@@ -1,0 +1,295 @@
+/*---------------------------Hero Section-------------------------*/
+.hero-section{
+    background: var(--basic-color);
+    color:white;
+    width:100%;
+}
+
+.hero-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+}
+
+/* ------------------------------------ */
+.hero-first-div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:var(--basic-color-hover); 
+    border-radius: 15px;
+    padding: 5px 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: fit-content;
+    
+}
+
+/* ------------------------------------ */
+.hero-second-div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width:40%;
+    margin-top: 20px;
+}
+
+.hero-third-div{
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+}
+
+.hero-third-div div{
+    margin: 25px 15px;
+}
+
+/* ------------------------------------ */
+.hero-fourth-div{
+    background-color: white;
+    padding: 10px ;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    color:rgb(153, 151, 151)
+}
+.hero-fourth-div div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0px 10px;
+}
+
+.filter-input{
+    border: none !important;
+    width: 200px;
+    box-shadow: none !important;
+}
+
+.vl{
+    border-left: 2px solid rgb(217, 217, 217);
+    height: 70px;
+}
+
+.search-btn{
+    background: var(--basic-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+
+/* ------------------------------------ */
+.hero-fifth-div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.filter-btn{
+    background-color: white;
+    padding: 10px 20px;
+    border-radius: 15px;
+    width: fit-content;
+    color:rgb(43, 72, 125);
+    font-weight: 600;
+    border: none;
+    margin-left: 20px;
+}
+.filter-btn:hover{
+    background: var(--basic-color-hover);
+    color: white;
+}
+
+
+/* ------------------------------------ */
+.hero-sixth-div{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.hero-sixth-div div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0px 10px;
+}
+
+.icon{
+    font-size: 20px;
+    background-color: rgb(38, 38, 138);
+    padding: 10px;
+    border-radius: 10px;
+    color: white;
+}
+
+
+/*---------------------------Main Section-------------------------*/
+/*---------------------------Info Section-------------------------*/
+.Info-section{
+    margin: 90px auto;
+    justify-content: center;
+}
+
+.info-box{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 30px;
+    border-radius: 15px;
+}
+.info-box h3{
+    font-weight: 700;
+}
+.info-icon{
+    font-size: 30px;
+    color: white;
+    background: var(--basic-color);
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
+/*---------------------------Trending Jobs Section-------------------------*/
+
+
+
+
+
+
+
+/*---------------------------Why HireSmart Section-------------------------*/
+.Why-hireSmart-section{
+    margin: 90px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.why-hireSmart-box{
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin: 15px;
+    height:40vh;
+}
+
+.ai-powered-icon{
+    font-size: 25px;
+    color: rgb(74, 23, 228);
+    background-color: rgb(201, 214, 255);
+    padding: 5px 10px;
+    border-radius: 10px;
+    width: fit-content;
+    margin-bottom: 30px;
+}
+
+.adv-search-icon{
+    font-size: 25px;
+    color: rgb(9, 153, 38);
+    background-color: rgb(234, 253, 236);
+    padding: 5px 10px;
+    border-radius: 10px;
+    width: fit-content;
+    margin-bottom: 30px;
+}
+
+.real-time-icon{
+    font-size: 25px;
+    color: rgb(255, 142, 21);
+    background-color: rgb(245, 230, 213);
+    padding: 5px 10px;
+    border-radius: 10px;
+    width: fit-content;
+    margin-bottom: 30px;
+}
+
+.prof-people-icon{
+    font-size: 25px;
+    color: rgb(9, 153, 38);
+    background-color: rgb(234, 253, 236);
+    padding: 5px 10px;
+    border-radius: 10px;
+    width: fit-content;
+    margin-bottom: 30px;
+}
+
+.ver-com-icon{
+    font-size: 25px;
+    color: rgb(74, 23, 228);
+    background-color: rgb(201, 214, 255);
+    padding: 5px 10px;
+    border-radius: 10px;
+    width: fit-content;
+    margin-bottom: 30px;
+}
+
+.ana-dash-icon{
+    font-size: 25px;
+    color: rgb(255, 142, 21);
+    background-color: rgb(245, 230, 213);
+    padding: 5px 10px;
+    border-radius: 10px;
+    width: fit-content;
+    margin-bottom: 30px;
+}
+
+
+/*---------------------------End Section-------------------------*/
+
+.for-job-seeker-icon{
+    font-size: 25px;
+    color: rgb(74, 23, 228);
+    background-color: rgb(201, 214, 255);
+    padding: 5px 10px;
+    border-radius: 10px;
+    width: fit-content;
+    margin-bottom: 30px;
+    margin-right: 20px;
+
+}
+
+.for-job-seeker-btn{
+    color: white;
+    background-color: rgb(74, 23, 228);
+    border: none;
+    border-radius: 15px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.for-employer-icon{
+    font-size: 25px;
+    color: rgb(9, 153, 38);
+    background-color: rgb(234, 253, 236);
+    padding: 5px 10px;
+    border-radius: 10px;
+    width: fit-content;
+    margin-bottom: 30px;
+    margin-right: 20px;
+}
+.for-employer-btn{
+    color: white;
+    background-color: rgb(9, 153, 38);
+    border: none;
+    border-radius: 15px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+
+
+
+
