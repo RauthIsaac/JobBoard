@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Navbar } from "./shared/navbar/navbar";
 import { Home } from "./features/Home/home/home";
+import { Home } from "./features/Home/home/home";
 import { Footer } from "./shared/footer/footer";
 
 
