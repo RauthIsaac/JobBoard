@@ -150,10 +150,16 @@
     justify-content: space-between;
     padding: 30px;
     border-radius: 15px;
+    transition: all 0.3s ease;
 }
 .info-box h3{
     font-weight: 700;
 }
+
+.info-box:hover{
+    transform: translateY(-5px);
+}
+
 .info-icon{
     font-size: 30px;
     color: white;
@@ -184,6 +190,11 @@
     padding: 30px;
     margin: 15px;
     height:40vh;
+    transition: all 0.3s ease;
+}
+
+.why-hireSmart-box:hover{
+    transform: translateY(-5px);
 }
 
 .ai-powered-icon{

@@ -1,1 +1,231 @@
-<p>job-details works!</p>
+<div style="margin: 100px;">
+    <!-- --------------------------- Job Details Section ------------------------------ -->
+    <section class="job-details-section p-2">
+        <div class="job-details row shadow rounded">
+            <div class="col-lg-9">
+                <div class="d-flex">
+                    <i class="bi bi-buildings me-2"></i>
+                    <span>TechFlow Solutions</span>
+                </div>
+                <h1 class="my-3">Senior Frontend Developer</h1>
+                <div class="d-flex ">
+                    <div class="d-flex me-4">
+                        <i class="bi bi-geo-alt me-2"></i>
+                        <span>Location</span>
+                    </div>
+                    <div class="d-flex me-4">
+                        <i class="bi bi-clock me-2"></i>
+                        <span>Posted At: </span>
+                    </div>
+                    <div class="d-flex me-4">
+                        <i class="bi bi-calendar2 me-2"></i>
+                        <span>Apply By: </span>
+                    </div>
+                </div>
+                <div class="d-flex mt-3">
+                    <div class="job-time me-3">
+                        <span>Full-Time</span>
+                    </div>
+                    <div style="margin-top: 5px; color:green">
+                        <span>{{ 200 | currency:'USD':'symbol' }}</span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-3">
+                <input type="button" class="apply-now-btn form-control" routerLink="/jobApp" value="Apply Now">
+                <button class="save-job-btn form-control" (click)="AddToSaved()" [class.saved]="isSaved">
+                    <i class="bi" [class.bi-bookmark-check]="isSaved" [class.bi-bookmark]="!isSaved"></i> {{ isSaved ? 'Saved' : ' Save' }}
+                </button>  
+            </div>
+
+        </div>  
+    </section>
+    
+    <!-- --------------------------- Main Section ------------------------------ -->
+    <section class="main-section">
+        <div class="row mt-5">
+            <div class="col-lg-8 col-md-12 col-sm-12 ">
+                
+                <div class="job-overview shadow rounded p-5 mb-4 ">
+                        <h2 class="mb-4">Job Overview</h2>
+
+                        <div class="row">
+
+                            <div class="col-lg-3 col-md-5 col-sm-10 mb-md-2 mb-sm-2">
+                                <div class="d-flex pe-md-3" style="background-color: rgb(244, 244, 244); border-radius: 15px; width: fit-content;">
+                                    <i class="bi bi-mortarboard m-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
+                                    <div class="d-flex flex-column">
+                                        <span style="color: rgb(117, 117, 117);">Experience</span>
+                                        <span style="font-weight: 500;">Senior Level</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-5 col-sm-10 mb-md-2 mb-sm-2" >
+                                <div class="d-flex pe-md-3" style="background-color: rgb(244, 244, 244); border-radius: 15px; width: fit-content;">
+                                    <i class="bi bi-clock m-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
+                                    <div class="d-flex flex-column">
+                                        <span style="color: rgb(162, 162, 162);">Type</span>
+                                        <span style="font-weight: 500;">Full-Time</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-5 col-sm-10 mb-md-2 mb-sm-2">
+                                <div class="d-flex pe-md-3" style="background-color: rgb(244, 244, 244); border-radius: 15px; width: fit-content;">
+                                    <i class="bi bi-people m-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
+                                    <div class="d-flex flex-column">
+                                        <span style="color: rgb(162, 162, 162);">Team Size</span>
+                                        <span style="font-weight: 500;">5-10</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-5 col-sm-10 mb-md-2 mb-sm-2">
+                                <div class="d-flex pe-md-3" style="background-color:rgb(244, 244, 244); border-radius: 15px; width: fit-content;">
+                                    <i class="bi bi-geo-alt m-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
+                                    <div class="d-flex flex-column">
+                                        <span style="color: rgb(162, 162, 162);">Location</span>
+                                        <span style="font-weight: 500;">Remote</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Job Description -->
+                        <div class="mt-4">
+                            <h5>Job Description</h5>
+                            <span class="mt-1">We are seeking a highly skilled Senior Frontend Developer with expertise in Angular and React to join our dynamic team. The ideal candidate will have a passion for building responsive and user-friendly web applications.</span>
+
+                        </div>
+                        <!-- Key Requirements -->
+                        <div>
+                            <h5 class="mt-4">Key Requirements</h5>
+                            <ul style="list-style-type: none; padding-left: 0px;">
+                                <div class="d-flex mb-3"><i class="bi bi-star me-2" style="color:rgb(27, 193, 27)"></i><li>Proven experience as a Frontend Developer with expertise in Angular and React.</li></div>
+                                <div class="d-flex mb-3"><i class="bi bi-star me-2" style="color:rgb(27, 193, 27)"></i><li>Strong understanding of web development principles and best practices.</li></div>
+                                <div class="d-flex mb-3"><i class="bi bi-star me-2" style="color:rgb(27, 193, 27)"></i><li>Experience with responsive design and cross-browser compatibility.</li></div>
+                                <div class="d-flex mb-3"><i class="bi bi-star me-2" style="color:rgb(27, 193, 27)"></i><li>Familiarity with version control systems (e.g., Git).</li></div>
+                                <div class="d-flex mb-3"><i class="bi bi-star me-2" style="color:rgb(27, 193, 27)"></i><li>Excellent problem-solving skills and attention to detail.</li></div>
+                            </ul>
+                        </div>
+
+                        <!-- What We Offer -->
+                        <div>
+                            <h5 class="mt-4">What We Offer</h5>
+                            <div class="row">
+                                <div class="offer col-lg-2 col-md-6 col-sm-12 mb-2">
+                                    <span>Health Insurance</span>
+                                </div>
+                                <div class="offer col-lg-2 col-md-6 col-sm-12 mb-2">
+                                    <span>Retirement Plan</span>
+                                </div>
+                                <div class="offer col-lg-2 col-md-6 col-sm-12 mb-2">
+                                    <span>Paid Time Off</span>
+                                </div>
+                                <div class="offer col-lg-2 col-md-6 col-sm-12 mb-2">
+                                    <span>Flexible Working Hours</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                </div>
+
+                <div class="about-job shadow rounded p-5 mb-4 ">
+                        <h2>About the Role</h2>
+                        <p>We are looking for a Senior Frontend Developer with expertise in Angular and React to join our team. The ideal candidate will have a strong background in building responsive web applications and a passion for creating user-friendly interfaces.</p>
+
+
+                        <!-- Job Responsibilities -->
+                        <div>
+                            <h5 class="mt-lg-5">Job Responsibilities</h5>
+                            <ul style="list-style-type: none; padding-left: 0;">
+                                <div class="d-flex mb-3"><span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>Develop and maintain web applications using Angular and React.</li></div>
+                                <div class="d-flex mb-3"><span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>Collaborate with designers and backend developers to create seamless user experiences.</li></div>
+                                <div class="d-flex mb-3"><span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>Participate in code reviews and contribute to best practices.</li></div>
+                            </ul>
+                        </div>
+
+                        <!-- What We Offer -->
+                        <div>
+                            <h5 class="mt-5">What We Offer</h5>
+                            <ul style="list-style-type: none; padding-left: 0;">
+                                <div class="d-flex mb-3"><span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>Competitive salary and equity package.</li></div>
+                                <div class="d-flex mb-3"><span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>Flexible working hours and remote work options.</li></div>
+                                <div class="d-flex mb-3"><span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>Comprehensive health benefits and wellness programs.</li></div>
+                                <div class="d-flex mb-3"><span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>Top-tier equipment and home office setup allowance.</li></div>
+                                <div class="d-flex mb-3"><span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>Unlimited PTO and wellness days.</li></div>
+                                <div class="d-flex mb-3"><span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>Team retreats and company event.</li></div>
+                                <div class="d-flex mb-3"><span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>Opportunity to work on cutting-edge technology.</li></div>
+                            </ul>
+                        </div>
+
+
+                        <!-- Ready To Apply -->
+                        <div class="mt-5 p-5" style="background-color: rgb(244, 244, 244); border-radius: 15px;">
+                            <div class="row">
+                                <div class="col-lg-8 col-md-7 col-sm-12">
+                                    <h5>Ready to Apply?</h5>
+                                    <p>Apply now and take the next step in your career.</p>
+                                </div>
+                                <div class="col-lg-4 col-md-5 col-sm-12">
+                                    <button class="apply-now-btn form-control" routerLink="/jobApp" value="Apply Now">Apply Now <i class="bi bi-arrow-right px-2"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+
+
+
+            </div>
+
+            <!-- Side Bar -->
+            <div class="main-side-bar col-lg-4 col-md-12 col-sm-12 ps-3" >
+                    
+                    <div class="shadow rounded p-4 mb-4">
+                        <!-- Company Logo(Image) -->
+                        <!-- <div class="text-center">
+                            <img src="assets/images/company-logo.png" alt="Company Logo" class="img-fluid">
+                        </div> -->
+                        <h3 class="d-flex my-3" >
+                            <i class="bi bi-buildings me-2"></i>
+                            <span>TechFlow Solutions</span>
+                        </h3>
+                        
+                        <p>TechFlow Solutions is a leading software development company specializing in innovative web solutions.</p>
+                    
+                        <div class="d-flex mt-lg-2">
+                            <i class="bi bi-people me-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
+                            <span style="color: rgb(162, 162, 162); margin-right: 8px;">Company Size: </span>
+                            <span style="font-weight: 500;">51-200 Employees</span>
+                        </div>
+                        <div class="d-flex mt-2">
+                            <i class="bi bi-buildings me-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
+                            <span style="color: rgb(162, 162, 162); margin-right: 8px;">Industry: </span>
+                            <span style="font-weight: 500;">Software Development</span>
+                        </div>
+                        <div class="d-flex mt-2">
+                            <i class="bi bi-geo-alt me-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
+                            <span style="color: rgb(162, 162, 162); margin-right: 8px;">Location: </span>
+                            <span style="font-weight:500;">New York, USA</span>
+                        </div>
+                        <div class="d-flex mt-2">
+                            <i class="bi bi-link-45deg me-3" style="color:rgb(58, 111, 245); font-size:larger;"></i>
+                            <span style="color: rgb(162, 162, 162); margin-right: 8px;">Website: </span>
+                            <span><a href="#" target="_blank" style="text-decoration: none; font-weight:500;">Visit Site</a></span>
+                        </div>
+
+
+                    </div> 
+                    
+            </div>
+
+
+
+
+        </div>
+    </section>
+
+</div>

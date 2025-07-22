@@ -1,0 +1,38 @@
+/* ------------------Tip Section--------------------- */
+
+
+.tip-box{
+    background: var(--basic-gray);
+    padding: 20px 30px;
+    border-radius: 15px;
+}
+
+.tip-text{
+    background: var(--basic-orange);
+    padding: 8px 15px;
+    width:fit-content;
+    border-radius: 20px;
+    color: white;
+}
+
+
+
+/* ------------------Application Section--------------------- */
+/* --------------------App Box----------------- */
+.app-box{
+    padding: 0px;
+
+}
+
+nav{
+    background: var(--basic-color);
+    color:white;
+    padding: 15px 30px;
+    font-size: x-large;
+}
+
+/* --------------------App Main----------------- */
+.app-main{
+    padding: 30px;
+}
+
