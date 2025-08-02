@@ -169,11 +169,20 @@
 }
 
 /*---------------------------Trending Jobs Section-------------------------*/
+.Trending-job-section{
+    padding: 40px;
+}
 
+.featured-opp{
+    background: var(--basic-color);
+    padding: 10px 20px ;
+    border-radius: 30px;
+    color:rgb(232, 230, 230);
+}
 
-
-
-
+.featured-opp:hover{
+    background: var(--basic-color-hover);
+}
 
 
 /*---------------------------Why HireSmart Section-------------------------*/

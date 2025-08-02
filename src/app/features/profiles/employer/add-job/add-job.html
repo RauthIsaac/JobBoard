@@ -1,1 +1,358 @@
-<p>add-job works!</p>
+<div class="add-job-container">
+  <div class="header">
+    <h1>Post a New Job</h1>
+    <p>Fill in the details below to create a comprehensive job posting</p>
+  </div>
+
+  <form [formGroup]="jobForm" (ngSubmit)="onSubmit()" class="job-form">
+    
+    <!-- Basic Job Information Section -->
+    <div class="form-section">
+      <h2>Basic Information</h2>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="jobTitle">Job Title *</label>
+          <input 
+            type="text" 
+            id="jobTitle" 
+            formControlName="jobTitle"
+            placeholder="e.g., Senior Frontend Developer"
+            [class.error]="isFieldInvalid('jobTitle')">
+          <div class="error-message" *ngIf="isFieldInvalid('jobTitle')">
+            {{ getFieldError('jobTitle') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="companyName">Company Name *</label>
+          <input 
+            type="text" 
+            id="companyName" 
+            formControlName="companyName"
+            placeholder="e.g., TechFlow Solutions"
+            [class.error]="isFieldInvalid('companyName')">
+          <div class="error-message" *ngIf="isFieldInvalid('companyName')">
+            {{ getFieldError('companyName') }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="salary">Salary *</label>
+          <input 
+            type="number" 
+            id="salary" 
+            formControlName="salary"
+            placeholder="200.00"
+            [class.error]="isFieldInvalid('salary')">
+          <div class="error-message" *ngIf="isFieldInvalid('salary')">
+            {{ getFieldError('salary') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="companyLogo">Company Logo URL</label>
+          <input 
+            type="url" 
+            id="companyLogo" 
+            formControlName="companyLogo"
+            placeholder="https://example.com/logo.png">
+        </div>
+      </div>
+    </div>
+
+    <!-- Job Overview Section -->
+    <div class="form-section">
+      <h2>Job Overview</h2>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="experienceLevel">Experience Level *</label>
+          <select 
+            id="experienceLevel" 
+            formControlName="experienceLevel"
+            [class.error]="isFieldInvalid('experienceLevel')">
+            <option value="">Select Experience Level</option>
+            <option *ngFor="let level of experienceLevels" [value]="level.value">
+              {{ level.label }}
+            </option>
+          </select>
+          <div class="error-message" *ngIf="isFieldInvalid('experienceLevel')">
+            {{ getFieldError('experienceLevel') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="jobType">Job Type *</label>
+          <select 
+            id="jobType" 
+            formControlName="jobType"
+            [class.error]="isFieldInvalid('jobType')">
+            <option value="">Select Job Type</option>
+            <option *ngFor="let type of jobTypes" [value]="type.value">
+              {{ type.label }}
+            </option>
+          </select>
+          <div class="error-message" *ngIf="isFieldInvalid('jobType')">
+            {{ getFieldError('jobType') }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="teamSize">Team Size *</label>
+          <input 
+            type="text" 
+            id="teamSize" 
+            formControlName="teamSize"
+            placeholder="e.g., 5-10"
+            pattern="^\d+-\d+$"
+            [class.error]="isFieldInvalid('teamSize')">
+          <div class="error-message" *ngIf="isFieldInvalid('teamSize')">
+            {{ getFieldError('teamSize') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="locationType">Location Type *</label>
+          <select 
+            id="locationType" 
+            formControlName="locationType"
+            [class.error]="isFieldInvalid('locationType')">
+            <option value="">Select Location Type</option>
+            <option *ngFor="let location of locationTypes" [value]="location.value">
+              {{ location.label }}
+            </option>
+          </select>
+          <div class="error-message" *ngIf="isFieldInvalid('locationType')">
+            {{ getFieldError('locationType') }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="specificLocation">Specific Location</label>
+        <input 
+          type="text" 
+          id="specificLocation" 
+          formControlName="specificLocation"
+          placeholder="e.g., New York, USA">
+      </div>
+    </div>
+
+    <!-- Company Details Section -->
+    <div class="form-section">
+      <h2>Company Details</h2>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="companySize">Company Size *</label>
+          <input 
+            type="text" 
+            id="companySize" 
+            formControlName="companySize"
+            placeholder="e.g., 51-200 Employees"
+            [class.error]="isFieldInvalid('companySize')">
+          <div class="error-message" *ngIf="isFieldInvalid('companySize')">
+            {{ getFieldError('companySize') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="industry">Industry *</label>
+          <input 
+            type="text" 
+            id="industry" 
+            formControlName="industry"
+            placeholder="e.g., Software Development"
+            [class.error]="isFieldInvalid('industry')">
+          <div class="error-message" *ngIf="isFieldInvalid('industry')">
+            {{ getFieldError('industry') }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="companyLocation">Company Location *</label>
+          <input 
+            type="text" 
+            id="companyLocation" 
+            formControlName="companyLocation"
+            placeholder="e.g., New York, USA"
+            [class.error]="isFieldInvalid('companyLocation')">
+          <div class="error-message" *ngIf="isFieldInvalid('companyLocation')">
+            {{ getFieldError('companyLocation') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="website">Company Website</label>
+          <input 
+            type="url" 
+            id="website" 
+            formControlName="website"
+            placeholder="https://company.com">
+        </div>
+      </div>
+    </div>
+
+    <!-- Job Description Section -->
+    <div class="form-section">
+      <h2>Job Description</h2>
+      
+      <div class="form-group">
+        <label for="jobDescription">Job Description *</label>
+        <textarea 
+          id="jobDescription" 
+          formControlName="jobDescription"
+          rows="6"
+          placeholder="We are seeking a highly skilled Senior Frontend Developer with expertise in Angular and React to join our dynamic team..."
+          [class.error]="isFieldInvalid('jobDescription')"></textarea>
+        <div class="error-message" *ngIf="isFieldInvalid('jobDescription')">
+          {{ getFieldError('jobDescription') }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="aboutTheRole">About the Role *</label>
+        <textarea 
+          id="aboutTheRole" 
+          formControlName="aboutTheRole"
+          rows="4"
+          placeholder="We are looking for a Senior Frontend Developer with expertise in Angular and React to join our team..."
+          [class.error]="isFieldInvalid('aboutTheRole')"></textarea>
+        <div class="error-message" *ngIf="isFieldInvalid('aboutTheRole')">
+          {{ getFieldError('aboutTheRole') }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Key Requirements Section -->
+    <div class="form-section">
+      <h2>Key Requirements</h2>
+      <div class="dynamic-list">
+        <div *ngFor="let requirement of keyRequirements.controls; let i = index" class="dynamic-item">
+          <input 
+            type="text" 
+            [formControlName]="i"
+            placeholder="e.g., Proven experience as a Frontend Developer with expertise in Angular and React"
+            [class.error]="requirement.invalid && (requirement.dirty || requirement.touched)">
+          <button type="button" class="remove-btn" (click)="removeKeyRequirement(i)">
+            Remove
+          </button>
+        </div>
+        <button type="button" class="add-btn" (click)="addKeyRequirement()">
+          Add Key Requirement
+        </button>
+      </div>
+    </div>
+
+    <!-- Job Responsibilities Section -->
+    <div class="form-section">
+      <h2>Job Responsibilities</h2>
+      <div class="dynamic-list" formArrayName="jobResponsibilities">
+        <div *ngFor="let responsibility of jobResponsibilities.controls; let i = index" class="dynamic-item">
+          <input 
+            type="text" 
+            [formControlName]="i"
+            placeholder="e.g., Develop and maintain web applications using Angular and React"
+            [class.error]="responsibility.invalid && (responsibility.dirty || responsibility.touched)">
+          <button type="button" class="remove-btn" (click)="removeJobResponsibility(i)">
+            Remove
+          </button>
+        </div>
+        <button type="button" class="add-btn" (click)="addJobResponsibility()">
+          Add Job Responsibility
+        </button>
+      </div>
+    </div>
+
+    <!-- Benefits Section -->
+    <div class="form-section">
+      <h2>What We Offer</h2>
+      
+      <div class="benefits-grid">
+        <div *ngFor="let benefit of benefits" class="benefit-item">
+          <label class="checkbox-label">
+            <input 
+              type="checkbox" 
+              [value]="benefit"
+              (change)="onBenefitChange(benefit, $any($event.target).checked)">
+            <span class="checkmark"></span>
+            {{ benefit }}
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Additional Benefits</label>
+        <div class="dynamic-list" formArrayName="additionalBenefits">
+          <div *ngFor="let benefit of additionalBenefits.controls; let i = index" class="dynamic-item">
+            <input 
+              type="text" 
+              [formControlName]="i"
+              placeholder="e.g., Stock options"
+              [class.error]="benefit.invalid && (benefit.dirty || benefit.touched)">
+            <button type="button" class="remove-btn" (click)="removeAdditionalBenefit(i)">
+              Remove
+            </button>
+          </div>
+          <button type="button" class="add-btn" (click)="addAdditionalBenefit()">
+            Add Additional Benefit
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Application Details Section -->
+    <div class="form-section">
+      <h2>Application Details</h2>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="applicationDeadline">Application Deadline</label>
+          <input 
+            type="date" 
+            id="applicationDeadline" 
+            formControlName="applicationDeadline">
+        </div>
+
+        <div class="form-group">
+          <label for="applyBy">Apply By *</label>
+          <input 
+            type="text" 
+            id="applyBy" 
+            formControlName="applyBy"
+            placeholder="e.g., December 31, 2024"
+            [class.error]="isFieldInvalid('applyBy')">
+          <div class="error-message" *ngIf="isFieldInvalid('applyBy')">
+            {{ getFieldError('applyBy') }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="applicationInstructions">Application Instructions</label>
+        <textarea 
+          id="applicationInstructions" 
+          formControlName="applicationInstructions"
+          rows="3"
+          placeholder="Please submit your resume and cover letter..."></textarea>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="onReset()">
+        Reset Form
+      </button>
+      <button type="submit" class="btn-primary" [disabled]="jobForm.invalid">
+        Post Job
+      </button>
+    </div>
+  </form>
+</div>

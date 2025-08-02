@@ -161,12 +161,30 @@
 
         <hr>
 
+        <!-- Trending Job Section -->
         <section class="Trending-job-section">
+            <div class="d-flex flex-column align-items-center mb-5 mt-3">
+               <div class="featured-opp d-flex my-4">
+                    <i class="bi bi-star me-3"></i>
+                    <span>Featured Opportunities</span>
+                </div>
+                <h2 style="font-weight: 700;">Trending Jobs This Week</h2>
+                <span class="mt-2">Discover hand-picked opportunities from top companies actively hiring</span>
+            </div>
 
+            <div class="row">
+                  @for(job of jobsList(); track job.id){
+                    <app-job-view [job]="job" class="col-lg-4 col-md-6 col-sm-10 my-4"></app-job-view>
+                }
+            </div>
+           
         </section>
 
         <hr>
 
+
+
+        <!-- Why HireSmart Section -->
         <section class="Why-hireSmart-section">
             <div class="d-flex flex-column align-items-center mx-auto mb-5" style="width: 50%;">
                 <h2 style="font-weight: 700;">Why Choose HireSmart?</h2>

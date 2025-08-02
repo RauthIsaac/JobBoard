@@ -1,0 +1,340 @@
+.add-job-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.add-job-container .header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.add-job-container .header h1 {
+  color: #2c3e50;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.add-job-container .header p {
+  color: #6c757d;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.add-job-container .job-form {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  overflow: hidden;
+}
+
+.add-job-container .form-section {
+  padding: 2rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.add-job-container .form-section:last-child {
+  border-bottom: none;
+}
+
+.add-job-container .form-section h2 {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #4dabf7;
+  display: inline-block;
+}
+
+.add-job-container .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.add-job-container .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+}
+
+.add-job-container .form-group label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.add-job-container .form-group input,
+.add-job-container .form-group select,
+.add-job-container .form-group textarea {
+  padding: 0.75rem;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #fff;
+}
+
+.add-job-container .form-group input:focus,
+.add-job-container .form-group select:focus,
+.add-job-container .form-group textarea:focus {
+  outline: none;
+  border-color: #4dabf7;
+  box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.1);
+}
+
+.add-job-container .form-group input.error,
+.add-job-container .form-group select.error,
+.add-job-container .form-group textarea.error {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.add-job-container .form-group input::placeholder,
+.add-job-container .form-group select::placeholder,
+.add-job-container .form-group textarea::placeholder {
+  color: #adb5bd;
+}
+
+.add-job-container .form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+  font-family: inherit;
+}
+
+.add-job-container .form-group .error-message {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+/* Dynamic Lists */
+.add-job-container .dynamic-list .dynamic-item {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  align-items: flex-start;
+}
+
+.add-job-container .dynamic-list .dynamic-item input {
+  flex: 1;
+}
+
+.add-job-container .dynamic-list .dynamic-item .remove-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.add-job-container .dynamic-list .dynamic-item .remove-btn:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+}
+
+.add-job-container .dynamic-list .add-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+.add-job-container .dynamic-list .add-btn:hover {
+  background: #218838;
+  transform: translateY(-1px);
+}
+
+/* Benefits Grid */
+.add-job-container .benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.add-job-container .benefits-grid .benefit-item .checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.75rem;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background: #fff;
+}
+
+.add-job-container .benefits-grid .benefit-item .checkbox-label:hover {
+  border-color: #4dabf7;
+  background: #f8f9fa;
+}
+
+.add-job-container .benefits-grid .benefit-item .checkbox-label input[type="checkbox"] {
+  display: none;
+}
+
+.add-job-container .benefits-grid .benefit-item .checkbox-label input[type="checkbox"]:checked + .checkmark {
+  background: #4dabf7;
+  border-color: #4dabf7;
+}
+
+.add-job-container .benefits-grid .benefit-item .checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+  display: block;
+}
+
+.add-job-container .benefits-grid .benefit-item .checkbox-label .checkmark {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #dee2e6;
+  border-radius: 4px;
+  margin-right: 0.75rem;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.add-job-container .benefits-grid .benefit-item .checkbox-label .checkmark::after {
+  content: '';
+  position: absolute;
+  display: none;
+  left: 6px;
+  top: 2px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Form Actions */
+.add-job-container .form-actions {
+  padding: 2rem;
+  background: #f8f9fa;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.add-job-container .form-actions .btn-primary,
+.add-job-container .form-actions .btn-secondary {
+  padding: 0.875rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.add-job-container .form-actions .btn-primary:disabled,
+.add-job-container .form-actions .btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.add-job-container .form-actions .btn-primary {
+  background: #4dabf7;
+  color: white;
+}
+
+.add-job-container .form-actions .btn-primary:hover:not(:disabled) {
+  background: #339af0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(77, 171, 247, 0.3);
+}
+
+.add-job-container .form-actions .btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.add-job-container .form-actions .btn-secondary:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+/* Loading and Success States */
+.add-job-container .form-loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.add-job-container .success-message {
+  background: #d4edda;
+  color: #155724;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border: 1px solid #c3e6cb;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .add-job-container {
+    padding: 1rem;
+  }
+
+  .add-job-container .header {
+    margin-bottom: 2rem;
+  }
+
+  .add-job-container .header h1 {
+    font-size: 2rem;
+  }
+
+  .add-job-container .form-section {
+    padding: 1.5rem;
+  }
+
+  .add-job-container .form-section h2 {
+    font-size: 1.25rem;
+  }
+
+  .add-job-container .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .add-job-container .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .add-job-container .benefits-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .add-job-container .dynamic-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .add-job-container .dynamic-item .remove-btn {
+    align-self: flex-end;
+    width: fit-content;
+  }
+
+  .add-job-container .form-actions {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,73 @@
+<div class="job-container h-100" *ngIf="job">
+    <div class="row">
+        <div class="comp-logo col-1">
+            <i class="bi bi-buildings"></i>
+        </div>
+        <div class="job-data col-10">
+            <h3>{{job.title}}</h3>
+            <span>{{job.companyName}}</span>
+            <div class="my-2">
+                <div>
+                    <div class="d-flex my-1">
+                        <i class="bi bi-geo-alt me-2"></i>
+                        <span>{{job.location}}</span>
+                    </div>
+                    <div class="d-flex my-1">
+                        <i class="bi bi-clock me-2"></i>
+                        <span>Posted At : {{job.postedDate | date:'MMM dd, yyyy'}}</span>
+                    </div>
+                </div>
+                <div class="my-2 ms-1">
+                    <span>{{ job.salary | currency:'USD':'symbol' }}</span>
+                </div>
+
+                <div class="row my-2">
+                    <div class="workplace-type">
+                        <span> {{job.workplaceType}} </span>
+                    </div>
+                    <div class="job-type col-lg-3">
+                        <span> {{job.jobType}} </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-1">
+            <button class="save-job-btn" (click)="AddToSaved()" [class.saved]="isSaved">
+                <i class="bi" [class.bi-bookmark-check]="isSaved" [class.bi-bookmark]="!isSaved"></i>
+            </button> 
+        </div>
+    </div>
+
+
+    <div class="my-3">
+        Join our dynamic team to build cutting-edge web applications using React, TypeScript, and modern frontend technologies. We're looking for a...
+        <!-- {{job.description}} -->
+    </div>
+
+    <div class="row my-3">
+        @for(skill of job.skills; track $index){
+            <div class="skill">{{skill}}</div>
+        }  
+        <div class="more">+1 more</div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-lg-8 col-md-12 col-sm-12 mb-md-2 mb-sm-2">
+            <button class="view-dtl-btn" [routerLink]="['/jobDtl',job.id]">
+                <i class="bi bi-box-arrow-up-right me-2"></i> View Details
+            </button>
+        </div>
+        <div class="col-lg-2 col-md-12 col-sm-12">
+            <input type="button" class="apply-now-btn " routerLink="/jobApp" value="Apply Now">
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+
