@@ -1,0 +1,65 @@
+.footer{
+    background-color: var(--basic-gray);
+}
+
+#EnterEmail{
+    border: none;
+    border-radius: 10px;
+    padding: 5px 20px;
+}
+
+
+.SubBtn{
+    background: var(--basic-color);
+    border: none;
+    border-radius: 10px;
+    color:white;
+    font-weight: 500;  
+}
+
+.SubBtn:hover{
+    background: var(--basic-color-hover);
+    color:white;
+    cursor: pointer;
+}
+
+
+
+.logo-icon{
+    font-size: 20px;
+    color: white;
+    background: var(--basic-color);
+    padding:5px 10px;
+    border-radius: 30%;
+    margin-right: 10px;
+}
+
+.HireSmart{
+   color: rgb(31, 68, 143); 
+   font-weight: 600;
+   font-family:Arial, Helvetica, sans-serif;
+   text-decoration: none;
+}
+
+a{
+    text-decoration: none;
+    color: rgb(127, 125, 125);
+    margin: 10px 0px;
+}
+
+a:hover{
+    color:rgb(49, 103, 212);
+}
+
+.icon{
+    background-color: rgb(234, 232, 232);
+    border-radius: 10px;
+    padding: 5px 10px;
+    margin: 0px 5px;
+}
+
+.icon:hover{
+    background:var(--basic-color);
+    color: white;
+    cursor: pointer;
+}

@@ -1,0 +1,38 @@
+<div class="max-w-xl mx-auto p-6 bg-white rounded shadow">
+  <h2 class="text-2xl font-bold mb-4">Seeker Profile</h2>
+
+  <div class="space-y-4">
+    <input
+      class="w-full border p-2 rounded"
+      placeholder="First Name"
+      [(ngModel)]="profile.firstName"
+    />
+
+    <input
+      class="w-full border p-2 rounded"
+      placeholder="Last Name"
+      [(ngModel)]="profile.lastName"
+    />
+
+    <input
+      class="w-full border p-2 rounded"
+      placeholder="Address"
+      [(ngModel)]="profile.address"
+    />
+
+    <input
+      class="w-full border p-2 rounded"
+      placeholder="CV URL"
+      [(ngModel)]="profile.CV_URL"
+    />
+  </div>
+
+  <div class="mt-6">
+    <button
+      (click)="saveProfile()"
+      class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+    >
+      Save Profile
+    </button>
+  </div>
+</div>
