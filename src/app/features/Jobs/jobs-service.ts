@@ -105,7 +105,7 @@ export class JobsService {
 
   /*--------------------------Get Job Details------------------------------ */
 
-  public JobDetail: any;
+  // public JobDetail: any;
 
   GetJobDetails(jobID: number):any {
     return this.http.get(`${this.apiUrl}/${jobID}`);

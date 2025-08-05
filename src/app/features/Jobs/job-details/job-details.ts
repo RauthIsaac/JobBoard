@@ -25,12 +25,12 @@ export class JobDetails implements OnInit{
       this.loadJobDetails(); 
     });
     }
-
-   
   
   loadJobDetails(){
     this.jobService.GetJobDetails(this.jobId()).subscribe((response: any) => {
       this.jobDetails.set(response);
+      
+      /*------ To Convert the requirements string to elements in array -----*/
       this.requirementsList.set((response.requirements).split(","));
       console.log("Job Details : ", this.jobDetails());
       console.log("requirements : ", this.requirementsList());
