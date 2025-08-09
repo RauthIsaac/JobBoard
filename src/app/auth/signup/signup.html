@@ -2,27 +2,26 @@
   <h2 class="title text-center fs-1 p-2 mb-5">Create your account</h2>
 
   <form class="w-100" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
-
+    <!-- Username -->
     <mat-form-field appearance="fill" class="full-width">
       <mat-label class="fs-4">Username</mat-label>
       <input
         matInput
         type="text"
-        formControlName="username"
+        formControlName="userName"
         placeholder="ex: Samaa"
       />
-      <mat-error
-        *ngIf="
-          signupForm.get('username')?.touched &&
-          signupForm.get('username')?.invalid
-        "
-      >
-        <small *ngIf="signupForm.get('username')?.errors?.['required']"
-          >Username is required</small
-        >
+      <mat-error *ngIf="signupForm.get('userName')?.errors">
+        <small *ngIf="signupForm.get('userName')?.errors?.['required']">
+          Username is required
+        </small>
+        <small *ngIf="signupForm.get('userName')?.errors?.['notUnique']">
+          Username already exists
+        </small>
       </mat-error>
     </mat-form-field>
 
+    <!-- Email -->
     <mat-form-field appearance="fill" class="full-width">
       <mat-label class="fs-4">Email</mat-label>
       <input
@@ -31,17 +30,20 @@
         formControlName="email"
         placeholder="ex: samaa@gmail.com"
       />
-      <mat-error
-        *ngIf="
-          signupForm.get('email')?.touched && signupForm.get('email')?.invalid
-        "
-      >
-        <small *ngIf="signupForm.get('email')?.errors?.['required']"
-          >Email is required</small
-        >
+      <mat-error *ngIf="signupForm.get('email')?.errors">
+        <small *ngIf="signupForm.get('email')?.errors?.['required']">
+          Email is required
+        </small>
+        <small *ngIf="signupForm.get('email')?.errors?.['email']">
+          Invalid email format
+        </small>
+        <small *ngIf="signupForm.get('email')?.errors?.['notUnique']">
+          Email already exists
+        </small>
       </mat-error>
     </mat-form-field>
 
+    <!-- Password -->
     <mat-form-field appearance="fill" class="full-width">
       <mat-label class="fs-4">Password</mat-label>
       <input
@@ -56,60 +58,85 @@
         (click)="hidePassword = !hidePassword"
         type="button"
       >
-        <mat-icon>{{
-          hidePassword ? "visibility_off" : "visibility"
-        }}</mat-icon>
+        <mat-icon>{{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon>
       </button>
-      <mat-error
-        *ngIf="
-          signupForm.get('password')?.touched &&
-          signupForm.get('password')?.invalid
-        "
-      >
-        <small *ngIf="signupForm.get('password')?.errors?.['required']"
-          >Password is required</small
-        >
+      <mat-error *ngIf="signupForm.get('password')?.errors">
+        <small *ngIf="signupForm.get('password')?.errors?.['required']">
+          Password is required
+        </small>
       </mat-error>
     </mat-form-field>
 
+    <!-- Confirm Password -->
     <mat-form-field appearance="fill" class="full-width">
       <mat-label class="fs-4">Confirm Password</mat-label>
       <input
         matInput
-        type="password"
+        [type]="hideConfirmPassword ? 'password' : 'text'"
         formControlName="confirmPassword"
         placeholder="********"
       />
       <button
         mat-icon-button
         matSuffix
-        (click)="hidePassword = !hidePassword"
+        (click)="hideConfirmPassword = !hideConfirmPassword"
         type="button"
       >
-        <mat-icon>{{
-          hidePassword ? "visibility_off" : "visibility"
-        }}</mat-icon>
+        <mat-icon>{{ hideConfirmPassword ? "visibility_off" : "visibility" }}</mat-icon>
       </button>
-      <mat-error
-        *ngIf="
-          signupForm.get('confirmPassword')?.touched &&
-          signupForm.get('confirmPassword')?.invalid
-        "
-      >
-        <small>Password confirmation is required</small>
+      <mat-error *ngIf="signupForm.get('confirmPassword')?.errors">
+        <small *ngIf="signupForm.get('confirmPassword')?.errors?.['required']">
+          Password confirmation is required
+        </small>
       </mat-error>
     </mat-form-field>
 
-    <div
-      *ngIf="signupForm.errors?.['passwordMismatch'] && signupForm.get('confirmPassword')?.touched"
-    >
+    <!-- Password Mismatch Error -->
+    <div *ngIf="signupForm.errors?.['passwordMismatch']">
       <small style="color: red">Passwords do not match</small>
     </div>
 
+    <!-- User Type -->
+    <div class="mb-3 mt-3">
+      <label class="fs-5 d-block mb-2">User Type</label>
+      <mat-radio-group formControlName="user_type">
+        <mat-radio-button value="Employer">Employer</mat-radio-button>
+        <mat-radio-button value="Seeker">Seeker</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!-- Company Name & Location - Shown only for Employer -->
+    <div *ngIf="signupForm.get('user_type')?.value === 'Employer'">
+      <!-- Company Name -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label class="fs-4">Company Name</mat-label>
+        <input
+          matInput
+          type="text"
+          formControlName="companyName"
+          placeholder="ex: Google LLC"
+        />
+      </mat-form-field>
+
+      <!-- Company Location -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label class="fs-4">Company Location</mat-label>
+        <input
+          matInput
+          type="text"
+          formControlName="companyLocation"
+          placeholder="ex: New York, USA"
+        />
+      </mat-form-field>
+    </div>
+
+    <!-- Submit -->
     <button class="fs-4" mat-raised-button color="primary" type="submit">
       Register
     </button>
-    <p class="text-center fs-5">
+
+    <!-- Login Redirect -->
+    <p class="text-center fs-5 mt-3">
       Already have an account?
       <a
         routerLink="/login"
