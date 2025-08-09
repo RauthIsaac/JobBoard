@@ -1,7 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, signal, effect } from '@angular/core';
 import { IJob } from '../../shared/models/ijob';
 import { JobDetails } from './job-details/job-details';
+import { ISkill } from '../../shared/models/iskill';
+import { ICategory } from '../../shared/models/icategory';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +14,7 @@ export class JobsService {
   private readonly SAVED_JOBS_KEY = 'savedJobs';
   public savedJobs = signal<Set<number>>(new Set<number>());
   
+  /*------------------------ Constructor ---------------------------- */
   constructor(private http: HttpClient) {
 
     this.loadSavedJobsFromStorage();
@@ -84,10 +87,10 @@ export class JobsService {
   }
   //#endregion
   
-  /*----------------------------API URL---------------------------- */
+  /*---------------------------- API URL ---------------------------- */
   private apiUrl = 'http://localhost:5007/api/Jobs';
 
-  /*---------------------------Get All Jobs----------------------------- */
+  /*--------------------------- Get All Jobs ----------------------------- */
   public JobsList = signal<IJob[]>([]);
 
   GetAllHttpJobs(){
@@ -103,13 +106,33 @@ export class JobsService {
 
   }
 
-  /*--------------------------Get Job Details------------------------------ */
-
-  // public JobDetail: any;
+  /*-------------------------- Get Job Details ------------------------------ */
 
   GetJobDetails(jobID: number):any {
     return this.http.get(`${this.apiUrl}/${jobID}`);
   }
 
+
+  /*-------------------------- Post New Job ------------------------------ */
+
+  createJob(jobData: any): any {
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjRjNGZjYzlkLWJiZTUtNDMyOC05MWY1LTk0ZDczYWQwNGJhMiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJUZWNoU29sdXRpb25zTHRkIiwianRpIjoiNjc1MzZmYjgtMjhkMi00YzUyLTk2N2ItMTQyMTExN2Q3ODA0IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiRW1wbG95ZXIiLCJleHAiOjE3NTUzMjU2MzksImlzcyI6IkpvYkJvYXJkQVBJIiwiYXVkIjoiSm9iQm9hcmRVc2VyIn0.i9zQ5XBxFmtJO1FJNivBvfbdgJBgCnUiks7cnc-Vwnk"; 
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    const newJob = this.http.post<IJob>(this.apiUrl, jobData, {headers});
+    
+    return newJob;
+  }
+
+
+  /*-------------------------- Get All Jobs Skills ------------------------------ */
+  GetAllJobsSkills(): any {
+    return this.http.get<ISkill[]>(`${this.apiUrl}/skills`);
+  }
+
+  /*-------------------------- Get All Jobs Categories ------------------------------ */
+  GetAllJobsCategories(): any {
+    return this.http.get<ICategory[]>(`${this.apiUrl}/categories`);
+  }
 
 }

@@ -14,10 +14,16 @@ export interface IJob {
     experienceLevel : ExperienceLevel,
     isActive : boolean,
     companyName : string,
+    companyImage : string,
+    companyDescription : string,
     companyLocation : string,
+    employeeRange : string,
     website : string,
-    categories: string[],
-    skills : string[],
+    industry : string,
+    responsabilities : string,
+    benefits : string,
+    categoryIds: number[],
+    skillIds: number[],
 }
 
 

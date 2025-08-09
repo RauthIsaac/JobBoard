@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddJob } from './add-job';
+import { AddJob } from './add-job/add-job';
 
 describe('AddJob', () => {
   let component: AddJob;

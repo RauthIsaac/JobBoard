@@ -16,7 +16,9 @@ export class EmployerProfile {
 
 
 
-  constructor() {}
+  constructor() {
+    
+  }
  
 
 

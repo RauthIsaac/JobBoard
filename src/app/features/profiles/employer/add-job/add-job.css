@@ -1,340 +1,161 @@
-.add-job-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-  background-color: #f8f9fa;
-  min-height: 100vh;
+.card-header{
+    background: var(--basic-color);
+    color: white;
+    border-radius: 10px 10px 0 0;
+    padding: 15px 20px;
 }
 
-.add-job-container .header {
-  text-align: center;
-  margin-bottom: 3rem;
+/* Section heading styles */
+h5.mb-3 {
+    font-weight: 600;
+    color: #333;
+    margin-top: 25px;
+    position: relative;
+    padding-bottom: 10px;
 }
 
-.add-job-container .header h1 {
-  color: #2c3e50;
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
+h5.mb-3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background-color: var(--basic-color);
+    border-radius: 3px;
 }
 
-.add-job-container .header p {
-  color: #6c757d;
-  font-size: 1.1rem;
-  margin: 0;
+/* Styles for skill tags */
+.skill-tags, .category-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 5px;
 }
 
-.add-job-container .job-form {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
-  overflow: hidden;
+.skill-tag, .category-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 18px;
+    border-radius: 25px;
+    background-color: #f5f5f5;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    font-weight: 500;
 }
 
-.add-job-container .form-section {
-  padding: 2rem;
-  border-bottom: 1px solid #e9ecef;
+.skill-tag:hover, .category-tag:hover {
+    background-color: #e8e8e8;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.add-job-container .form-section:last-child {
-  border-bottom: none;
+.skill-tag.selected, .category-tag.selected {
+    background: var(--basic-color);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-.add-job-container .form-section h2 {
-  color: #2c3e50;
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid #4dabf7;
-  display: inline-block;
+.skill-tag.selected i, .category-tag.selected i {
+    margin-left: 8px;
+    font-size: 16px;
 }
 
-.add-job-container .form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
+.category-tag {
+    background-color: #e6f7ff;
+    color: #0077cc;
 }
 
-.add-job-container .form-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1.5rem;
+.category-tag:hover {
+    background-color: #d1efff;
 }
 
-.add-job-container .form-group label {
-  font-weight: 600;
-  color: #495057;
-  margin-bottom: 0.5rem;
-  font-size: 0.95rem;
+.category-tag.selected {
+    background-color: #0077cc;
+    color: white;
 }
 
-.add-job-container .form-group input,
-.add-job-container .form-group select,
-.add-job-container .form-group textarea {
-  padding: 0.75rem;
-  border: 2px solid #dee2e6;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  background-color: #fff;
+/* Styles for add new skill/category inputs */
+.mt-3.d-flex {
+    margin-top: 15px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    border-radius: 25px;
+    overflow: hidden;
 }
 
-.add-job-container .form-group input:focus,
-.add-job-container .form-group select:focus,
-.add-job-container .form-group textarea:focus {
-  outline: none;
-  border-color: #4dabf7;
-  box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.1);
+.mt-3.d-flex .form-control {
+    border-radius: 25px 0 0 25px;
+    border: none;
+    padding: 12px 20px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: none;
 }
 
-.add-job-container .form-group input.error,
-.add-job-container .form-group select.error,
-.add-job-container .form-group textarea.error {
-  border-color: #dc3545;
-  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+.mt-3.d-flex .form-control:focus {
+    box-shadow: inset 0 0 0 2px var(--basic-color);
 }
 
-.add-job-container .form-group input::placeholder,
-.add-job-container .form-group select::placeholder,
-.add-job-container .form-group textarea::placeholder {
-  color: #adb5bd;
+.mt-3.d-flex .btn {
+    border-radius: 0 25px 25px 0;
+    background-color: var(--basic-color);
+    border: none;
+    padding: 0 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
-.add-job-container .form-group textarea {
-  resize: vertical;
-  min-height: 120px;
-  font-family: inherit;
+.mt-3.d-flex .btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
 }
 
-.add-job-container .form-group .error-message {
-  color: #dc3545;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
-  font-weight: 500;
+/* Info icon styling */
+.bi-info-circle-fill {
+    font-size: 14px;
+    color: #6c757d;
+    cursor: help;
+    transition: color 0.3s ease;
 }
 
-/* Dynamic Lists */
-.add-job-container .dynamic-list .dynamic-item {
-  display: flex;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-  align-items: flex-start;
+.bi-info-circle-fill:hover {
+    color: var(--basic-color);
 }
 
-.add-job-container .dynamic-list .dynamic-item input {
-  flex: 1;
+/* Skill & Category */
+.add-button {
+    background: var(--basic-color);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.add-job-container .dynamic-list .dynamic-item .remove-btn {
-  background: #dc3545;
-  color: white;
-  border: none;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  white-space: nowrap;
+.add-button:hover {
+    background: var(--basic-color-hover);
 }
 
-.add-job-container .dynamic-list .dynamic-item .remove-btn:hover {
-  background: #c82333;
-  transform: translateY(-1px);
+
+
+/* Post Button */
+.post-btn {
+    background: var(--basic-color);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.add-job-container .dynamic-list .add-btn {
-  background: #28a745;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  margin-top: 0.5rem;
-}
-
-.add-job-container .dynamic-list .add-btn:hover {
-  background: #218838;
-  transform: translateY(-1px);
-}
-
-/* Benefits Grid */
-.add-job-container .benefits-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.add-job-container .benefits-grid .benefit-item .checkbox-label {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  padding: 0.75rem;
-  border: 2px solid #e9ecef;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  background: #fff;
-}
-
-.add-job-container .benefits-grid .benefit-item .checkbox-label:hover {
-  border-color: #4dabf7;
-  background: #f8f9fa;
-}
-
-.add-job-container .benefits-grid .benefit-item .checkbox-label input[type="checkbox"] {
-  display: none;
-}
-
-.add-job-container .benefits-grid .benefit-item .checkbox-label input[type="checkbox"]:checked + .checkmark {
-  background: #4dabf7;
-  border-color: #4dabf7;
-}
-
-.add-job-container .benefits-grid .benefit-item .checkbox-label input[type="checkbox"]:checked + .checkmark::after {
-  display: block;
-}
-
-.add-job-container .benefits-grid .benefit-item .checkbox-label .checkmark {
-  width: 20px;
-  height: 20px;
-  border: 2px solid #dee2e6;
-  border-radius: 4px;
-  margin-right: 0.75rem;
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-.add-job-container .benefits-grid .benefit-item .checkbox-label .checkmark::after {
-  content: '';
-  position: absolute;
-  display: none;
-  left: 6px;
-  top: 2px;
-  width: 6px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-}
-
-/* Form Actions */
-.add-job-container .form-actions {
-  padding: 2rem;
-  background: #f8f9fa;
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  border-top: 1px solid #e9ecef;
-}
-
-.add-job-container .form-actions .btn-primary,
-.add-job-container .form-actions .btn-secondary {
-  padding: 0.875rem 2rem;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 120px;
-}
-
-.add-job-container .form-actions .btn-primary:disabled,
-.add-job-container .form-actions .btn-secondary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none !important;
-}
-
-.add-job-container .form-actions .btn-primary {
-  background: #4dabf7;
-  color: white;
-}
-
-.add-job-container .form-actions .btn-primary:hover:not(:disabled) {
-  background: #339af0;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(77, 171, 247, 0.3);
-}
-
-.add-job-container .form-actions .btn-secondary {
-  background: #6c757d;
-  color: white;
-}
-
-.add-job-container .form-actions .btn-secondary:hover {
-  background: #5a6268;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
-}
-
-/* Loading and Success States */
-.add-job-container .form-loading {
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-.add-job-container .success-message {
-  background: #d4edda;
-  color: #155724;
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  border: 1px solid #c3e6cb;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .add-job-container {
-    padding: 1rem;
-  }
-
-  .add-job-container .header {
-    margin-bottom: 2rem;
-  }
-
-  .add-job-container .header h1 {
-    font-size: 2rem;
-  }
-
-  .add-job-container .form-section {
-    padding: 1.5rem;
-  }
-
-  .add-job-container .form-section h2 {
-    font-size: 1.25rem;
-  }
-
-  .add-job-container .form-row {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .add-job-container .form-group {
-    margin-bottom: 1rem;
-  }
-
-  .add-job-container .benefits-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .add-job-container .dynamic-item {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .add-job-container .dynamic-item .remove-btn {
-    align-self: flex-end;
-    width: fit-content;
-  }
-
-  .add-job-container .form-actions {
-    flex-direction: column;
-  }
+.post-btn:hover {
+    background: var(--basic-color-hover);
 }

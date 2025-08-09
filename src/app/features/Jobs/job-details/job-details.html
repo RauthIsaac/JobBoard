@@ -1,4 +1,23 @@
 <div style="margin: 100px;">
+    <!-- Loading indicator -->
+    @if (loading()) {
+        <div class="text-center p-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading job details...</p>
+        </div>
+    }
+    
+    <!-- Error message -->
+    @if (error()) {
+        <div class="alert alert-danger" role="alert">
+            {{ error() }}
+        </div>
+    }
+    
+    <!-- Job details content -->
+    @if (!loading() && !error() && jobDetails()) {
     <!-- --------------------------- Job Details Section ------------------------------ -->
     <section class="job-details-section p-2">
         <div class="job-details row shadow rounded">
@@ -112,40 +131,18 @@
                                 }
                             </ul>
                         </div>
-
-                        <!-- What We Offer -->
-                        <div>
-                            <h5 class="mt-4">What We Offer</h5>
-                            <div class="row">
-                                <div class="offer col-lg-2 col-md-6 col-sm-12 mb-2">
-                                    <span>Health Insurance</span>
-                                </div>
-                                <div class="offer col-lg-2 col-md-6 col-sm-12 mb-2">
-                                    <span>Retirement Plan</span>
-                                </div>
-                                <div class="offer col-lg-2 col-md-6 col-sm-12 mb-2">
-                                    <span>Paid Time Off</span>
-                                </div>
-                                <div class="offer col-lg-2 col-md-6 col-sm-12 mb-2">
-                                    <span>Flexible Working Hours</span>
-                                </div>
-                            </div>
-                        </div>
                         
-                </div>
-
-                <div class="about-job shadow rounded p-5 mb-4 ">
-                        <h2>About the Role</h2>
-                        <p>We are looking for a Senior Frontend Developer with expertise in Angular and React to join our team. The ideal candidate will have a strong background in building responsive web applications and a passion for creating user-friendly interfaces.</p>
-
-
+                    
                         <!-- Job Responsibilities -->
                         <div>
                             <h5 class="mt-lg-5">Job Responsibilities</h5>
                             <ul style="list-style-type: none; padding-left: 0;">
-                                <div class="d-flex mb-3"><span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>Develop and maintain web applications using Angular and React.</li></div>
-                                <div class="d-flex mb-3"><span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>Collaborate with designers and backend developers to create seamless user experiences.</li></div>
-                                <div class="d-flex mb-3"><span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>Participate in code reviews and contribute to best practices.</li></div>
+                                @for(responsibility of responsibilitiesList(); track $index)
+                                {
+                                    <div class="d-flex mb-3">
+                                        <span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>{{responsibility}}</li>
+                                    </div>
+                                }
                             </ul>
                         </div>
 
@@ -153,13 +150,12 @@
                         <div>
                             <h5 class="mt-5">What We Offer</h5>
                             <ul style="list-style-type: none; padding-left: 0;">
-                                <div class="d-flex mb-3"><span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>Competitive salary and equity package.</li></div>
-                                <div class="d-flex mb-3"><span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>Flexible working hours and remote work options.</li></div>
-                                <div class="d-flex mb-3"><span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>Comprehensive health benefits and wellness programs.</li></div>
-                                <div class="d-flex mb-3"><span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>Top-tier equipment and home office setup allowance.</li></div>
-                                <div class="d-flex mb-3"><span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>Unlimited PTO and wellness days.</li></div>
-                                <div class="d-flex mb-3"><span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>Team retreats and company event.</li></div>
-                                <div class="d-flex mb-3"><span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>Opportunity to work on cutting-edge technology.</li></div>
+                                @for(offer of offersList(); track $index)
+                                {
+                                    <div class="d-flex mb-3">
+                                        <span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>{{offer}}</li>
+                                    </div>
+                                }
                             </ul>
                         </div>
 
@@ -187,25 +183,25 @@
                     
                     <div class="shadow rounded p-4 mb-4">
                         <!-- Company Logo(Image) -->
-                        <!-- <div class="text-center">
-                            <img src="assets/images/company-logo.png" alt="Company Logo" class="img-fluid">
-                        </div> -->
+                        <div class="text-center">
+                            <img src="{{jobDetails().companyImage}}" alt="Company Logo" class="img-fluid">
+                        </div>
                         <h3 class="d-flex my-3" >
                             <i class="bi bi-buildings me-2"></i>
                             <span>{{jobDetails().companyName}}</span>
                         </h3>
                         
-                        <p>TechFlow Solutions is a leading software development company specializing in innovative web solutions.</p>
+                        <p>{{jobDetails().companyDescription}}</p>
                     
                         <div class="d-flex mt-lg-2">
                             <i class="bi bi-people me-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
                             <span style="color: rgb(162, 162, 162); margin-right: 8px;">Company Size: </span>
-                            <span style="font-weight: 500;">{{jobDetails().minTeamSize}}-{{jobDetails().maxTeamSize}} Emplyees</span>
+                            <span style="font-weight: 500;">{{jobDetails().employeeRange}} Employees</span>
                         </div>
                         <div class="d-flex mt-2">
                             <i class="bi bi-buildings me-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
                             <span style="color: rgb(162, 162, 162); margin-right: 8px;">Industry: </span>
-                            <span style="font-weight: 500;">Software Development</span>
+                            <span style="font-weight: 500;">{{jobDetails().industry}}</span>
                         </div>
                         <div class="d-flex mt-2">
                             <i class="bi bi-geo-alt me-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
@@ -228,5 +224,6 @@
 
         </div>
     </section>
+    } 
 
 </div>
