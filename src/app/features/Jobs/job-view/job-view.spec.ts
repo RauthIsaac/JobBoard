@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddJob } from './add-job/add-job';
+import { JobView } from './job-view';
 
-describe('AddJob', () => {
-  let component: AddJob;
-  let fixture: ComponentFixture<AddJob>;
+describe('JobView', () => {
+  let component: JobView;
+  let fixture: ComponentFixture<JobView>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddJob]
+      imports: [JobView]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AddJob);
+    fixture = TestBed.createComponent(JobView);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
