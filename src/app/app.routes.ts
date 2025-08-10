@@ -10,8 +10,6 @@ import { AddJob } from './features/profiles/employer/add-job/add-job';
 import { Navbar } from './shared/components/navbar/navbar';
 import { Login } from './auth/login/login';
 import { Signup } from './auth/signup/signup';
-import { MainLayout } from './layouts/main-layout';
-import { AuthLayout } from './layouts/auth-layout';
 import { SeekerProfileComponent } from './features/profiles/seeker/seeker-profile/seeker-profile';
 import { ConfirmEmail } from './auth/confirm-email/confirm-email';
 
