@@ -89,33 +89,41 @@ export class Signup {
 
   onSubmit() {
     if (this.signupForm.valid) {
-      const payload = this.signupForm.value;
+      let payload = { ...this.signupForm.value };
+      
+      // إذا كان المستخدم Seeker، احذف companyName و companyLocation من الـ payload
+      if (payload.user_type === 'Seeker') {
+        delete payload.companyName;
+        delete payload.companyLocation;
+      }
+      
       console.log('Payload sent to API:', payload);
-
+    
       this.AuthService.register(payload).subscribe({
         next: (res) => {
           console.log('Registration success!', res);
-          this.router.navigate(['/verify-email']);        },
+          // this.router.navigate(['/confirm-email']);       
+       },
        error: (err) => {
-  console.error('Registration failed', err);
-
-  const errorMsg = err?.error?.message || err?.message || '';
-  const message = errorMsg.toLowerCase();
-
-  if (message.includes('username') || message.includes('user')) {
-    this.signupForm.get('userName')?.setErrors({ notUnique: true });
-    this.signupForm.get('userName')?.markAsTouched();
-  }
-
-  if (message.includes('email')) {
-    this.signupForm.get('email')?.setErrors({ notUnique: true });
-    this.signupForm.get('email')?.markAsTouched();
-  }
-}
-
+        console.error('Registration failed', err);
+            
+        const errorMsg = err?.error?.message || err?.message || '';
+        const message = errorMsg.toLowerCase();
+            
+        if (message.includes('username') || message.includes('user')) {
+          this.signupForm.get('userName')?.setErrors({ notUnique: true });
+          this.signupForm.get('userName')?.markAsTouched();
+        }
+      
+        if (message.includes('email')) {
+          this.signupForm.get('email')?.setErrors({ notUnique: true });
+          this.signupForm.get('email')?.markAsTouched();
+        }
+      }
       });
     } else {
       this.signupForm.markAllAsTouched();
     }
   }
+
 }

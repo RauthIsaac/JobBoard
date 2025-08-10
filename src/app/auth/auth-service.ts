@@ -18,8 +18,10 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/api/Auth/login`, credentials);
   }
 
-  verifyEmail(data: { email: string; code: string }) {
-  return this.http.post('/api/Auth/confirm-email', data);
+  verifyEmail(data: { email: string; token: string }): Observable<any> {
+    // التأكد من استخدام baseUrl بشكل صحيح
+    return this.http.post(`${this.baseUrl}/api/Auth/confirm-email`, data);
+  }
 }
 
-}
+

@@ -6,7 +6,7 @@ import { Signup } from './auth/signup/signup';
 import { MainLayout } from './layouts/main-layout';
 import { AuthLayout } from './layouts/auth-layout';
 import { SeekerProfileComponent } from './features/profiles/seeker/seeker-profile/seeker-profile';
-// import { VerifyEmailComponent } from './verify-email/verify-email';
+import { ConfirmEmail } from './auth/confirm-email/confirm-email';
 
 
 export const routes: Routes = [
@@ -20,7 +20,7 @@ export const routes: Routes = [
     {path: '', component: AuthLayout, children: [
         {path: 'register', component: Signup },
         {path: 'login', component: Login },
-        // { path: 'verify-email', component: VerifyEmailComponent},
+        {path: 'confirm-email', component: ConfirmEmail},
     ]}
 
 ];

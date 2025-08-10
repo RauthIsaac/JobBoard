@@ -1,0 +1,37 @@
+<mat-card class="verify-card">
+  <h2>{{ isVerifying ? 'Verifying Email' : 'Email Confirmation' }}</h2>
+  
+  <div class="message-container">
+    <p [ngClass]="{ 
+      'success-message': isSuccess, 
+      'error-message': isError,
+      'info-message': !isSuccess && !isError
+    }">
+      {{ message }}
+    </p>
+    
+    <!-- Loading spinner for verification -->
+    <div *ngIf="isVerifying" class="spinner-container">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+    
+    <!-- Success icon -->
+    <div *ngIf="isSuccess" class="success-icon">
+      <mat-icon color="primary">check_circle</mat-icon>
+    </div>
+    
+    <!-- Error icon -->
+    <div *ngIf="isError" class="error-icon">
+      <mat-icon color="warn">error</mat-icon>
+    </div>
+  </div>
+
+  <!-- Login link - only show when not verifying -->
+  <div *ngIf="!isVerifying" class="login-link">
+    <p>
+      <a routerLink="/login" class="login-button">
+        {{ isSuccess ? 'Go to Login' : 'Back to Login' }}
+      </a>
+    </p>
+  </div>
+</mat-card>
