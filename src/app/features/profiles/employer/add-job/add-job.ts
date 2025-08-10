@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -21,12 +21,58 @@ export class AddJob implements OnInit {
   submitSuccess = false;
   skills = signal<ISkill[]>([]);
   categories = signal<ICategory[]>([]);
-
   
-  newSkill = '';
-  newCategory = '';
-  nextSkillId = 11;
-  nextCategoryId = 6;
+  // Signal to track form changes for reactive updates
+  formUpdated = signal<number>(0);
+  
+  // Search functionality
+  skillSearchTerm = signal<string>('');
+  categorySearchTerm = signal<string>('');
+  
+  // Filtered signals based on search terms (limited to 10 items each)
+  filteredSkills = computed(() => {
+    const searchTerm = this.skillSearchTerm().toLowerCase();
+    return this.skills()
+      .filter(skill => skill.skillName.toLowerCase().includes(searchTerm))
+      .slice(0, 10); // Limit to maximum 10 skills
+  });
+  
+  filteredCategories = computed(() => {
+    const searchTerm = this.categorySearchTerm().toLowerCase();
+    return this.categories()
+      .filter(category => category.categoryName.toLowerCase().includes(searchTerm))
+      .slice(0, 10); // Limit to maximum 10 categories
+  });
+
+  // Computed properties for selected items (now reactive to form changes)
+  selectedSkills = computed(() => {
+    this.formUpdated(); // Trigger reactivity
+    const selectedIds: number[] = this.jobForm.get('skills')?.value || [];
+    return this.skills().filter(skill => selectedIds.includes(skill.id));
+  });
+
+  selectedCategories = computed(() => {
+    this.formUpdated(); // This needs to be triggered when categories change
+    const selectedIds: number[] = this.jobForm.get('categories')?.value || [];
+    return this.categories().filter(category => selectedIds.includes(category.id));
+  });
+
+  // Computed properties for total counts
+  totalMatchingSkills = computed(() => {
+    const searchTerm = this.skillSearchTerm().toLowerCase();
+    return this.skills().filter(skill => 
+      skill.skillName.toLowerCase().includes(searchTerm)
+    ).length;
+  });
+
+  totalMatchingCategories = computed(() => {
+    const searchTerm = this.categorySearchTerm().toLowerCase();
+    return this.categories().filter(category => 
+      category.categoryName.toLowerCase().includes(searchTerm)
+    ).length;
+  });
+
+
 
   // Options for select fields
   experienceLevels = [
@@ -103,6 +149,36 @@ export class AddJob implements OnInit {
 
 
 
+  /*------------------------- Search Methods -------------------------*/
+  onSkillSearch(searchTerm: string): void {
+    this.skillSearchTerm.set(searchTerm);
+  }
+  
+  onCategorySearch(searchTerm: string): void {
+    this.categorySearchTerm.set(searchTerm);
+  }
+  
+  clearSkillSearch(): void {
+    this.skillSearchTerm.set('');
+  }
+  
+  clearCategorySearch(): void {
+    this.categorySearchTerm.set('');
+  }
+
+  /*------------------------- Remove Selected Items -------------------------*/
+  removeSelectedSkill(skillId: number): void {
+    const currentSkills: number[] = this.jobForm.get('skills')?.value || [];
+    this.jobForm.get('skills')?.setValue(currentSkills.filter(id => id !== skillId));
+    this.triggerFormUpdate();
+  }
+
+  removeSelectedCategory(categoryId: number): void {
+    const currentCategories: number[] = this.jobForm.get('categories')?.value || [];
+    this.jobForm.get('categories')?.setValue(currentCategories.filter(id => id !== categoryId));
+    this.triggerFormUpdate();
+  }
+
   /*------------------------- Get Skills -------------------------*/
   //#region Skills
   getSkills(): void {
@@ -136,6 +212,7 @@ export class AddJob implements OnInit {
       this.jobForm.get('skills')?.setValue(currentSkills.filter(id => id !== skill.id));
     }
 
+    this.triggerFormUpdate();
     console.log('Current selected skills:', this.jobForm.get('skills')?.value);
   }
 
@@ -143,36 +220,6 @@ export class AddJob implements OnInit {
     const selectedSkills: number[] = this.jobForm.get('skills')?.value || [];
     return selectedSkills.includes(skillId);
   }
-
-  // Add a new custom skill
-  addNewSkill(): void {
-
-    if (this.newSkill.trim() === '') return;
-
-    // Split by commas to allow adding multiple skills at once
-    const skillsToAdd = this.newSkill.split(',').map(s => s.trim()).filter(s => s !== '');
-
-    for (const skillName of skillsToAdd) {
-      const existingSkill = this.skills().find(s => 
-        s.skillName.toLowerCase() === skillName.toLowerCase()
-      );
-
-      if (existingSkill) {
-        if (!this.isSkillSelected(existingSkill.id)) {
-          this.onSkillChange(existingSkill, true);
-        }
-      } else {
-        const newSkillObj: ISkill = {
-          id: this.nextSkillId++,
-          skillName: skillName,
-        };
-        this.skills.update(skills => [...skills, newSkillObj]);
-        this.onSkillChange(newSkillObj, true);
-      }
-    }
-
-    this.newSkill = '';
-   }
 
    //#endregion
 
@@ -214,8 +261,10 @@ export class AddJob implements OnInit {
       this.jobForm.get('categories')?.setValue(currentCategories.filter(id => id !== category.id));
     }
 
-    console.log('Current selected categories:', this.jobForm.get('categories')?.value);
+    // Add this missing line to trigger reactive updates
+    this.triggerFormUpdate();
 
+    console.log('Current selected categories:', this.jobForm.get('categories')?.value);
   }
 
   isCategorySelected(categoryId: number): boolean {
@@ -223,40 +272,15 @@ export class AddJob implements OnInit {
     return selectedCategories.includes(categoryId);
   }
 
-  // Add a new custom category
-  addNewCategory(): void {
-    if (this.newCategory.trim() === '') return;
-
-    const categoriesToAdd = this.newCategory.split(',')
-      .map(c => c.trim())
-      .filter(c => c !== '');
-
-    for (const categoryName of categoriesToAdd) {
-      const existingCategory = this.categories().find(c => 
-        c.categoryName.toLowerCase() === categoryName.toLowerCase()
-      );
-
-      if (existingCategory) {
-        if (!this.isCategorySelected(existingCategory.id)) {
-          this.onCategoryChange(existingCategory, true);
-        }
-      } else {
-        const newCategoryObj: ICategory = {
-          id: this.nextCategoryId++,
-          categoryName: categoryName,
-        };
-
-        this.categories.update(cats => [...cats, newCategoryObj]);
-        this.onCategoryChange(newCategoryObj, true);
-      }
-    }
-
-    this.newCategory = '';
-  }
-
   //#endregion
  
 
+
+
+  // Helper method to trigger reactive updates
+  private triggerFormUpdate(): void {
+    this.formUpdated.update(val => val + 1);
+  }
   
   // Helper method to mark all controls in a form group as touched
   private markFormGroupTouched(formGroup: FormGroup) {
@@ -339,10 +363,13 @@ export class AddJob implements OnInit {
   onReset(): void {
     this.jobForm.reset();
     this.initForm();
+    // Clear search terms when resetting
+    this.skillSearchTerm.set('');
+    this.categorySearchTerm.set('');
+    // Trigger update for selected items
+    this.triggerFormUpdate();
   }
 
 
 
-}  
-
-
+}

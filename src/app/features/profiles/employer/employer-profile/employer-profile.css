@@ -12,7 +12,6 @@
 }
 
 
-
 .info{
     padding: 30px;
 }
@@ -34,7 +33,24 @@
     border-radius: 10px;
     height: fit-content;
 }
+.post-new-job-btn:hover{
+    background: var(--basic-color-hover);
+}
 
+
+.edit-profile-btn{
+    padding: 5px 30px;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    background: var(--basic-gray);
+    color:black;
+    border-radius: 10px;
+    height: fit-content;
+}
+.edit-profile-btn:hover{
+    background: var(--basic-gray-hover);
+}
 
 /* ------------------------- Info Section ------------------------- */
 .info-section{

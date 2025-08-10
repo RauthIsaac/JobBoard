@@ -19,12 +19,12 @@ export const routes: Routes = [
             {path: 'home', component: Home},
             {path: 'jobDtl/:id', component: JobDetails},
             {path: 'jobView', component: JobView},
-            {path: 'savedJobs', component: SavedJobs}
+            {path: 'savedJobs', component: SavedJobs},
+            {path: 'empProfile', component: EmployerProfile},
         ]
     },
     
     {path: 'jobApp', component: JobApplication},
-    {path: 'empProfile', component: EmployerProfile},
     {path: 'addJob', component: AddJob},
 
 

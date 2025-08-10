@@ -10,12 +10,6 @@ import { ProfilesService } from '../../profiles-service';
 })
 export class EmployerProfile {
 
-  // Get their values from the API
-  imagePath:string = "/empImage.png";
-  logoPath:string = "/favicon.ico";
-
-
-
   constructor() {
     
   }

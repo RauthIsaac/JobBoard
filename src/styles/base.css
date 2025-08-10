@@ -22,6 +22,7 @@ body {
     --basic-orange :rgb(248, 93, 32);
 
     --basic-gray : rgb(241, 241, 241);
+    --basic-gray-hover : rgb(218, 217, 217);
 
     --basic-green:  rgb(24, 177, 77);
 }
