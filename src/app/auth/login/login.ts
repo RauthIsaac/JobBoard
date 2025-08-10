@@ -40,15 +40,15 @@ export class Login {
   onSubmit() {
     if (this.loginForm.valid) {
       if (this.loginForm.get('rememberMe')?.value) {
-  localStorage.setItem('rememberedEmail', this.loginForm.get('email')?.value);
-} else {
-  localStorage.removeItem('rememberedEmail');
-}
-
+        localStorage.setItem('rememberedEmail', this.loginForm.get('email')?.value);
+      } else {
+        localStorage.removeItem('rememberedEmail');
+      }
+    
       // API call
       this.router.navigate(['/home']);
     } else {
-    this.loginForm.markAllAsTouched();
-  }
+      this.loginForm.markAllAsTouched();
+    }
   }
 }

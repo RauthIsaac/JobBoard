@@ -12,6 +12,8 @@ import { Login } from './auth/login/login';
 import { Signup } from './auth/signup/signup';
 import { SeekerProfileComponent } from './features/profiles/seeker/seeker-profile/seeker-profile';
 import { ConfirmEmail } from './auth/confirm-email/confirm-email';
+import { ForgetPassword } from './auth/forget-password/forget-password';
+import { ResetPassword } from './auth/reset-password/reset-password';
 
 
 export const routes: Routes = [
@@ -33,6 +35,8 @@ export const routes: Routes = [
     {path: 'register', component: Signup },
     {path: 'login', component: Login },
     {path: 'confirm-email', component: ConfirmEmail},
+    {path: 'forget-password', component: ForgetPassword},
+    {path: 'reset-password', component: ResetPassword},
 
 
     {path: '**', component: NotFound}
