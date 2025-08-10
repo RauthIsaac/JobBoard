@@ -32,11 +32,18 @@ export class Login {
     this.loginForm = this.fb.group({
       email: ['', Validators.required],
       password: ['', Validators.required],
+      rememberMe: [false],
     });
   }
 
   onSubmit() {
     if (this.loginForm.valid) {
+      if (this.loginForm.get('rememberMe')?.value) {
+  localStorage.setItem('rememberedEmail', this.loginForm.get('email')?.value);
+} else {
+  localStorage.removeItem('rememberedEmail');
+}
+
       // API call
       this.router.navigate(['/home']);
     } else {

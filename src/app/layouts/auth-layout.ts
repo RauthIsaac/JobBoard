@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
-
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-auth-layout',
   standalone: true,
@@ -9,5 +10,5 @@ import { RouterModule, RouterOutlet } from '@angular/router';
   styleUrl: './auth-layout.css'
 })
 export class AuthLayout {
-
+ 
 }

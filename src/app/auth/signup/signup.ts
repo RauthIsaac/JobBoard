@@ -95,8 +95,7 @@ export class Signup {
       this.AuthService.register(payload).subscribe({
         next: (res) => {
           console.log('Registration success!', res);
-          this.router.navigate(['/login']);
-        },
+          this.router.navigate(['/verify-email']);        },
        error: (err) => {
   console.error('Registration failed', err);
 

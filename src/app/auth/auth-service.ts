@@ -13,4 +13,13 @@ export class AuthService {
   register(payload: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/api/Auth/register`, payload);
   }
+
+  login(credentials: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/api/Auth/login`, credentials);
+  }
+
+  verifyEmail(data: { email: string; code: string }) {
+  return this.http.post('/api/Auth/confirm-email', data);
+}
+
 }
