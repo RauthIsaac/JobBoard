@@ -15,6 +15,7 @@ import { ForgetPassword } from './auth/forget-password/forget-password';
 import { ResetPassword } from './auth/reset-password/reset-password';
 
 import { SeekerProfile } from './features/profiles/seeker/seeker-profile/seeker-profile';
+import { UserProfile } from './user-profile/user-profile';
 // import { VerifyEmailComponent } from './verify-email/verify-email';
 
 
@@ -28,7 +29,8 @@ export const routes: Routes = [
             {path: 'jobDtl/:id', component: JobDetails},
             {path: 'jobView', component: JobView},
             {path: 'savedJobs', component: SavedJobs},
-            {path: 'profile', component: SeekerProfile}
+            {path: 'profile', component: SeekerProfile},
+            {path: 'userProfile', component: UserProfile}
 
         ]
     },
