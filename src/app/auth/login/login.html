@@ -1,1 +1,61 @@
-<p>login works!</p>
+<mat-card>
+  <h2 class="title text-center fs-1 p-2 mb-5">Login to your account</h2>
+
+  <form class="w-100" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label class="fs-4">Email</mat-label>
+      <input
+        matInput
+        type="email"
+        formControlName="email"
+        placeholder="ex: samaa@gmail.com"
+      />
+      <mat-error *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+        <small *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</small>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label class="fs-4">Password</mat-label>
+      <input
+        matInput
+        [type]="hidePassword ? 'password' : 'text'"
+        formControlName="password"
+        placeholder="********"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="hidePassword = !hidePassword"
+        type="button"
+      >
+        <mat-icon>{{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon>
+      </button>
+      <mat-error *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+        <small *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</small>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-checkbox formControlName="rememberMe">Remember Me</mat-checkbox>
+
+
+    <button class="fs-4" mat-raised-button color="primary" type="submit">
+      Login
+    </button>
+
+    <p class="text-center fs-5 my-1">
+      Don't have an account?
+      <a routerLink="/register" class="title" style="cursor: pointer; text-decoration: underline">
+        Register
+      </a>
+    </p>
+
+    <p class="text-center fs-5 my-1">
+      Forgot your password?
+      <a routerLink="/forget-password" class="title" style="cursor: pointer; text-decoration: underline">
+        Reset it
+      </a>
+    </p>
+  </form>
+</mat-card>
