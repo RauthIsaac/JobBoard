@@ -18,8 +18,10 @@ body {
 :root{
     --basic-color : linear-gradient(to right, rgb(46, 66, 131), rgb(65, 131, 211));
     --basic-color-hover : linear-gradient(to right, rgb(22, 42, 107), rgb(75, 121, 177));
-   
+
     --basic-orange :rgb(248, 93, 32);
 
     --basic-gray : rgb(241, 241, 241);
+
+    --basic-green:  rgb(24, 177, 77);
 }

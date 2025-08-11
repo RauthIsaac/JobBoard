@@ -1,18 +1,10 @@
 import { AuthService } from './../auth-service';
 import { Component } from '@angular/core';
-import {
-  ReactiveFormsModule,
-  FormGroup,
-  Validators,
-  AbstractControl,
-  FormBuilder,
-  FormsModule
-} from '@angular/forms';
+import { ReactiveFormsModule,FormGroup,Validators,AbstractControl,FormBuilder,FormsModule} from '@angular/forms';
 import { MaterialModule } from '../../shared/material.module';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { MatRadioModule } from '@angular/material/radio';
-import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-signup',
@@ -24,7 +16,6 @@ import { HttpClientModule } from '@angular/common/http';
     FormsModule,
     RouterModule,
     MatRadioModule,
-    HttpClientModule
   ],
   templateUrl: './signup.html',
   styleUrl: './signup.css'
@@ -33,11 +24,10 @@ export class Signup {
   signupForm: FormGroup;
   hidePassword = true;
   hideConfirmPassword = true;
-  errorMessage: string | null = null; // لعرض الخطأ العام
+  errorMessage: string | null = null;
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
     private AuthService: AuthService
   ) {
     this.signupForm = this.fb.group(
@@ -89,33 +79,39 @@ export class Signup {
 
   onSubmit() {
     if (this.signupForm.valid) {
-      const payload = this.signupForm.value;
+      let payload = { ...this.signupForm.value };
+      
+      if (payload.user_type === 'Seeker') {
+        delete payload.companyName;
+        delete payload.companyLocation;
+      }
+      
       console.log('Payload sent to API:', payload);
-
+    
       this.AuthService.register(payload).subscribe({
         next: (res) => {
-          console.log('Registration success!', res);
-          this.router.navigate(['/verify-email']);        },
+          console.log('Registration success!', res);      
+       },
        error: (err) => {
-  console.error('Registration failed', err);
-
-  const errorMsg = err?.error?.message || err?.message || '';
-  const message = errorMsg.toLowerCase();
-
-  if (message.includes('username') || message.includes('user')) {
-    this.signupForm.get('userName')?.setErrors({ notUnique: true });
-    this.signupForm.get('userName')?.markAsTouched();
-  }
-
-  if (message.includes('email')) {
-    this.signupForm.get('email')?.setErrors({ notUnique: true });
-    this.signupForm.get('email')?.markAsTouched();
-  }
-}
-
+        console.error('Registration failed', err);
+            
+        const errorMsg = err?.error?.message || err?.message || '';
+        const message = errorMsg.toLowerCase();
+            
+        if (message.includes('username') || message.includes('user')) {
+          this.signupForm.get('userName')?.setErrors({ notUnique: true });
+          this.signupForm.get('userName')?.markAsTouched();
+        }
+      
+        if (message.includes('email')) {
+          this.signupForm.get('email')?.setErrors({ notUnique: true });
+          this.signupForm.get('email')?.markAsTouched();
+        }
+      }
       });
     } else {
       this.signupForm.markAllAsTouched();
     }
   }
+
 }

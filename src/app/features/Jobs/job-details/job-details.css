@@ -1,0 +1,59 @@
+
+/*--------------------------- Job Details Section ------------------------------*/
+.job-details{
+    padding: 20px;
+}
+
+.job-time{
+    background-color:  rgb(244, 244, 244);
+    padding: 5px 10px;
+    border-radius: 15px;
+}
+
+.apply-now-btn{
+    background: var(--basic-color);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    /* margin-top: 30px; */
+    outline: none;
+    box-shadow: none;
+}
+.apply-now-btn:hover{
+    background: var(--basic-color-hover);
+}
+
+
+.save-job-btn{
+    padding: 10px 20px;
+    border-radius: 10px;
+    border-style: groove;
+    cursor: pointer;
+    margin-top: 20px;
+    outline: none;
+    box-shadow: none;
+}
+
+.saved{
+    background-color: green;
+    color: white;
+    outline: none;
+    box-shadow: none;
+}
+
+
+
+/*--------------------------- Main Section ------------------------------*/
+.main-section {
+    justify-content: space-between !important;
+}
+
+.offer{
+    background-color: rgb(215, 218, 235); 
+    border-radius: 20px; 
+    padding: 5px 20px; 
+    width:fit-content;
+    margin-right: 10px;
+}

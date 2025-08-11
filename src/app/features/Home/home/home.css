@@ -150,10 +150,16 @@
     justify-content: space-between;
     padding: 30px;
     border-radius: 15px;
+    transition: all 0.3s ease;
 }
 .info-box h3{
     font-weight: 700;
 }
+
+.info-box:hover{
+    transform: translateY(-5px);
+}
+
 .info-icon{
     font-size: 30px;
     color: white;
@@ -163,11 +169,20 @@
 }
 
 /*---------------------------Trending Jobs Section-------------------------*/
+.Trending-job-section{
+    padding: 40px;
+}
 
+.featured-opp{
+    background: var(--basic-color);
+    padding: 10px 20px ;
+    border-radius: 30px;
+    color:rgb(232, 230, 230);
+}
 
-
-
-
+.featured-opp:hover{
+    background: var(--basic-color-hover);
+}
 
 
 /*---------------------------Why HireSmart Section-------------------------*/
@@ -184,6 +199,11 @@
     padding: 30px;
     margin: 15px;
     height:40vh;
+    transition: all 0.3s ease;
+}
+
+.why-hireSmart-box:hover{
+    transform: translateY(-5px);
 }
 
 .ai-powered-icon{

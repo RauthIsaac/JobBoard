@@ -1,0 +1,161 @@
+.card-header{
+    background: var(--basic-color);
+    color: white;
+    border-radius: 10px 10px 0 0;
+    padding: 15px 20px;
+}
+
+/* Section heading styles */
+h5.mb-3 {
+    font-weight: 600;
+    color: #333;
+    margin-top: 25px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+h5.mb-3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background-color: var(--basic-color);
+    border-radius: 3px;
+}
+
+/* Styles for skill tags */
+.skill-tags, .category-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 5px;
+}
+
+.skill-tag, .category-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 18px;
+    border-radius: 25px;
+    background-color: #f5f5f5;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    font-weight: 500;
+}
+
+.skill-tag:hover, .category-tag:hover {
+    background-color: #e8e8e8;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.skill-tag.selected, .category-tag.selected {
+    background: var(--basic-color);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.skill-tag.selected i, .category-tag.selected i {
+    margin-left: 8px;
+    font-size: 16px;
+}
+
+.category-tag {
+    background-color: #e6f7ff;
+    color: #0077cc;
+}
+
+.category-tag:hover {
+    background-color: #d1efff;
+}
+
+.category-tag.selected {
+    background-color: #0077cc;
+    color: white;
+}
+
+/* Styles for add new skill/category inputs */
+.mt-3.d-flex {
+    margin-top: 15px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    border-radius: 25px;
+    overflow: hidden;
+}
+
+.mt-3.d-flex .form-control {
+    border-radius: 25px 0 0 25px;
+    border: none;
+    padding: 12px 20px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: none;
+}
+
+.mt-3.d-flex .form-control:focus {
+    box-shadow: inset 0 0 0 2px var(--basic-color);
+}
+
+.mt-3.d-flex .btn {
+    border-radius: 0 25px 25px 0;
+    background-color: var(--basic-color);
+    border: none;
+    padding: 0 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.mt-3.d-flex .btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* Info icon styling */
+.bi-info-circle-fill {
+    font-size: 14px;
+    color: #6c757d;
+    cursor: help;
+    transition: color 0.3s ease;
+}
+
+.bi-info-circle-fill:hover {
+    color: var(--basic-color);
+}
+
+/* Skill & Category */
+.add-button {
+    background: var(--basic-color);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.add-button:hover {
+    background: var(--basic-color-hover);
+}
+
+
+
+/* Post Button */
+.post-btn {
+    background: var(--basic-color);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.post-btn:hover {
+    background: var(--basic-color-hover);
+}
