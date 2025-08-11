@@ -14,6 +14,7 @@ import { SeekerProfileComponent } from './features/profiles/seeker/seeker-profil
 import { ConfirmEmail } from './auth/confirm-email/confirm-email';
 import { ForgetPassword } from './auth/forget-password/forget-password';
 import { ResetPassword } from './auth/reset-password/reset-password';
+import { Explore } from './features/Explore/explore';
 
 
 export const routes: Routes = [
@@ -27,6 +28,7 @@ export const routes: Routes = [
             {path: 'jobView', component: JobView},
             {path: 'savedJobs', component: SavedJobs},
             {path: 'empProfile', component: EmployerProfile},
+            {path: 'explore', component: Explore},
         ]
     },
     

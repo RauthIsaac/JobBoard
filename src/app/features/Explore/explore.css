@@ -1,0 +1,130 @@
+/* ------------- Hero -------------- */
+.hero{
+    margin-top: 40px;
+    padding: 20px 70px
+}
+
+
+.search-div{
+    display: flex;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    outline: none;
+    box-shadow: 0 0 0 0.09rem rgba(135, 133, 133, 0.25);
+}
+
+.search-div input[type="text"] {
+    border: none;
+    outline: none;
+    flex: 1;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    outline: none;
+    box-shadow: none;
+}
+
+.search-div i {
+    color: #888;
+}
+
+
+.popular-searches-div{
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    border-radius: 15px;
+}
+
+.filter-btn{
+    background: var(--basic-color);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 15px;
+    width: fit-content;
+    font-weight: 600;
+    border: none;
+    margin: 0px 8px 5px 0px;
+}
+.filter-btn:hover{
+    background-color: var(--basic-color-hover);
+    color: white;
+}
+
+
+
+/* ------------------------Container------------------------- */
+.content{
+    background: var(--basic-gray);
+    padding:30px;
+}
+
+
+/* ------------------------Sidebar------------------------- */
+.side-bar{
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+}
+
+/* Job Type Radio Buttons Styles */
+.job-type-options {
+    margin-top: 10px;
+}
+
+.form-check {
+    padding-left: 1.5em;
+    margin-bottom: 0.5rem;
+}
+
+.form-check-input {
+    width: 1.1em;
+    height: 1.1em;
+    margin-top: 0.2em;
+}
+
+.form-check-label {
+    margin-left: 0.5em;
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background: var(--basic-color);
+    border: var(--basic-color);
+}
+
+
+
+
+
+/* ------------------------Main Content------------------------- */
+
+.main-content{
+    background: white;
+    padding: 20px 40px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+
+
+
+/* Active filter indicator */
+.filter-active {
+    position: relative;
+}
+
+.filter-active::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 12px;
+    height: 12px;
+    background: #28a745;
+    border-radius: 50%;
+    border: 2px solid white;
+}

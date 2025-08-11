@@ -1,9 +1,10 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, signal, effect } from '@angular/core';
 import { IJob } from '../../shared/models/ijob';
 import { JobDetails } from './job-details/job-details';
 import { ISkill } from '../../shared/models/iskill';
 import { ICategory } from '../../shared/models/icategory';
+import { JobFilterParams } from '../../shared/models/job-filter-params';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class JobsService {
       this.saveSavedJobsToStorage(this.savedJobs());
 
       /*------------------- */
-      this.GetAllHttpJobs();
+      this.GetAllJobs();
     });
   }
 
@@ -90,20 +91,84 @@ export class JobsService {
   /*---------------------------- API URL ---------------------------- */
   private apiUrl = 'http://localhost:5007/api/Jobs';
 
-  /*--------------------------- Get All Jobs ----------------------------- */
+  /*--------------------------- Jobs List Signal ----------------------------- */
   public JobsList = signal<IJob[]>([]);
+  public isLoading = signal<boolean>(false);
+  public error = signal<string | null>(null);
 
-  GetAllHttpJobs(){
-    this.http.get(this.apiUrl).subscribe(jobs => {
-      if(Array.isArray(jobs)){
-        this.JobsList.set(jobs);
-      }else{
+  /*--------------------------- Get All Jobs (without filters) ----------------------------- */
+  GetAllJobs(): void {
+    this.isLoading.set(true);
+    this.error.set(null);
+
+    this.http.get<IJob[]>(this.apiUrl).subscribe({
+      next: (jobs) => {
+        this.JobsList.set(Array.isArray(jobs) ? jobs : []);
+        this.isLoading.set(false);
+        console.log("Loaded Jobs:", this.JobsList());
+      },
+      error: (error) => {
+        console.error('Error loading jobs:', error);
+        this.error.set('Failed to load jobs');
+        this.isLoading.set(false);
         this.JobsList.set([]);
       }
-
-      console.log("Loaded Jobs : ", this.JobsList() );
     });
+  }
 
+  /*--------------------------- Get Filtered Jobs ----------------------------- */
+  GetFilteredJobs(filters: JobFilterParams): void {
+    this.isLoading.set(true);
+    this.error.set(null);
+
+    let params = new HttpParams();
+
+    // Add filter parameters if they exist
+    if (filters.searchValue && filters.searchValue.trim()) {
+      params = params.set('searchValue', filters.searchValue.trim());
+    }
+    if (filters.categoryId) {
+      params = params.set('categoryId', filters.categoryId.toString());
+    }
+    if (filters.skillId) {
+      params = params.set('skillId', filters.skillId.toString());
+    }
+    if (filters.employerId) {
+      params = params.set('employerId', filters.employerId.toString());
+    }
+    if (filters.workplaceType) {
+      params = params.set('workplaceType', filters.workplaceType);
+    }
+    if (filters.jobType) {
+      params = params.set('jobType', filters.jobType);
+    }
+    if (filters.experienceLevel) {
+      params = params.set('experienceLevel', filters.experienceLevel);
+    }
+    if (filters.educationLevel) {
+      params = params.set('educationLevel', filters.educationLevel);
+    }
+    if (filters.isActive !== undefined) {
+      params = params.set('isActive', filters.isActive.toString());
+    }
+    if (filters.sortingOption !== undefined) {
+      params = params.set('sortingOption', filters.sortingOption.toString());
+    }
+
+
+    this.http.get<IJob[]>(this.apiUrl, { params }).subscribe({
+      next: (jobs) => {
+        this.JobsList.set(Array.isArray(jobs) ? jobs : []);
+        this.isLoading.set(false);
+        console.log("Filtered Jobs:", this.JobsList());
+      },
+      error: (error) => {
+        console.error('Error loading filtered jobs:', error);
+        this.error.set('Failed to load filtered jobs');
+        this.isLoading.set(false);
+        this.JobsList.set([]);
+      }
+    });
   }
 
   /*-------------------------- Get Job Details ------------------------------ */
