@@ -1,3 +1,15 @@
 export interface IEmployer {
-
+    id : number,
+    userId : string,
+    email : string,
+    phone : string,
+    companyName : string,
+    companyImage : string,
+    companyMission : string,
+    companyDescription : string,
+    companyLocation : string,
+    employeeRange : string,
+    establishedYear : number,
+    industry : string,
+    website : string,
 }

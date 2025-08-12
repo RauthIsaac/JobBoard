@@ -5,6 +5,7 @@ import { MaterialModule } from '../../shared/material.module';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-signup',
@@ -28,7 +29,8 @@ export class Signup {
 
   constructor(
     private fb: FormBuilder,
-    private AuthService: AuthService
+    private AuthService: AuthService,
+    private snackBar: MatSnackBar
   ) {
     this.signupForm = this.fb.group(
       {
@@ -90,10 +92,20 @@ export class Signup {
     
       this.AuthService.register(payload).subscribe({
         next: (res) => {
-          console.log('Registration success!', res);      
-       },
-       error: (err) => {
-        console.error('Registration failed', err);
+          console.log('Registration success!', res);
+          this.snackBar.open(`Registration successful!, ${res?.message}`, 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
+        },
+        error: (err) => {
+          console.error('Registration failed', err);
+          this.snackBar.open(`Registration failed!, ${err?.message}`, 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
             
         const errorMsg = err?.error?.message || err?.message || '';
         const message = errorMsg.toLowerCase();

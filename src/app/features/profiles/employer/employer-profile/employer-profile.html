@@ -11,25 +11,25 @@
 
             <div class="col-lg-5 col-md-6 col-sm-12">
                 <div class="emp-name">
-                    <h2 style="font-weight: 700;">TechStart Solutions</h2>
+                    <h2 style="font-weight: 700;">{{empData().companyName}}</h2>
                 </div>
                 <div class="emp-target">
-                    <span>Building the future of work through innovative technology</span>
+                    <span>{{empData().industry}}</span>
                 </div>
                 <div class="my-3">
                     <div class="d-flex">
                         <div class="me-4">
                             <i class="bi bi-geo-alt me-2"></i>
-                            <span>Location</span>
+                            <span>{{empData().companyLocation}}</span>
                         </div>
                         <div>
                             <i class="bi bi-link-45deg me-2" style="font-size: larger;"></i>
-                            <span>www.techstart.com</span>
+                            <span>{{empData().website}}</span>
                         </div>
                     </div>
                     <div class="mt-1">
                         <i class="bi bi-people me-2"></i>
-                        <span>50-200 Employees</span>
+                        <span>{{empData().employeeRange}} Employees </span>
                     </div>
                 </div>
 
@@ -37,7 +37,7 @@
 
             <div class="col-lg-3 d-flex flex-column align-items-end">
                 <button class="post-new-job-btn mb-2" routerLink="/addJob"><i class="bi bi-plus me-3"></i> Post New Job </button>
-                <button class="edit-profile-btn" routerLink="/"><i class="bi bi-gear me-3"></i> Edit Profile </button>
+                <button class="edit-profile-btn" routerLink="/editEmp"><i class="bi bi-gear me-3"></i> Edit Profile </button>
             </div>
 
         </div>
@@ -54,19 +54,19 @@
 
             <div class="col-lg-6 d-flex flex-column mb-4">
                 <span style="color: rgb(161, 161, 161);">Company Name</span>
-                <span>TechStart Solutions</span>
+                <span>{{empData().companyName}}</span>
             </div>
             <div class="col-lg-6 d-flex flex-column mb-4">
                 <span style="color: rgb(161, 161, 161);">Website</span>
                 <div class="d-flex col-lg-4 col-md-12 col-sm-12">
                     <i class="bi bi-link-45deg me-2" style="font-size: larger;"></i>
-                    <a href="" style="text-decoration: none;">www.techstart.com</a>
+                    <a href="" style="text-decoration: none;">{{empData().website}}</a>
                     <i class="bi bi-box-arrow-up-right ms-2"></i>
                 </div>
             </div>
             <div class="col-lg-6 d-flex flex-column mb-4">
                 <span style="color: rgb(161, 161, 161);">Industry</span>
-                <span>Technology</span>
+                <span>{{empData().industry}}</span>
             </div>
             <div class="col-lg-6 d-flex flex-column mb-4">
                 <span style="color: rgb(161, 161, 161);">Email</span>
@@ -79,28 +79,28 @@
                 <span style="color: rgb(161, 161, 161);">Company Size</span>
                 <div class="d-flex mt-lg-2">
                     <i class="bi bi-people me-2"></i>
-                    <span>51-200 Employees</span>
+                    <span>{{empData().employeeRange}} Employees</span>
                 </div>   
             </div>
             <div class="col-lg-6 d-flex flex-column mb-4">
                 <span style="color: rgb(161, 161, 161);">Phone</span>
                 <div class="d-flex mt-lg-2">
                     <i class="bi bi-telephone me-2"></i>
-                    <span>+1 (555) 123-4567</span>
+                    <span>{{empData().phone}}</span>
                 </div>   
             </div>
             <div class="col-lg-6 d-flex flex-column mb-4">
                 <span style="color: rgb(161, 161, 161);">Founded</span>
                 <div class="d-flex mt-lg-2">
                     <i class="bi bi-calendar me-2"></i>
-                    <span>2018</span>
+                    <span>{{empData().establishedYear}}</span>
                 </div>   
             </div> 
             <div class="col-lg-6 d-flex flex-column mb-4">
                 <span style="color: rgb(161, 161, 161);">Address</span>
                 <div class="d-flex mt-lg-2">
                     <i class="bi bi-geo-alt me-2"></i>
-                    <span>123 Innovation Drive, San Francisco, CA 94105</span>
+                    <span>{{empData().companyLocation}}</span>
                 </div>   
             </div>
         </div>
@@ -112,13 +112,16 @@
         <div class="mt-3">
             <div style="color: rgb(161, 161, 161); margin-bottom: 5px;"> Company Description </div>
             <div>
-                TechStart Solutions is a leading technology company focused on creating innovative software solutions that transform how businesses operate. We specialize in cloud computing, artificial intelligence, and data analytics to help our clients achieve their digital transformation goals.
+                <!-- TechStart Solutions is a leading technology company focused on creating innovative software solutions that transform how businesses operate. We specialize in cloud computing, artificial intelligence, and data analytics to help our clients achieve their digital transformation goals. -->
+                {{empData().companyDescription}}
             </div>
         </div>
         <div class="mt-3">
             <div style="color: rgb(161, 161, 161); margin-bottom: 5px;"> Mission </div>
             <div>
-                To democratize access to advanced technology and empower businesses of all sizes to compete in the digital economy.
+               <!-- To democratize access to advanced technology and empower businesses of all sizes to compete in the digital economy. -->
+               {{empData().companyMission}}
+            
             </div>
         </div>
         <div class="mt-3">

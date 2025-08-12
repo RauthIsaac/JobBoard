@@ -15,6 +15,7 @@ import { ConfirmEmail } from './auth/confirm-email/confirm-email';
 import { ForgetPassword } from './auth/forget-password/forget-password';
 import { ResetPassword } from './auth/reset-password/reset-password';
 import { Explore } from './features/Explore/explore';
+import { EditEmpProfile } from './features/profiles/employer/edit-emp-profile/edit-emp-profile';
 
 
 export const routes: Routes = [
@@ -29,6 +30,8 @@ export const routes: Routes = [
             {path: 'savedJobs', component: SavedJobs},
             {path: 'empProfile', component: EmployerProfile},
             {path: 'explore', component: Explore},
+            {path: 'editEmp', component: EditEmpProfile},
+
         ]
     },
     

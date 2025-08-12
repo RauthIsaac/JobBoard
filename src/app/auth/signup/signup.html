@@ -9,7 +9,7 @@
         matInput
         type="text"
         formControlName="userName"
-        placeholder="ex: Samaa"
+        placeholder="ex: userName"
       />
       <mat-error *ngIf="signupForm.get('userName')?.errors">
         <small *ngIf="signupForm.get('userName')?.errors?.['required']">
@@ -28,7 +28,7 @@
         matInput
         type="email"
         formControlName="email"
-        placeholder="ex: samaa@gmail.com"
+        placeholder="ex: userName@gmail.com"
       />
       <mat-error *ngIf="signupForm.get('email')?.errors">
         <small *ngIf="signupForm.get('email')?.errors?.['required']">

@@ -9,7 +9,7 @@
         matInput
         type="email"
         formControlName="email"
-        placeholder="ex: samaa@gmail.com"
+        placeholder="ex: userName@gmail.com"
       />
       <mat-error *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
         <small *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</small>
