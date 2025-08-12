@@ -1,0 +1,130 @@
+<div class="application-container">
+
+  <div class="header-section">
+    <a href="#" class="back-link"><mat-icon>arrow_back</mat-icon> Back to Jobs</a>
+    <div class="job-details">
+      <div class="job-info">
+        <mat-icon class="company-logo">T</mat-icon>
+        <div>
+          <h2>Senior Frontend Developer</h2>
+          <p class="company-name">TechFlow Solutions</p>
+        </div>
+      </div>
+      <div class="job-meta">
+        <span><mat-icon>location_on</mat-icon> San Francisco, CA</span>
+        <span><mat-icon>schedule</mat-icon> Hybrid</span>
+        <span><mat-icon>attach_money</mat-icon> $120,000 - $160,000</span>
+      </div>
+    </div>
+    <div class="job-actions">
+      <button mat-button><mat-icon>bookmark_border</mat-icon> Save Job</button>
+      <button mat-button><mat-icon>share</mat-icon> Share</button>
+      <button mat-button><mat-icon>print</mat-icon> Print</button>
+    </div>
+  </div>
+  
+  <div class="main-content">
+    
+    <div class="left-sidebar">
+    <mat-card class="progress-card">
+      <h3>Application Progress</h3>
+      <mat-stepper orientation="vertical" [linear]="false" #stepper>
+        <mat-step label="Personal Info"></mat-step>
+        <mat-step label="Documents"></mat-step>
+        <mat-step label="Questions"></mat-step>
+        <mat-step label="Review"></mat-step>
+      </mat-stepper>
+      <p class="estimated-time">Estimated time: 8-12 minutes</p>
+      <p class="autosave">Auto-saving enabled</p>
+    </mat-card>
+
+    <mat-card class="quick-facts-card">
+      <h3>Job Quick Facts</h3>
+      <mat-list>
+        <mat-list-item>
+          <mat-icon matListItemIcon>location_on</mat-icon>
+          <span matListItemTitle>San Francisco, CA</span>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon matListItemIcon>schedule</mat-icon>
+          <span matListItemTitle>Hybrid</span>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon matListItemIcon>attach_money</mat-icon>
+          <span matListItemTitle>$120,000 - $160,000</span>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon matListItemIcon>groups</mat-icon>
+          <span matListItemTitle>50-200 employees</span>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon matListItemIcon>devices</mat-icon>
+          <span matListItemTitle>Technology</span>
+        </mat-list-item>
+      </mat-list>
+      <h3>Benefits</h3>
+      <div class="tags-container">
+        <span class="tech-chip">Health Insurance</span>
+        <span class="tech-chip">401k</span>
+        <span class="tech-chip">Remote Work</span>
+      </div>
+    </mat-card>
+
+
+    <mat-card class="similar-jobs-card">
+      <h3>Similar Jobs</h3>
+      <div class="job-match-item">
+        <div>
+          <h4>Frontend Engineer</h4>
+          <p>StartupXYZ</p>
+        </div>
+        <div class="match-score">90%</div>
+        <button mat-flat-button color="primary">Quick Apply</button>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="job-match-item">
+        <div>
+          <h4>React Developer</h4>
+          <p>DigitalCorp</p>
+        </div>
+        <div class="match-score">85%</div>
+        <button mat-flat-button color="primary">Quick Apply</button>
+      </div>
+    </mat-card>
+</div>
+    
+    <div class="right-content">
+      <mat-card class="personal-info-card" [formGroup]="personalInfoForm">
+  <div class="card-header">
+    <h3>Personal Information</h3>
+    <div class="navigation-buttons">
+  <button mat-button (click)="stepper.previous()" [disabled]="stepper.selectedIndex === 0">Previous</button>
+  <button mat-button (click)="saveDraft()"><mat-icon>save</mat-icon> Save Draft</button>
+  <button mat-flat-button color="primary" (click)="stepper.next()" [disabled]="personalInfoForm.invalid">Next</button>
+</div>
+  </div>
+  <div class="form-grid">
+    <mat-form-field appearance="outline">
+      <mat-label>Full Name *</mat-label>
+      <input matInput formControlName="fullName" placeholder="Sarah Johnson">
+      <mat-error *ngIf="isFieldInvalid('fullName')">Full Name is required.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email Address *</mat-label>
+      <input matInput formControlName="emailAddress" placeholder="sarah.johnson@email.com">
+      <mat-error *ngIf="isFieldInvalid('emailAddress')">Email is required and must be valid.</mat-error>
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline">
+      <mat-label>Years of Experience *</mat-label>
+      <mat-select formControlName="yearsOfExperience">
+        <mat-option *ngFor="let year of yearsOfExperience" [value]="year">{{ year }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="isFieldInvalid('yearsOfExperience')">Years of Experience is required.</mat-error>
+    </mat-form-field>
+  </div>
+</mat-card>
+    </div>
+  </div>
+</div>

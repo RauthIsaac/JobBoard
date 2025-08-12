@@ -16,6 +16,7 @@ import { ResetPassword } from './auth/reset-password/reset-password';
 
 import { SeekerProfile } from './features/profiles/seeker/seeker-profile/seeker-profile';
 import { UserProfile } from './user-profile/user-profile';
+import { SeekerApplication } from './seeker-application/seeker-application';
 // import { VerifyEmailComponent } from './verify-email/verify-email';
 
 
@@ -30,8 +31,8 @@ export const routes: Routes = [
             {path: 'jobView', component: JobView},
             {path: 'savedJobs', component: SavedJobs},
             {path: 'profile', component: SeekerProfile},
-            {path: 'userProfile', component: UserProfile}
-
+            {path: 'userProfile', component: UserProfile},
+            {path: 'userApplication', component: SeekerApplication}
         ]
     },
     
