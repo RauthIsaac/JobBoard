@@ -58,7 +58,7 @@ export class Login {
           this.authService.saveAuthData(
             response.token, 
             response.role,
-            response.userName || response.name || response.userName,
+            response.userName || this.loginForm.get('username')?.value,
             response.email || this.loginForm.get('email')?.value
           );
 

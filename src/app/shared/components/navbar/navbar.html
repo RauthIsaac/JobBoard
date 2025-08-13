@@ -55,7 +55,13 @@
             <button class="btn btn-outline-secondary dropdown-toggle" type="button"
                     data-bs-toggle="dropdown" aria-expanded="false">
               <i class="bi bi-person-circle me-1"></i>
-              {{ authService.getUserName() }}
+              @if (authService.getUserType() === 'Seeker'){
+                {{ authService.getUserName() }}
+              }
+              @if (authService.getUserType() === 'Employer'){
+                {{ authService.getCompanyName() }}
+              }
+              
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
               <!-- Conditional Links for Logged-in Users -->
@@ -71,8 +77,8 @@
                 <!-- Seeker Dashboard (if user is seeker) -->
                 @if (authService.getUserType() === 'Seeker') {
                   <li class="nav-item">
-                    <a class="nav-link" routerLink="/profile" routerLinkActive="active">
-                      <i class="bi bi-person-circle ms-2 me-1"></i>My Profile</a>
+                    <a class="nav-link" routerLink="/seekerProfile" routerLinkActive="active">
+                      <i class="bi bi-person-circle ms-3 me-2"></i>My Profile</a>
                   </li>
                 }
               }

@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -58,6 +58,19 @@ export class AuthService {
   /*---------------------------- Get User Name ----------------------------*/
   getUserName(): string {
     return localStorage.getItem(this.USER_NAME_KEY) || 'User';
+  }
+
+    /*---------------------------- Get User Name ----------------------------*/
+  private empData = signal<any>({});
+  
+  getCompanyName(): string{
+    this.getEmployerProfile().subscribe({
+      next: (data:any) => {
+        this.empData.set(data);
+      }
+    });
+
+    return this.empData().companyName || 'Company';
   }
 
   /*---------------------------- Get User Email ----------------------------*/
@@ -121,7 +134,7 @@ export class AuthService {
       'Authorization': `Bearer ${this.getToken()}`
     });
 
-    return this.http.get(`${this.baseUrl}/api/Seeker/my-profile`, { headers });
+    return this.http.get(`${this.baseUrl}/api/Seeker/GetMyProfile`, { headers });
   }
 
   /*---------------------------- Get Employer Profile ----------------------------*/
@@ -153,7 +166,7 @@ export class AuthService {
       'Content-Type': 'application/json'
     });
 
-    return this.http.put(`${this.baseUrl}/api/Seeker/my-profile`, profileData, { headers });
+    return this.http.put(`${this.baseUrl}/api/Seeker`, profileData, { headers });
   }
 
 }

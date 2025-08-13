@@ -1,142 +1,122 @@
-<mat-card class="seeker-profile-card">
-  <mat-card-header>
-    <div mat-card-avatar class="profile-avatar">
-      <img mat-card-avatar [src]="profile.profilePictureUrl || 'profile-icon-design-free-vector.jpg'" alt="Profile Picture">
-      <label for="profilePicture" class="upload-overlay">
-        <mat-icon>edit</mat-icon>
-      </label>
-      <input id="profilePicture" type="file" class="hidden-file-input" (change)="onFileSelected($event)">
-    </div>
-    <mat-card-title>Seeker Profile</mat-card-title>
-    <mat-card-subtitle>Update your personal information and experience</mat-card-subtitle>
-  </mat-card-header>
-
-  <mat-card-content class="space-y-6">
-    <div class="info-section">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <mat-form-field appearance="outline">
-          <mat-label>First Name</mat-label>
-          <input matInput placeholder="First Name" [(ngModel)]="profile.firstName" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Last Name</mat-label>
-          <input matInput placeholder="Last Name" [(ngModel)]="profile.lastName" />
-        </mat-form-field>
+<div class="container">
+  <mat-card class="profile-card header-card">
+    <div class="header-content row">
+      <img src="{{seekerData().profileImageURL}}" alt="{{seekerData().name}}" class="profile-pic mx-auto col-lg-3 col-md-4 col-sm-12">
+      <div class="info-details col-lg-5 col-md-8 col-sm-12">
+        <h2>{{seekerData().name}}</h2>
+        <p class="role">{{seekerData().title}}</p>
+        <p class="contact-info"><mat-icon>location_on</mat-icon> {{seekerData().address}}</p>
+        <p class="contact-info"><mat-icon>mail</mat-icon> {{seekerData().email}}</p>
+        <p class="contact-info"><mat-icon>phone</mat-icon> {{seekerData().phoneNumber}}</p>
       </div>
-
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Address</mat-label>
-        <input matInput placeholder="Address" [(ngModel)]="profile.address" />
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>CV URL</mat-label>
-        <input matInput placeholder="CV URL" [(ngModel)]="profile.CV_URL" />
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Bio</mat-label>
-        <textarea matInput placeholder="Tell us a little about yourself..." [(ngModel)]="profile.bio" matTextareaAutosize matAutosizeMinRows="3" matAutosizeMaxRows="6"></textarea>
-      </mat-form-field>
-    </div>
-
-    <mat-divider></mat-divider>
-    <div class="dynamic-section">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="mat-subheading-2">Work Experience</h3>
-        <button mat-icon-button color="primary" (click)="addExperience()">
-          <mat-icon>add_circle_outline</mat-icon>
-        </button>
+      <div class="action-buttons col-lg-3 col-md-12 col-sm-12">
+        <button mat-button routerLink="/editSeeker"><mat-icon>edit</mat-icon> Edit Profile</button>
+        <button mat-button><mat-icon>cloud_download</mat-icon> Download Resume</button>
       </div>
-      <div *ngFor="let exp of profile.experience; let i = index" class="item-card">
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label>Job Title</mat-label>
-          <input matInput placeholder="Job Title" [(ngModel)]="exp.jobTitle" />
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label>Company</mat-label>
-          <input matInput placeholder="Company" [(ngModel)]="exp.company" />
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label>Job Description</mat-label>
-          <textarea matInput placeholder="Job Description..." [(ngModel)]="exp.description" matTextareaAutosize matAutosizeMinRows="2"></textarea>
-        </mat-form-field>
-        <div class="grid grid-cols-2 gap-4">
-          <mat-form-field appearance="fill">
-            <mat-label>Start Date</mat-label>
-            <input matInput type="month" [(ngModel)]="exp.startDate" />
-          </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>End Date</mat-label>
-            <input matInput type="month" [(ngModel)]="exp.endDate" />
-          </mat-form-field>
+    </div> 
+  </mat-card>
+
+  <div class="row">
+    <div class="left-section col-lg-8 col-md-12 col-sm-12">
+      <mat-card class="profile-card summary-card">
+        <h3>Professional Summary</h3>
+        <p>{{seekerData().summary}}</p>
+      </mat-card>
+
+      <mat-card class="profile-card experience-card">
+        <h3>Work Experience</h3>
+        <mat-card class="experience-item p-3 my-3">
+          @for(exp of seekerData().seekerExperiences; track $index){
+            <div class="job-header">
+              <div>
+                <h4>{{exp.jobTitle}}</h4>
+                <p class="company">{{exp.companyName}}</p>
+                <p class="location"><mat-icon>location_on</mat-icon> {{exp.location}}</p>
+              </div>
+              <span class="dates">{{exp.startDate | date:'MMM yyyy'}} - {{exp.endDate | date:'MMM yyyy'}}</span>
+            </div>
+            <ul class="job-duties">
+              <li *ngFor="let duty of exp.duties">{{duty}}</li>
+            </ul>
+
+          }
+        </mat-card>
+      </mat-card>
+
+      <mat-card class="profile-card skills-card">
+        <h3>Skills & Technologies</h3>
+        <div class="tags-container my-3">
+          @for(skill of seekerData().skillName; track $index){
+            <span class="tech-chip">{{skill}}</span>
+          }
         </div>
-        <button mat-mini-fab color="warn" (click)="removeExperience(i)" class="remove-btn">
-          <mat-icon>delete</mat-icon>
-        </button>
+      </mat-card>
+
+  <mat-card class="profile-card certifications-card">
+    <h3><mat-icon>school</mat-icon> Education</h3>
+      <mat-card class="experience-item p-3 my-3">
+        @for(edu of seekerData().seekerEducations; track $index){
+          <div class="job-header">
+            <div>
+              <h5>{{edu.degree}} of {{edu.major}} in {{edu.faculty}}</h5>
+              <p>{{edu.university}}</p>
+              <p>GPA: {{edu.GPA}}</p>
+            </div>
+            <p><mat-icon>calendar_month</mat-icon> {{edu.date | date:'MMM yyyy'}}  • {{edu.location}}</p>
+          </div>
+        }
+      </mat-card>
+
+    <h3 class="my-4"><mat-icon>verified</mat-icon> Certifications</h3>
+    <div class="certification-item">
+      <div class="info ">
+        @for(cert of seekerData().certificateName; track $index){
+          <h5>{{cert}}</h5>
+        }
       </div>
     </div>
+    <mat-divider class="my-3"></mat-divider>
+    
+  </mat-card>
 
-    <mat-divider></mat-divider>
-    <div class="dynamic-section">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="mat-subheading-2">Education</h3>
-        <button mat-icon-button color="primary" (click)="addEducation()">
-          <mat-icon>add_circle_outline</mat-icon>
-        </button>
-      </div>
-      <div *ngFor="let edu of profile.education; let i = index" class="item-card">
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label>Degree</mat-label>
-          <input matInput placeholder="Degree" [(ngModel)]="edu.degree" />
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label>University</mat-label>
-          <input matInput placeholder="University" [(ngModel)]="edu.university" />
-        </mat-form-field>
-        <div class="grid grid-cols-2 gap-4">
-          <mat-form-field appearance="fill">
-            <mat-label>Start Date</mat-label>
-            <input matInput type="month" [(ngModel)]="edu.startDate" />
-          </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>Graduation Date</mat-label>
-            <input matInput type="month" [(ngModel)]="edu.endDate" />
-          </mat-form-field>
+    <mat-card class="profile-card training-card">
+      <h3>Additional Training</h3>
+      <ul>
+        @for(training of seekerData().trainingName; track $index){
+          <li>{{training}}</li>
+        }
+      </ul>
+    </mat-card>
+    </div>
+
+
+ 
+    <div class="right-section col-lg-4 col-md-12 col-sm-12">
+      <mat-card class="sidebar-card connect-card">
+        <h3>Connect</h3>
+        <mat-list>
+          <mat-list-item>
+            <mat-icon matListItemIcon>linkedin</mat-icon>
+            <span matListItemTitle>LinkedIn</span>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon matListItemIcon>code</mat-icon> <span matListItemTitle>GitHub</span>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon matListItemIcon>link</mat-icon> <span matListItemTitle>Portfolio</span>
+          </mat-list-item>
+        </mat-list>
+      </mat-card>
+
+      <mat-card class="sidebar-card interests-card">
+        <h3>Professional Interests</h3>
+        <div class="tags-container my-3">
+          @for(interest of seekerData().interestName; track $index){
+            <span class="tech-chip">{{interest}}</span>
+          }
         </div>
-        <button mat-mini-fab color="warn" (click)="removeEducation(i)" class="remove-btn">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
+      </mat-card>
     </div>
-
-    <mat-divider></mat-divider>
-    <div class="dynamic-section">
-      <h3 class="mat-subheading-2 mb-4">Skills</h3>
-      <mat-chip-grid aria-label="Skills selection" #chipList>
-        <mat-chip-row *ngFor="let skill of profile.skills; let i = index" (removed)="removeSkill(i)">
-          {{ skill }}
-          <button matChipRemove [attr.aria-label]="'remove ' + skill">
-            <mat-icon>cancel</mat-icon>
-          </button>
-        </mat-chip-row>
-      </mat-chip-grid>
-      <mat-form-field appearance="fill" class="w-full mt-4">
-        <mat-label>Add a new skill</mat-label>
-        <input
-          matInput
-          placeholder="Type a skill and press Enter"
-          #skillInput
-          [matChipInputFor]="chipList"
-          (matChipInputTokenEnd)="addSkill($event)"
-        />
-      </mat-form-field>
-    </div>
-  </mat-card-content>
-
-  <mat-card-actions class="flex justify-center mt-6">
-    <button mat-raised-button color="primary" class="w-full md:w-auto" (click)="saveProfile()">
-      <mat-icon>save</mat-icon> Save Profile
-    </button>
-  </mat-card-actions>
-</mat-card>
+    
+  </div>  
+</div>

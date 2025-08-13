@@ -15,11 +15,9 @@ import { ForgetPassword } from './auth/forget-password/forget-password';
 import { ResetPassword } from './auth/reset-password/reset-password';
 import { Explore } from './features/Explore/explore';
 import { EditEmpProfile } from './features/profiles/employer/edit-emp-profile/edit-emp-profile';
-
+import { EditSeekerProfile} from './features/profiles/seeker/edit-seeker-profile/edit-seeker-profile';
 import { SeekerProfile } from './features/profiles/seeker/seeker-profile/seeker-profile';
-import { UserProfile } from './user-profile/user-profile';
-import { SeekerApplication } from './seeker-application/seeker-application';
-// import { VerifyEmailComponent } from './verify-email/verify-email';
+import { SeekerApplication } from './features/profiles/seeker/seeker-application/seeker-application';
 
 
 export const routes: Routes = [
@@ -37,8 +35,8 @@ export const routes: Routes = [
             {path: 'editEmp', component: EditEmpProfile},
 
             {path: 'savedJobs', component: SavedJobs},
-            {path: 'profile', component: SeekerProfile},
-            {path: 'userProfile', component: UserProfile},
+            {path: 'editSeeker', component: EditSeekerProfile},
+            {path: 'seekerProfile', component: SeekerProfile},
             {path: 'userApplication', component: SeekerApplication}
         ]
     },

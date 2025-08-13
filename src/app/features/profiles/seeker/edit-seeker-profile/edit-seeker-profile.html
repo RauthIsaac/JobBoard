@@ -1,0 +1,376 @@
+<mat-card class="seeker-profile-card">
+    <mat-card-header>
+        <mat-card-title class="text-center">
+            <h2 class="mat-headline">Edit Seeker Profile</h2>
+        </mat-card-title>
+    </mat-card-header>    
+
+    <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+        <mat-card-content class="space-y-6">
+            <!-- Basic Information Section -->
+            <div class="info-section">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Name -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Full Name</mat-label>
+                        <input matInput formControlName="name" placeholder="Full Name" />
+                        <mat-error *ngIf="profileForm.get('name')?.hasError('maxlength')">
+                            Maximum 100 characters allowed
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Title -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Professional Title</mat-label>
+                        <input matInput formControlName="title" placeholder="e.g. Software Developer" />
+                        <mat-error *ngIf="profileForm.get('title')?.hasError('maxlength')">
+                            Maximum 100 characters allowed
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Date of Birth -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Date of Birth</mat-label>
+                        <input matInput type="date" formControlName="dateOfBirth" />
+                    </mat-form-field>
+
+                    <!-- Gender -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Gender</mat-label>
+                        <mat-select formControlName="gender">
+                            <mat-option *ngFor="let gender of genderOptions" [value]="gender.value">
+                                {{ gender.label }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <!-- Email -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Email</mat-label>
+                        <input matInput formControlName="email" placeholder="Email Address" />
+                        <mat-error *ngIf="profileForm.get('email')?.hasError('email')">
+                            Please enter a valid email
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Profile Image URL -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Profile Image URL</mat-label>
+                        <input matInput formControlName="profileImageURL" placeholder="Profile Image URL" />
+                        <mat-error *ngIf="profileForm.get('profileImageURL')?.hasError('pattern')">
+                            Please enter a valid URL (http:// or https://)
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Address -->
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Address</mat-label>
+                    <input matInput formControlName="address" placeholder="Full Address" />
+                    <mat-error *ngIf="profileForm.get('address')?.hasError('maxlength')">
+                        Maximum 200 characters allowed
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- CV URL -->
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>CV URL</mat-label>
+                    <input matInput formControlName="cvURL" placeholder="CV Download Link" />
+                    <mat-error *ngIf="profileForm.get('cvURL')?.hasError('pattern')">
+                        Please enter a valid URL (http:// or https://)
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Summary -->
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Professional Summary</mat-label>
+                    <textarea matInput formControlName="summary" 
+                              placeholder="Brief professional summary..." 
+                              matTextareaAutosize matAutosizeMinRows="3" 
+                              matAutosizeMaxRows="6"></textarea>
+                    <mat-error *ngIf="profileForm.get('summary')?.hasError('maxlength')">
+                        Maximum 1000 characters allowed
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <mat-divider class="my-3"></mat-divider>
+
+            <!-- Skills Section -->
+            <div class="dynamic-section mb-4">
+                <div class="flex justify-between items-center ">
+                    <h3 class="mat-subheading-2">Skills</h3>
+                </div>
+                
+                <mat-chip-grid aria-label="Skills" #skillsChipList>
+                    <mat-chip-row 
+                        *ngFor="let skill of profileForm.get('skillName')?.value; let i = index" 
+                        (removed)="removeSkill(i)">
+                        {{ skill }}
+                        <button matChipRemove>
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                    </mat-chip-row>
+                    <input placeholder="Add skill..." 
+                           [matChipInputFor]="skillsChipList"
+                           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                           (matChipInputTokenEnd)="addSkill($event)" />
+                </mat-chip-grid>
+            </div>
+
+            <mat-divider class="my-3"></mat-divider>
+
+            <!-- Work Experience Section -->
+            <div class="dynamic-section">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="mat-subheading-2">Work Experience</h3>
+                    <button mat-icon-button color="primary" type="button" (click)="addExperience()">
+                        <mat-icon>add_circle_outline</mat-icon>
+                    </button>
+                </div>
+                
+                <div *ngFor="let experience of seekerExperiences.controls; let i = index"
+                     class="item-card" [formGroup]="experience">
+                    <button mat-mini-fab color="warn" type="button" 
+                            (click)="removeExperience(i)" class="remove-btn">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Job Title</mat-label>
+                            <input matInput formControlName="jobTitle" placeholder="Job Title" />
+                            <mat-error *ngIf="experience.get('jobTitle')?.hasError('required')">
+                                Job title is required
+                            </mat-error>
+                            <mat-error *ngIf="experience.get('jobTitle')?.hasError('maxlength')">
+                                Maximum 100 characters allowed
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Company Name</mat-label>
+                            <input matInput formControlName="companyName" placeholder="Company Name" />
+                            <mat-error *ngIf="experience.get('companyName')?.hasError('required')">
+                                Company name is required
+                            </mat-error>
+                            <mat-error *ngIf="experience.get('companyName')?.hasError('maxlength')">
+                                Maximum 100 characters allowed
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Location</mat-label>
+                            <input matInput formControlName="location" placeholder="Location" />
+                            <mat-error *ngIf="experience.get('location')?.hasError('maxlength')">
+                                Maximum 100 characters allowed
+                            </mat-error>
+                        </mat-form-field>
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Start Date</mat-label>
+                                <input matInput type="date" formControlName="startDate" />
+                                <mat-error *ngIf="experience.get('startDate')?.hasError('required')">
+                                    Start date is required
+                                </mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                                <mat-label>End Date</mat-label>
+                                <input matInput type="date" formControlName="endDate" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <mat-form-field appearance="outline" class="w-full">
+                        <mat-label>Job Description</mat-label>
+                        <textarea matInput formControlName="description" 
+                                  placeholder="Job description and responsibilities..." 
+                                  matTextareaAutosize matAutosizeMinRows="2" 
+                                  matAutosizeMaxRows="4"></textarea>
+                        <mat-error *ngIf="experience.get('description')?.hasError('maxlength')">
+                            Maximum 500 characters allowed
+                        </mat-error>
+                    </mat-form-field>
+                </div> 
+            
+              </div>
+
+            <mat-divider class="my-3"></mat-divider>
+
+            <!-- Education Section -->
+            <div class="dynamic-section">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="mat-subheading-2">Education</h3>
+                    <button mat-icon-button color="primary" type="button" (click)="addEducation()">
+                        <mat-icon>add_circle_outline</mat-icon>
+                    </button>
+                </div>
+                <div *ngFor="let education of seekerEducations.controls; let i = index"
+                     class="item-card" [formGroup]="education">
+                    <button mat-mini-fab color="warn" type="button"
+                            (click)="removeEducation(i)" class="remove-btn">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Major/Field of Study</mat-label>
+                            <input matInput formControlName="major" placeholder="Major" />
+                            <mat-error *ngIf="education.get('major')?.hasError('required')">
+                                Major is required
+                            </mat-error>
+                            <mat-error *ngIf="education.get('major')?.hasError('maxlength')">
+                                Maximum 100 characters allowed
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Faculty/Department</mat-label>
+                            <input matInput formControlName="faculty" placeholder="Faculty" />
+                            <mat-error *ngIf="education.get('faculty')?.hasError('required')">
+                                Faculty is required
+                            </mat-error>
+                            <mat-error *ngIf="education.get('faculty')?.hasError('maxlength')">
+                                Maximum 100 characters allowed
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>University/Institution</mat-label>
+                            <input matInput formControlName="university" placeholder="University" />
+                            <mat-error *ngIf="education.get('university')?.hasError('required')">
+                                University is required
+                            </mat-error>
+                            <mat-error *ngIf="education.get('university')?.hasError('maxlength')">
+                                Maximum 100 characters allowed
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Education Level</mat-label>
+                            <mat-select formControlName="educationLevel">
+                                <mat-option *ngFor="let level of educationLevelOptions" [value]="level.value">
+                                    {{ level.label }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="education.get('educationLevel')?.hasError('required')">
+                                Education level is required
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Graduation Date</mat-label>
+                            <input matInput type="date" formControlName="date" />
+                            <mat-error *ngIf="education.get('date')?.hasError('required')">
+                                Date is required
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Location</mat-label>
+                            <input matInput formControlName="location" placeholder="Location" />
+                            <mat-error *ngIf="education.get('location')?.hasError('maxlength')">
+                                Maximum 100 characters allowed
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>GPA (Optional)</mat-label>
+                            <input matInput type="number" formControlName="GPA" 
+                                   placeholder="GPA" min="0" max="4" step="0.01" />
+                            <mat-error *ngIf="education.get('GPA')?.hasError('min') || education.get('GPA')?.hasError('max')">
+                                GPA must be between 0 and 4
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div> 
+            </div>
+
+            <mat-divider class="my-3"></mat-divider>
+
+            <!-- Certificates Section -->
+            <div class="dynamic-section mb-4">
+                <div class="flex justify-between items-center ">
+                    <h3 class="mat-subheading-2">Certificates</h3>
+                </div>
+                
+                <mat-chip-grid aria-label="Certificates" #certificatesChipList>
+                    <mat-chip-row 
+                        *ngFor="let cert of profileForm.get('certificateName')?.value; let i = index" 
+                        (removed)="removeCertificate(i)">
+                        {{ cert }}
+                        <button matChipRemove>
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                    </mat-chip-row>
+                    <input placeholder="Add certificate..." 
+                           [matChipInputFor]="certificatesChipList"
+                           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                           (matChipInputTokenEnd)="addCertificate($event)" />
+                </mat-chip-grid>
+            </div>
+
+            <mat-divider class="my-3"></mat-divider>
+
+            <!-- Interests Section -->
+            <div class="dynamic-section mb-4">
+                <div class="flex justify-between items-center ">
+                    <h3 class="mat-subheading-2">Interests</h3>
+                </div>
+                
+                <mat-chip-grid aria-label="Interests" #interestsChipList>
+                    <mat-chip-row 
+                        *ngFor="let interest of profileForm.get('interestName')?.value; let i = index" 
+                        (removed)="removeInterest(i)">
+                        {{ interest }}
+                        <button matChipRemove>
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                    </mat-chip-row>
+                    <input placeholder="Add interest..." 
+                           [matChipInputFor]="interestsChipList"
+                           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                           (matChipInputTokenEnd)="addInterest($event)" />
+                </mat-chip-grid>
+            </div>
+
+            <mat-divider class="my-3"></mat-divider>
+
+            <!-- Trainings Section -->
+            <div class="dynamic-section mb-4">
+                <div class="flex justify-between items-center ">
+                    <h3 class="mat-subheading-2">Trainings</h3>
+                </div>
+                
+                <mat-chip-grid aria-label="Trainings" #trainingsChipList>
+                    <mat-chip-row 
+                        *ngFor="let training of profileForm.get('trainingName')?.value; let i = index" 
+                        (removed)="removeTraining(i)">
+                        {{ training }}
+                        <button matChipRemove>
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                    </mat-chip-row>
+                    <input placeholder="Add training..." 
+                           [matChipInputFor]="trainingsChipList"
+                           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                           (matChipInputTokenEnd)="addTraining($event)" />
+                </mat-chip-grid>
+            </div>
+        </mat-card-content>
+
+        <mat-card-actions class="flex justify-center mt-6">
+            <button mat-raised-button 
+                    color="primary" 
+                    class="w-full md:w-auto" 
+                    type="submit"
+                    [disabled]="isLoading">
+                <mat-spinner *ngIf="isLoading" diameter="20" class="mr-2"></mat-spinner>
+                <mat-icon *ngIf="!isLoading">save</mat-icon> 
+                {{ isLoading ? 'Saving...' : 'Save Profile' }}
+            </button>
+        </mat-card-actions>
+    </form>
+</mat-card>
