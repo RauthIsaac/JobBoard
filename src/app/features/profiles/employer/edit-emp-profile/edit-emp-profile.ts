@@ -5,7 +5,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MaterialModule } from "../../../../shared/material.module";
 import { AuthService } from '../../../../auth/auth-service';
 import { ProfilesService } from '../../profiles-service';
-import { NgFor, NgIf } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-edit-emp-profile',
-  imports: [ReactiveFormsModule, MatCardModule, MaterialModule, MatDividerModule, NgFor, NgIf, MatOptionModule, MatProgressSpinner],
+  imports: [ReactiveFormsModule, MatCardModule, MaterialModule, MatDividerModule, CommonModule, MatOptionModule, MatProgressSpinner],
   providers: [ProfilesService],
   templateUrl: './edit-emp-profile.html',
   styleUrl: './edit-emp-profile.css'

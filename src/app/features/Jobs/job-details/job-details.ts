@@ -1,11 +1,11 @@
-import { CurrencyPipe, DatePipe, NgIf, NgFor } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgIf, NgFor, CommonModule } from '@angular/common';
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { JobsService } from '../jobs-service';
 
 @Component({
   selector: 'app-job-details',
-  imports: [CurrencyPipe, RouterLink, NgIf, DatePipe, NgFor],
+  imports: [CurrencyPipe, RouterLink,  DatePipe,  CommonModule],
   templateUrl: './job-details.html',
   styleUrl: './job-details.css'
 })
