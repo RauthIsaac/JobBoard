@@ -1,0 +1,14 @@
+header{
+    padding : 40px 100px 20px;
+}
+
+.main-container{
+    background: var(--basic-gray);
+}
+
+.box{
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* padding: 20px; */
+}

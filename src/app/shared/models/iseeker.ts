@@ -1,5 +1,5 @@
 export interface Iseeker {
-    id? : number,
+    id : number,
     userId? : string,
     name? : string,
     title? : string,
@@ -26,9 +26,9 @@ enum Gender {
 
 interface SeekerExperience{
     id? : number,
-    jobTitle? : string,
-    companyName? : string,
-    location? : string,
+    jobTitle? : string,    
+    companyName? : string, 
+    location? : string,    
     startDate? : Date,
     endDate? : Date,
     description? : string
@@ -41,7 +41,7 @@ interface SeekerEducation{
     university? : string,
     date? : Date,
     location? : string,
-    GPA? : number,
+    GPA? : number,        
     educationLevel? : EducationLevel
 }
 

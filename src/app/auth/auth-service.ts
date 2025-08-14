@@ -163,7 +163,7 @@ export class AuthService {
   updateSeekerProfile(profileData: any): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.getToken()}`,
-      'Content-Type': 'application/json'
+      // 'Content-Type': 'application/json'
     });
 
     return this.http.put(`${this.baseUrl}/api/Seeker`, profileData, { headers });

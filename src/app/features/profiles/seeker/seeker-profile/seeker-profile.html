@@ -25,72 +25,77 @@
 
       <mat-card class="profile-card experience-card">
         <h3>Work Experience</h3>
-        <mat-card class="experience-item p-3 my-3">
-          @for(exp of seekerData().seekerExperiences; track $index){
-            <div class="job-header">
-              <div>
-                <h4>{{exp.jobTitle}}</h4>
-                <p class="company">{{exp.companyName}}</p>
-                <p class="location"><mat-icon>location_on</mat-icon> {{exp.location}}</p>
-              </div>
-              <span class="dates">{{exp.startDate | date:'MMM yyyy'}} - {{exp.endDate | date:'MMM yyyy'}}</span>
+        <div class="experience-item p-3 my-3" *ngFor="let exp of seekerData().seekerExperiences; trackBy: trackByIndex">
+          <div class="job-header">
+            <div>
+              <h4>{{exp.jobTitle}}</h4>
+              <p class="company">{{exp.companyName}}</p>
+              <p class="location" *ngIf="exp.location"><i class="bi bi-geo-alt me-2"></i> {{exp.location}}</p>
             </div>
-            <ul class="job-duties">
-              <li *ngFor="let duty of exp.duties">{{duty}}</li>
-            </ul>
-
-          }
-        </mat-card>
+            <span class="dates">{{exp.startDate | date:'MMM yyyy'}} - {{exp.endDate ? (exp.endDate | date:'MMM yyyy') : 'Present'}}</span>
+          </div>
+          <div class="job-description" *ngIf="exp.description">
+            <p>{{exp.description}}</p>
+          </div>
+        </div>
+        
+        <!-- Show message if no experience -->
+        <div *ngIf="!seekerData().seekerExperiences || seekerData().seekerExperiences.length === 0" class="no-data-message">
+          <p>No work experience added yet.</p>
+        </div>
       </mat-card>
 
       <mat-card class="profile-card skills-card">
         <h3>Skills & Technologies</h3>
         <div class="tags-container my-3">
-          @for(skill of seekerData().skillName; track $index){
-            <span class="tech-chip">{{skill}}</span>
-          }
+          <span class="tech-chip" *ngFor="let skill of seekerData().skillName; trackBy: trackByIndex">{{skill}}</span>
+        </div>
+        <div *ngIf="!seekerData().skillName || seekerData().skillName.length === 0" class="no-data-message">
+          <p>No skills added yet.</p>
         </div>
       </mat-card>
 
-  <mat-card class="profile-card certifications-card">
-    <h3><mat-icon>school</mat-icon> Education</h3>
-      <mat-card class="experience-item p-3 my-3">
-        @for(edu of seekerData().seekerEducations; track $index){
+      <mat-card class="profile-card certifications-card">
+        <h3><mat-icon>school</mat-icon> Education</h3>
+        <div class="experience-item p-3 my-3" *ngFor="let edu of seekerData().seekerEducations; trackBy: trackByIndex">
           <div class="job-header">
             <div>
-              <h5>{{edu.degree}} of {{edu.major}} in {{edu.faculty}}</h5>
+              <h5>{{edu.educationLevel | educationLevelName}} of {{edu.major}} in {{edu.faculty}}</h5>
               <p>{{edu.university}}</p>
-              <p>GPA: {{edu.GPA}}</p>
+              <p *ngIf="edu.GPA"><strong>GPA: </strong> {{edu.GPA}}/4.0 </p>
             </div>
-            <p><mat-icon>calendar_month</mat-icon> {{edu.date | date:'MMM yyyy'}}  • {{edu.location}}</p>
+            <p>{{edu.date | date:'MMM yyyy'}} • {{edu.location}}</p>
           </div>
-        }
+        </div>
+        
+        <!-- Show message if no education -->
+        <div *ngIf="!seekerData().seekerEducations || seekerData().seekerEducations.length === 0" class="no-data-message">
+          <p>No education added yet.</p>
+        </div>
+
+        <h3 class="my-4"><mat-icon>verified</mat-icon> Certifications</h3>
+        <div class="certification-item">
+          <div class="info">
+            <h5 *ngFor="let cert of seekerData().certificateName; trackBy: trackByIndex">{{cert}}</h5>
+          </div>
+        </div>
+        <div *ngIf="!seekerData().certificateName || seekerData().certificateName.length === 0" class="no-data-message">
+          <p>No certificates added yet.</p>
+        </div>
+        <mat-divider class="my-3"></mat-divider>
       </mat-card>
 
-    <h3 class="my-4"><mat-icon>verified</mat-icon> Certifications</h3>
-    <div class="certification-item">
-      <div class="info ">
-        @for(cert of seekerData().certificateName; track $index){
-          <h5>{{cert}}</h5>
-        }
-      </div>
-    </div>
-    <mat-divider class="my-3"></mat-divider>
-    
-  </mat-card>
-
-    <mat-card class="profile-card training-card">
-      <h3>Additional Training</h3>
-      <ul>
-        @for(training of seekerData().trainingName; track $index){
-          <li>{{training}}</li>
-        }
-      </ul>
-    </mat-card>
+      <mat-card class="profile-card training-card">
+        <h3>Additional Training</h3>
+        <ul *ngIf="seekerData().trainingName && seekerData().trainingName.length > 0">
+          <li *ngFor="let training of seekerData().trainingName; trackBy: trackByIndex">{{training}}</li>
+        </ul>
+        <div *ngIf="!seekerData().trainingName || seekerData().trainingName.length === 0" class="no-data-message">
+          <p>No training added yet.</p>
+        </div>
+      </mat-card>
     </div>
 
-
- 
     <div class="right-section col-lg-4 col-md-12 col-sm-12">
       <mat-card class="sidebar-card connect-card">
         <h3>Connect</h3>
@@ -100,10 +105,12 @@
             <span matListItemTitle>LinkedIn</span>
           </mat-list-item>
           <mat-list-item>
-            <mat-icon matListItemIcon>code</mat-icon> <span matListItemTitle>GitHub</span>
+            <mat-icon matListItemIcon>code</mat-icon> 
+            <span matListItemTitle>GitHub</span>
           </mat-list-item>
           <mat-list-item>
-            <mat-icon matListItemIcon>link</mat-icon> <span matListItemTitle>Portfolio</span>
+            <mat-icon matListItemIcon>link</mat-icon> 
+            <span matListItemTitle>Portfolio</span>
           </mat-list-item>
         </mat-list>
       </mat-card>
@@ -111,12 +118,12 @@
       <mat-card class="sidebar-card interests-card">
         <h3>Professional Interests</h3>
         <div class="tags-container my-3">
-          @for(interest of seekerData().interestName; track $index){
-            <span class="tech-chip">{{interest}}</span>
-          }
+          <span class="tech-chip" *ngFor="let interest of seekerData().interestName; trackBy: trackByIndex">{{interest}}</span>
+        </div>
+        <div *ngIf="!seekerData().interestName || seekerData().interestName.length === 0" class="no-data-message">
+          <p>No interests added yet.</p>
         </div>
       </mat-card>
     </div>
-    
   </div>  
 </div>

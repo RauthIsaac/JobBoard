@@ -17,7 +17,12 @@ import { Explore } from './features/Explore/explore';
 import { EditEmpProfile } from './features/profiles/employer/edit-emp-profile/edit-emp-profile';
 import { EditSeekerProfile} from './features/profiles/seeker/edit-seeker-profile/edit-seeker-profile';
 import { SeekerProfile } from './features/profiles/seeker/seeker-profile/seeker-profile';
-import { SeekerApplication } from './features/profiles/seeker/seeker-application/seeker-application';
+import { Layout } from './features/profiles/seeker/seeker-application/layout/layout';
+import { PersonalInfo } from './features/profiles/seeker/seeker-application/steps/personal-info/personal-info';
+import { Documents } from './features/profiles/seeker/seeker-application/steps/documents/documents';
+import { Questions } from './features/profiles/seeker/seeker-application/steps/questions/questions';
+import { Review } from './features/profiles/seeker/seeker-application/steps/review/review';
+
 
 
 export const routes: Routes = [
@@ -37,10 +42,24 @@ export const routes: Routes = [
             {path: 'savedJobs', component: SavedJobs},
             {path: 'editSeeker', component: EditSeekerProfile},
             {path: 'seekerProfile', component: SeekerProfile},
-            {path: 'userApplication', component: SeekerApplication}
+
         ]
     },
-    
+
+
+    {
+        path: 'seekerApp',
+        component: Layout,
+        children: [
+            { path: 'personal-info', component: PersonalInfo },
+            { path: 'documents', component: Documents },
+            { path: 'questions', component: Questions },
+            { path: 'review', component: Review },
+            { path: '', redirectTo: 'personal-info', pathMatch: 'full' }
+        ]
+    },
+
+
     {path: 'jobApp', component: JobApplication},
     {path: 'addJob', component: AddJob},
     {path: 'register', component: Signup },
@@ -48,6 +67,7 @@ export const routes: Routes = [
     {path: 'confirm-email', component: ConfirmEmail},
     {path: 'forget-password', component: ForgetPassword},
     {path: 'reset-password', component: ResetPassword},
+
 
 
     {path: '**', component: NotFound}

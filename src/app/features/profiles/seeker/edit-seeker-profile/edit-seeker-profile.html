@@ -72,14 +72,15 @@
                     </mat-error>
                 </mat-form-field>
 
-                <!-- CV URL -->
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>CV URL</mat-label>
-                    <input matInput formControlName="cvURL" placeholder="CV Download Link" />
-                    <mat-error *ngIf="profileForm.get('cvURL')?.hasError('pattern')">
-                        Please enter a valid URL (http:// or https://)
-                    </mat-error>
-                </mat-form-field>
+                <!-- CV Upload -->
+                <div class="w-full mb-4">
+                    <label for="cvFile">Upload CV</label>
+                    <input type="file" class="form-control my-2" id="cvFile" (change)="onFileSelected($event)" accept=".pdf,.doc,.docx" />
+                    <p *ngIf="profileForm.get('cvURL')?.value">
+                        Current CV: <a [href]="profileForm.get('cvURL')?.value" target="_blank">Download</a>
+                    </p>
+                </div>
+
 
                 <!-- Summary -->
                 <mat-form-field appearance="outline" class="w-full">
