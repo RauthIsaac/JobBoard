@@ -5,88 +5,31 @@ import { JobDetails } from './job-details/job-details';
 import { ISkill } from '../../shared/models/iskill';
 import { ICategory } from '../../shared/models/icategory';
 import { JobFilterParams } from '../../shared/models/job-filter-params';
+import { Observable, map, tap } from 'rxjs';
+import { AuthService } from '../../auth/auth-service';
+
+export interface SavedJobsFilterParams {
+  searchValue?: string;
+  SortingOption?: 'DateAsc' | 'DateDesc';
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class JobsService {
-  //#region 
 
-  private readonly SAVED_JOBS_KEY = 'savedJobs';
-  public savedJobs = signal<Set<number>>(new Set<number>());
+  /*------------------------ Saved Jobs State ---------------------------- */
+  public savedJobsState = signal<number[]>([]);
   
   /*------------------------ Constructor ---------------------------- */
-  constructor(private http: HttpClient) {
-
-    this.loadSavedJobsFromStorage();
+  constructor(private http: HttpClient , private authService: AuthService) {
+    // Load saved jobs on service initialization
+    this.loadSavedJobs();
 
     effect(() => {
-      this.saveSavedJobsToStorage(this.savedJobs());
-
-      /*------------------- */
       this.GetAllJobs();
     });
   }
-
-  private loadSavedJobsFromStorage(): void {
-    try {
-      const savedJobsJson = localStorage.getItem(this.SAVED_JOBS_KEY);
-      if (savedJobsJson) {
-        const savedJobsArray: number[] = JSON.parse(savedJobsJson);
-        this.savedJobs.set(new Set(savedJobsArray));
-      }
-    } catch (error) {
-      console.error('Error loading saved jobs from localStorage:', error);
-      this.savedJobs.set(new Set<number>());
-    }
-  }
-
-  private saveSavedJobsToStorage(savedJobsSet: Set<number>): void {
-    try {
-      const savedJobsArray = Array.from(savedJobsSet);
-      localStorage.setItem(this.SAVED_JOBS_KEY, JSON.stringify(savedJobsArray));
-    } catch (error) {
-      console.error('Error saving jobs to localStorage:', error);
-    }
-  }
-
-  toggleSaved(jobId: number): void {
-    this.savedJobs.update(currentSet => {
-      const newSet = new Set(currentSet);
-      if (newSet.has(jobId)) {
-        newSet.delete(jobId);
-      } else {
-        newSet.add(jobId);
-      }
-      return newSet;
-    });
-  }
-
-  isSaved(jobId: number): boolean {
-    return this.savedJobs().has(jobId);
-  }
-
-  getSavedJobsList(): number[] {
-    return Array.from(this.savedJobs());
-  }
-
-  removeSavedJob(jobId: number): void {
-    this.savedJobs.update(currentSet => {
-      const newSet = new Set(currentSet);
-      newSet.delete(jobId);
-      return newSet;
-    });
-  }
-
-  clearAllSavedJobs(): void {
-    this.savedJobs.set(new Set<number>());
-    localStorage.removeItem(this.SAVED_JOBS_KEY);
-  }
-
-  getSavedJobsCount(): number {
-    return this.savedJobs().size;
-  }
-  //#endregion
   
   /*---------------------------- API URL ---------------------------- */
   private apiUrl = 'http://localhost:5007/api/Jobs';
@@ -155,7 +98,6 @@ export class JobsService {
       params = params.set('sortingOption', filters.sortingOption.toString());
     }
 
-
     this.http.get<IJob[]>(this.apiUrl, { params }).subscribe({
       next: (jobs) => {
         this.JobsList.set(Array.isArray(jobs) ? jobs : []);
@@ -172,14 +114,11 @@ export class JobsService {
   }
 
   /*-------------------------- Get Job Details ------------------------------ */
-
   GetJobDetails(jobID: number):any {
     return this.http.get(`${this.apiUrl}/${jobID}`);
   }
 
-
   /*-------------------------- Post New Job ------------------------------ */
-
   createJob(jobData: any): any {
     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjRjNGZjYzlkLWJiZTUtNDMyOC05MWY1LTk0ZDczYWQwNGJhMiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJUZWNoU29sdXRpb25zTHRkIiwianRpIjoiNjc1MzZmYjgtMjhkMi00YzUyLTk2N2ItMTQyMTExN2Q3ODA0IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiRW1wbG95ZXIiLCJleHAiOjE3NTUzMjU2MzksImlzcyI6IkpvYkJvYXJkQVBJIiwiYXVkIjoiSm9iQm9hcmRVc2VyIn0.i9zQ5XBxFmtJO1FJNivBvfbdgJBgCnUiks7cnc-Vwnk"; 
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -188,7 +127,6 @@ export class JobsService {
     
     return newJob;
   }
-
 
   /*-------------------------- Get All Jobs Skills ------------------------------ */
   GetAllJobsSkills(): any {
@@ -200,4 +138,94 @@ export class JobsService {
     return this.http.get<ICategory[]>(`${this.apiUrl}/categories`);
   }
 
+  /*-------------------------- Saved Jobs ------------------------------ */
+  private savedJobsUrl = 'http://localhost:5007/api/SavedJob';
+  private isSavedJobUrl = 'http://localhost:5007/api/SavedJob/issaved' 
+
+  private getAuthHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+  }
+
+  /*-------------------------- Get Saved Jobs (with filters) ------------------------------ */
+  getSavedJobs(filters?: SavedJobsFilterParams): Observable<IJob[]> {
+    let params = new HttpParams();
+    
+    if (filters?.searchValue && filters.searchValue.trim()) {
+      params = params.set('searchValue', filters.searchValue.trim());
+    }
+    
+    if (filters?.SortingOption) {
+      params = params.set('SortingOption', filters.SortingOption);
+    }
+
+
+    return this.http.get<IJob[]>(this.savedJobsUrl, { 
+      headers: this.getAuthHeaders(),
+      params 
+    });
+  }
+
+  /*-------------------------- Add to Saved Jobs ------------------------------ */
+  addToSavedJobs(jobId: number): Observable<any> {
+    return this.http.post(
+      `${this.savedJobsUrl}`,
+      {"jobId": jobId},
+      { headers: this.getAuthHeaders() }
+    ).pipe(
+      tap(() => {
+        // Update the savedJobsState signal
+        const currentSaved = this.savedJobsState();
+        if (!currentSaved.includes(jobId)) {
+          this.savedJobsState.set([...currentSaved, jobId]);
+        }
+      })
+    );
+  }
+
+  /*-------------------------- Remove from Saved Jobs ------------------------------ */
+  removeFromSavedJobs(jobId: number): Observable<any> {
+    return this.http.delete(`${this.savedJobsUrl}/${jobId}`, { headers: this.getAuthHeaders() }).pipe(
+      tap(() => {
+        // Update the savedJobsState signal
+        const currentSaved = this.savedJobsState();
+        this.savedJobsState.set(currentSaved.filter(id => id !== jobId));
+      })
+    );
+  }
+
+  /*-------------------------- Check if saved ------------------------------ */
+  isSaved(jobId: number): Observable<boolean> {
+    // First check local state, then fallback to API
+    const isInLocalState = this.savedJobsState().includes(jobId);
+    if (isInLocalState) {
+      return new Observable(observer => {
+        observer.next(true);
+        observer.complete();
+      });
+    }
+    
+    return this.http.get<boolean>(`${this.isSavedJobUrl}/${jobId}`, { headers: this.getAuthHeaders() });
+  }
+
+  /*-------------------------- Load Saved Jobs State ------------------------------ */
+  loadSavedJobs(): void {
+    this.getSavedJobs().subscribe({
+      next: (jobs) => {
+        const ids = jobs.map(j => j.id);
+        this.savedJobsState.set(ids);
+        console.log('Loaded saved jobs IDs:', ids);
+      },
+      error: (err) => {
+        console.error('Error loading saved jobs', err);
+        this.savedJobsState.set([]);
+      }
+    });
+  }
+
+  /*-------------------------- Check if job is saved (synchronous) ------------------------------ */
+  isJobSaved(jobId: number): boolean {
+    return this.savedJobsState().includes(jobId);
+  }
 }

@@ -32,15 +32,14 @@
             </div>
         </div>
         <div class="col-1">
-            <button class="save-job-btn" (click)="AddToSaved()" [class.saved]="isSaved">
-                <i class="bi" [class.bi-bookmark-check]="isSaved" [class.bi-bookmark]="!isSaved"></i>
-            </button> 
+            <button class="save-job-btn" (click)="AddToSaved()" [class.saved]="isSavedFlag()">
+                <i class="bi" [class.bi-bookmark-check]="isSavedFlag()" [class.bi-bookmark]="!isSavedFlag()"></i>
+            </button>
         </div>
     </div>
 
-
     <div class="my-3">
-        {{job.description | textSlice:120}}
+        {{getSlicedDescription()}}
     </div>
 
     <div class="row my-3">
@@ -62,11 +61,4 @@
             <input type="button" class="apply-now-btn " routerLink="/jobApp" value="Apply Now">
         </div>
     </div>
-
-
 </div>
-
-
-
-
-

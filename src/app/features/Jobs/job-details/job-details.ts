@@ -1,15 +1,16 @@
-import { CurrencyPipe, DatePipe, NgIf, NgFor, CommonModule } from '@angular/common';
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { CurrencyPipe, DatePipe, CommonModule } from '@angular/common';
+import { Component, OnInit, signal, effect } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { JobsService } from '../jobs-service';
+import { IJob } from '../../../shared/models/ijob';
 
 @Component({
   selector: 'app-job-details',
-  imports: [CurrencyPipe, RouterLink,  DatePipe,  CommonModule],
+  imports: [CurrencyPipe, RouterLink, DatePipe, CommonModule],
   templateUrl: './job-details.html',
   styleUrl: './job-details.css'
 })
-export class JobDetails implements OnInit{
+export class JobDetails implements OnInit {
 
   jobId = signal<number>(0);
   jobDetails = signal<any>({});
@@ -19,20 +20,31 @@ export class JobDetails implements OnInit{
   responsibilitiesList = signal<string[]>([]);
   offersList = signal<string[]>([]);
 
-  constructor(private jobService: JobsService, private route: ActivatedRoute) {}
+  isSavedFlag = signal<boolean>(false);
+
+  constructor(private jobService: JobsService, private route: ActivatedRoute) {
+    // Listen to changes in savedJobsState
+    effect(() => {
+      const savedIds = this.jobService.savedJobsState();
+      const currentJobId = this.jobId();
+      if (currentJobId > 0) {
+        this.isSavedFlag.set(savedIds.includes(currentJobId));
+      }
+    });
+  }
 
   ngOnInit(): void {
-    window.scrollTo(0, 0);
-    
     this.route.params.subscribe(params => {
-      this.jobId.set(+params['id']); 
-      this.loadJobDetails(); 
-    });
-    }
+      const jobId = +params['id'];
+      this.jobId.set(jobId);
+      this.loadJobDetails();
 
-   
-  
-  loadJobDetails(){
+      // Set initial saved state
+      this.isSavedFlag.set(this.jobService.isJobSaved(jobId));
+    });
+  }
+
+  loadJobDetails() {
     this.loading.set(true);
     this.error.set(null);
     
@@ -60,21 +72,39 @@ export class JobDetails implements OnInit{
           }
           this.loading.set(false);
         },
-        error: (err:any) => {
+        error: (err: any) => {
           this.error.set('Failed to load job details. Please try again.');
           this.loading.set(false);
         }
       });
   }
 
-
-
   /*----------------------------Saved Jobs-------------------------------- */
-  get isSaved(): boolean {
-    return this.jobService.isSaved(this.jobId());
-  }
-
-  AddToSaved(): void {
-    this.jobService.toggleSaved(this.jobId());
+  toggleSaved(): void {
+    const jobId = this.jobId();
+    
+    if (this.isSavedFlag()) {
+      this.jobService.removeFromSavedJobs(jobId).subscribe({
+        next: () => {
+          console.log(`Job ${jobId} removed from saved jobs`);
+        },
+        error: (err) => {
+          console.error('Error removing job:', err);
+          // Revert the UI state on error
+          this.isSavedFlag.set(true);
+        }
+      });
+    } else {
+      this.jobService.addToSavedJobs(jobId).subscribe({
+        next: () => {
+          console.log(`Job ${jobId} added to saved jobs`);
+        },
+        error: (err) => {
+          console.error('Error saving job:', err);
+          // Revert the UI state on error
+          this.isSavedFlag.set(false);
+        }
+      });
+    }
   }
 }
