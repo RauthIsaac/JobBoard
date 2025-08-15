@@ -15,7 +15,7 @@
         <button 
           class="btn btn-outline-danger btn-sm"
           (click)="clearAllSavedJobs()"
-          [disabled]="getTotalCount() === 0"
+          [disabled]="getTotalCount() === 0 || isLoading()"
           *ngIf="getTotalCount() > 0">
           <i class="bi bi-trash me-1"></i>
           Clear All
@@ -27,6 +27,7 @@
   <!-- Search and Filter Controls -->
   <div class="filters-section mb-4" *ngIf="getTotalCount() > 0">
     <div class="row g-3">
+      <label class="form-label text-muted large mb-1">Get your saved job</label>
       <!-- Search Input -->
       <div class="col-md-8">
         <div class="search-container position-relative">
@@ -47,12 +48,16 @@
             <i class="bi bi-x-circle text-muted"></i>
           </button>
         </div>
+        
+        <!-- Typing indicator -->
+        <small class="text-primary mt-1" *ngIf="isTyping()">
+          <i class="bi bi-three-dots"></i> Searching...
+        </small>
       </div>
 
       <!-- Sort Dropdown -->
       <div class="col-md-4">
         <div class="sort-container">
-          <label class="form-label text-muted small mb-1">Sort by Date</label>
           <select 
             class="form-select" 
             [value]="SortingOption()"
@@ -66,7 +71,7 @@
     </div>
 
     <!-- Filter Results Info -->
-    <div class="filter-info mt-3" *ngIf="searchValue().length > 0">
+    <div class="filter-info mt-3" *ngIf="searchValue().length > 0 && !isTyping()">
       <div class="d-flex align-items-center justify-content-between">
         <small class="text-muted">
           <span *ngIf="getFilteredCount() > 0">
@@ -89,7 +94,7 @@
   </div>
 
   <!-- Loading State -->
-  <div class="text-center my-5" *ngIf="isLoading()">
+  <div class="text-center my-5" *ngIf="isLoading() && !isTyping()">
     <div class="spinner-border text-primary mb-3" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
@@ -102,17 +107,21 @@
     {{ error() }}
     <button 
       class="btn btn-outline-danger btn-sm ms-3"
-      (click)="refreshSavedJobs()">
+      (click)="refreshSavedJobs()"
+      [disabled]="isLoading()">
       Try Again
     </button>
   </div>
 
   <!-- Jobs List -->
-  <div *ngIf="!isLoading() && !error() && filteredJobsList().length > 0" class="jobs-container">
+  <div *ngIf="!isLoading() && !error() && filteredJobsList().length > 0" class="jobs-container my-3">
     <div class="row g-4">
-      <div class="col-12 col-md-6 col-lg-4" *ngFor="let job of filteredJobsList(); trackBy: trackByJobId">
+      <div *ngFor="let job of filteredJobsList(); trackBy: trackByJobId" class="col-12">  
         <div class="job-card-wrapper">
-          <app-job-view [job]="job"></app-job-view>
+           <app-job-saved-view
+             [job]="job" 
+             (jobRemoved)="onJobRemoved($event)"
+             class="w-100"></app-job-saved-view> 
         </div>
       </div>
     </div>
@@ -136,7 +145,7 @@
 
   <!-- No Search Results State -->
   <div class="no-results-state text-center my-5" 
-       *ngIf="!isLoading() && !error() && getTotalCount() > 0 && getFilteredCount() === 0 && searchValue().length > 0">
+       *ngIf="!isLoading() && !error() && getTotalCount() > 0 && getFilteredCount() === 0 && searchValue().length > 0 && !isTyping()">
     <div class="no-results-icon mb-4">
       <i class="bi bi-search display-1 text-muted"></i>
     </div>

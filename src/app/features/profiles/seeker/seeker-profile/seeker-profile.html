@@ -10,8 +10,53 @@
         <p class="contact-info"><mat-icon>phone</mat-icon> {{seekerData().phoneNumber}}</p>
       </div>
       <div class="action-buttons col-lg-3 col-md-12 col-sm-12">
-        <button mat-button routerLink="/editSeeker"><mat-icon>edit</mat-icon> Edit Profile</button>
-        <button mat-button><mat-icon>cloud_download</mat-icon> Download Resume</button>
+        <button mat-button routerLink="/editSeeker" class="mt-2"><mat-icon class="mx-1">edit</mat-icon> Edit Profile</button>
+        
+        <!-- Resume Upload Section -->
+        <div class="resume-section">
+          <!-- Hidden file input -->
+          <input #fileInput 
+                 type="file" 
+                 accept=".pdf,.doc,.docx" 
+                 style="display: none;" 
+                 (change)="onFileSelected($event)">
+          
+          <!-- Upload Button -->
+          <button mat-button 
+                  (click)="openFileDialog()" 
+                  [disabled]="isUploadingResume()"
+                  *ngIf="!seekerData().resumeUrl">
+            <mat-icon>cloud_upload</mat-icon>
+            <span *ngIf="!isUploadingResume()">Upload Resume</span>
+            <mat-spinner diameter="20" *ngIf="isUploadingResume()"></mat-spinner>
+          </button>
+
+          <!-- Resume Management Buttons (when resume exists) -->
+          <div *ngIf="seekerData().resumeUrl" class="resume-actions">
+            <!-- View/Download Button -->
+            <button mat-button (click)="downloadResume()" title="Download Resume">
+              <mat-icon>download</mat-icon> Download
+            </button>
+            
+            <!-- Replace Button -->
+            <button mat-button 
+                    (click)="openFileDialog()" 
+                    [disabled]="isUploadingResume()"
+                    title="Replace Resume">
+              <mat-icon>refresh</mat-icon>
+              <span *ngIf="!isUploadingResume()">Replace</span>
+              <mat-spinner diameter="20" *ngIf="isUploadingResume()"></mat-spinner>
+            </button>
+            
+            <!-- Delete Button -->
+            <button mat-button 
+                    (click)="deleteResume()" 
+                    color="warn" 
+                    title="Delete Resume">
+              <mat-icon>delete</mat-icon> Delete
+            </button>
+          </div>
+        </div>
       </div>
     </div> 
   </mat-card>

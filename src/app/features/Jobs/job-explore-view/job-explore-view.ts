@@ -1,32 +1,39 @@
-import { CurrencyPipe, DatePipe, NgIf } from '@angular/common';
-import { Component, Input, OnInit, signal, effect, OnChanges, SimpleChanges } from '@angular/core';
+import { CommonModule, CurrencyPipe, DatePipe, NgIf } from '@angular/common';
+import { Component, Input, OnInit, signal, effect, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { JobsService } from '../jobs-service';
 
 @Component({
-  selector: 'app-job-view',
-  imports: [CurrencyPipe, RouterLink, DatePipe, NgIf],
-  templateUrl: './job-view.html',
-  styleUrl: './job-view.css'
+  selector: 'app-job-explore-view',
+  imports: [CurrencyPipe, RouterLink, DatePipe, CommonModule],
+  templateUrl: './job-explore-view.html',
+  styleUrl: './job-explore-view.css'
 })
-export class JobView implements OnInit, OnChanges {
+export class JobExploreView implements OnInit, OnChanges {
 
   @Input({ required: true }) job!: any;
+  @Output() jobRemoved = new EventEmitter<number>(); // Event للإشارة إلى أن الوظيفة تم حذفها
 
   isSavedFlag = signal<boolean>(false);
 
   constructor(private jobService: JobsService) {
-    // Listen to changes in savedJobsState for ANY job changes
+    // Listen to changes in savedJobsState for real-time updates
     effect(() => {
       if (this.job?.id) {
         const isCurrentJobSaved = this.jobService.isJobSaved(this.job.id);
         this.isSavedFlag.set(isCurrentJobSaved);
+        console.log(`Job ${this.job.id} saved state: ${isCurrentJobSaved}`);
       }
     });
   }
 
   ngOnInit(): void {
     this.updateSavedState();
+    
+    // إضافة تأخير صغير للتأكد من تحميل الـ savedJobsState
+    setTimeout(() => {
+      this.updateSavedState();
+    }, 50);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -53,6 +60,8 @@ export class JobView implements OnInit, OnChanges {
         next: () => {
           // الـ effect سيحدث التحديث تلقائياً
           console.log(`Job ${jobId} removed from saved jobs`);
+          // إرسال event للمكون الأب إذا كان في صفحة saved jobs
+          this.jobRemoved.emit(jobId);
         },
         error: (err) => {
           console.error('Error removing job from saved:', err);
