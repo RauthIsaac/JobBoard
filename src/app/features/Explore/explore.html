@@ -37,7 +37,7 @@
             (keyup.enter)="onSearch()"
         />
         @if (searchTerm()) {
-            <button type="button" class="btn btn-sm btn-link p-1" (click)="searchControl.setValue(''); searchTerm.set('')">
+            <button type="button" class="btn btn-sm btn-link p-1" (click)="searchControl.setValue(''); searchTerm.set(''); ">
                 <i class="bi bi-x"></i>
             </button>
         }
@@ -79,6 +79,21 @@
                     <input type="text" placeholder="Search location..." class="form-control" />
                 </div>
                 <small class="text-muted">Location filtering coming soon...</small>
+            </div>
+
+            <hr class="my-4">
+
+            <!-- Category Filter -->
+            <div [formGroup]="filtersForm">
+                <div class="my-2">
+                    <span class="fs-5">Category</span>
+                    <select class="form-select mt-2" formControlName="categoryId">
+                        <option value="">All Categories</option>
+                        @for(category of categories(); track category.id) {
+                            <option [value]="category.id">{{ category.categoryName }}</option>
+                        }
+                    </select>
+                </div>
             </div>
 
             <hr class="my-4">

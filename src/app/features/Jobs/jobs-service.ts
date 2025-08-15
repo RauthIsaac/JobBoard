@@ -59,8 +59,10 @@ export class JobsService {
     });
   }
 
-  /*--------------------------- Get Filtered Jobs ----------------------------- */
+  /*--------------------------- Get Filtered Jobs (Debug Version) ----------------------------- */
   GetFilteredJobs(filters: JobFilterParams): void {
+    console.log('GetFilteredJobs called with filters:', filters);
+    
     this.isLoading.set(true);
     this.error.set(null);
 
@@ -69,43 +71,70 @@ export class JobsService {
     // Add filter parameters if they exist
     if (filters.searchValue && filters.searchValue.trim()) {
       params = params.set('searchValue', filters.searchValue.trim());
+      console.log('Added searchValue param:', filters.searchValue.trim());
     }
-    if (filters.categoryId) {
+    
+    if (filters.categoryId && filters.categoryId > 0) {
       params = params.set('categoryId', filters.categoryId.toString());
+      console.log('Added categoryId param:', filters.categoryId.toString());
     }
+    
     if (filters.skillId) {
       params = params.set('skillId', filters.skillId.toString());
+      console.log('Added skillId param:', filters.skillId.toString());
     }
+    
     if (filters.employerId) {
       params = params.set('employerId', filters.employerId.toString());
+      console.log('Added employerId param:', filters.employerId.toString());
     }
-    if (filters.workplaceType) {
+    
+    if (filters.workplaceType && filters.workplaceType.trim()) {
       params = params.set('workplaceType', filters.workplaceType);
+      console.log('Added workplaceType param:', filters.workplaceType);
     }
-    if (filters.jobType) {
+    
+    if (filters.jobType && filters.jobType.trim()) {
       params = params.set('jobType', filters.jobType);
+      console.log('Added jobType param:', filters.jobType);
     }
-    if (filters.experienceLevel) {
+    
+    if (filters.experienceLevel && filters.experienceLevel.trim()) {
       params = params.set('experienceLevel', filters.experienceLevel);
+      console.log('Added experienceLevel param:', filters.experienceLevel);
     }
-    if (filters.educationLevel) {
+    
+    if (filters.educationLevel && filters.educationLevel.trim()) {
       params = params.set('educationLevel', filters.educationLevel);
+      console.log('Added educationLevel param:', filters.educationLevel);
     }
+    
     if (filters.isActive !== undefined) {
       params = params.set('isActive', filters.isActive.toString());
+      console.log('Added isActive param:', filters.isActive.toString());
     }
+    
     if (filters.sortingOption !== undefined) {
       params = params.set('sortingOption', filters.sortingOption.toString());
+      console.log('Added sortingOption param:', filters.sortingOption.toString());
     }
+    console.log('Final HTTP params:', params.toString());
+    console.log('Full API URL will be:', `${this.apiUrl}?${params.toString()}`);
 
     this.http.get<IJob[]>(this.apiUrl, { params }).subscribe({
       next: (jobs) => {
+        console.log('API Response received:', jobs);
         this.JobsList.set(Array.isArray(jobs) ? jobs : []);
         this.isLoading.set(false);
-        console.log("Filtered Jobs:", this.JobsList());
+        console.log("Filtered Jobs loaded:", this.JobsList().length, "jobs");
       },
       error: (error) => {
         console.error('Error loading filtered jobs:', error);
+        console.error('Error details:', {
+          status: error.status,
+          message: error.message,
+          url: error.url
+        });
         this.error.set('Failed to load filtered jobs');
         this.isLoading.set(false);
         this.JobsList.set([]);
