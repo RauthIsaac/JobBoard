@@ -1,44 +1,157 @@
-<div class="saved-jobs-container" style="margin: 200px;">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Saved Jobs Count : ({{ getSavedJobsCount() }})</h2>
-    <button 
-      *ngIf="(savedJobsList()?.size || 0) > 0" 
-      class="btn btn-outline-danger btn-sm"
-      (click)="clearAllSavedJobs()">
-      <i class="bi bi-trash"></i> Delete All
-    </button>
+<div class="container saved-jobs-page">
+  <!-- Page Header -->
+  <div class="page-header my-5">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h2 class="page-title mb-0">
+          <i class="bi bi-bookmark-check me-2"></i> Saved Jobs
+          <span class="badge bg-primary ms-2" *ngIf="getTotalCount() > 0">{{ getTotalCount() }}</span>
+        </h2>
+        <p class="text-muted mt-2" *ngIf="getTotalCount() > 0">
+          You have {{ getTotalCount() }} saved job{{ getTotalCount() > 1 ? 's' : '' }}
+        </p>
+      </div>
+      <div class="col-md-4 text-end">
+        <button 
+          class="btn btn-outline-danger btn-sm"
+          (click)="clearAllSavedJobs()"
+          [disabled]="getTotalCount() === 0"
+          *ngIf="getTotalCount() > 0">
+          <i class="bi bi-trash me-1"></i>
+          Clear All
+        </button>
+      </div>
+    </div>
   </div>
 
-  <div *ngIf="(savedJobsList()?.size || 0) === 0" class="no-jobs text-center p-5">
-    <i class="bi bi-bookmark display-1 text-muted"></i>
-    <h4 class="text-muted mt-3">There is no saved jobs yet.</h4>
-  </div>
+  <!-- Search and Filter Controls -->
+  <div class="filters-section mb-4" *ngIf="getTotalCount() > 0">
+    <div class="row g-3">
+      <!-- Search Input -->
+      <div class="col-md-8">
+        <div class="search-container position-relative">
+          <i class="bi bi-search position-absolute start-0 top-50 translate-middle-y ms-3 text-muted"></i>
+          <input 
+            type="text" 
+            class="form-control ps-5 pe-5" 
+            placeholder="Search saved jobs by title, company, or location..."
+            [value]="searchValue()"
+            (input)="onSearchChange($event)"
+            [disabled]="isLoading() && !isTyping()">
+          
+          <button 
+            class="btn btn-link position-absolute end-0 top-50 translate-middle-y me-2 p-1"
+            (click)="clearSearch()"
+            *ngIf="searchValue().length > 0"
+            type="button">
+            <i class="bi bi-x-circle text-muted"></i>
+          </button>
+        </div>
+      </div>
 
-  <div class="row">
-    <div *ngFor="let jobId of savedJobsList() || []" class="col-md-6 col-lg-4 mb-3">
-      <div class="card job-item shadow-sm">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start mb-2">
-            <h6 class="card-title">Job ID: {{ jobId }}</h6>
-            <button 
-              class="btn btn-sm btn-outline-danger"
-              (click)="removeJob(jobId)"
-              title="Delete from Saved">
-              <i class="bi bi-x"></i>
-            </button>
-          </div>
-          
-          <!-- Here you can add more job details when you have full job objects -->
-          <p class="card-text text-muted">Job Details...</p>
-          
-          <div class="d-flex justify-content-between align-items-center">
-            <small class="text-muted">Saved</small>
-            <a href="/job-details/{{ jobId }}" class="btn btn-primary btn-sm">
-              {{jobId}}
-            </a>
-          </div>
+      <!-- Sort Dropdown -->
+      <div class="col-md-4">
+        <div class="sort-container">
+          <label class="form-label text-muted small mb-1">Sort by Date</label>
+          <select 
+            class="form-select" 
+            [value]="SortingOption()"
+            (change)="onSortChange($any($event.target).value)"
+            [disabled]="isLoading()">
+            <option value="DateDesc">Newest First</option>
+            <option value="DateAsc">Oldest First</option>
+          </select>
         </div>
       </div>
     </div>
+
+    <!-- Filter Results Info -->
+    <div class="filter-info mt-3" *ngIf="searchValue().length > 0">
+      <div class="d-flex align-items-center justify-content-between">
+        <small class="text-muted">
+          <span *ngIf="getFilteredCount() > 0">
+            Showing {{ getFilteredCount() }} of {{ getTotalCount() }} saved jobs
+          </span>
+          <span *ngIf="getFilteredCount() === 0">
+            No saved jobs match your search
+          </span>
+        </small>
+        
+        <button 
+          class="btn btn-outline-secondary btn-sm"
+          (click)="refreshSavedJobs()"
+          [disabled]="isLoading()">
+          <i class="bi bi-arrow-clockwise me-1"></i>
+          Refresh
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="text-center my-5" *ngIf="isLoading()">
+    <div class="spinner-border text-primary mb-3" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="text-muted">Loading your saved jobs...</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="alert alert-danger my-4" *ngIf="error()" role="alert">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    {{ error() }}
+    <button 
+      class="btn btn-outline-danger btn-sm ms-3"
+      (click)="refreshSavedJobs()">
+      Try Again
+    </button>
+  </div>
+
+  <!-- Jobs List -->
+  <div *ngIf="!isLoading() && !error() && filteredJobsList().length > 0" class="jobs-container">
+    <div class="row g-4">
+      <div class="col-12 col-md-6 col-lg-4" *ngFor="let job of filteredJobsList(); trackBy: trackByJobId">
+        <div class="job-card-wrapper">
+          <app-job-view [job]="job"></app-job-view>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Jobs State -->
+  <div class="no-jobs-state text-center my-5" *ngIf="!isLoading() && !error() && getTotalCount() === 0">
+    <div class="no-jobs-icon mb-4">
+      <i class="bi bi-bookmark display-1 text-muted"></i>
+    </div>
+    <h4 class="text-muted mb-3">No Saved Jobs Yet</h4>
+    <p class="text-muted mb-4">
+      Start saving jobs that interest you to create your personal collection.<br>
+      You can find jobs to save on the main jobs page.
+    </p>
+    <a routerLink="/jobs" class="btn btn-primary">
+      <i class="bi bi-search me-2"></i>
+      Browse Jobs
+    </a>
+  </div>
+
+  <!-- No Search Results State -->
+  <div class="no-results-state text-center my-5" 
+       *ngIf="!isLoading() && !error() && getTotalCount() > 0 && getFilteredCount() === 0 && searchValue().length > 0">
+    <div class="no-results-icon mb-4">
+      <i class="bi bi-search display-1 text-muted"></i>
+    </div>
+    <h4 class="text-muted mb-3">No Results Found</h4>
+    <p class="text-muted mb-4">
+      No saved jobs match your search for "<strong>{{ searchValue() }}</strong>".<br>
+      Try adjusting your search terms.
+    </p>
+    <button class="btn btn-outline-primary me-2" (click)="clearSearch()">
+      <i class="bi bi-x-circle me-2"></i>
+      Clear Search
+    </button>
+    <button class="btn btn-primary" (click)="refreshSavedJobs()">
+      <i class="bi bi-arrow-clockwise me-2"></i>
+      Refresh
+    </button>
   </div>
 </div>
