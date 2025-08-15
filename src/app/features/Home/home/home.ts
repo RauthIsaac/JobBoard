@@ -12,9 +12,9 @@ import { JobView } from '../../Jobs/job-view/job-view';
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
-export class Home implements OnInit{
+export class Home implements OnInit {
 
-  jobsList = signal<IJob[]>([]);
+  jobsList = signal<IJob[]>([]); 
   categories = signal<ICategory[]>([]);
 
   // Form controls for search
@@ -25,13 +25,15 @@ export class Home implements OnInit{
   constructor(
     private jobService: JobsService,
     private router: Router
-  ) {
-    this.jobsList = this.jobService.JobsList;
-    this.loadCategories();
-  }
+  ) {}
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
+
+    this.jobsList = this.jobService.JobsList;
+
+    this.jobService.GetAllJobs();
+    this.loadCategories();
   }
 
   private loadCategories(): void {
@@ -56,26 +58,20 @@ export class Home implements OnInit{
     if (searchValue) {
       searchParams.search = searchValue;
     }
-
     if (locationValue) {
       searchParams.location = locationValue;
     }
-
     if (categoryValue && categoryValue !== '') {
       searchParams.categoryId = categoryValue;
     }
 
-    // Navigate to explore page with query parameters
-    this.router.navigate(['/explore'], { 
-      queryParams: searchParams
-    });
-
+    this.router.navigate(['/explore'], { queryParams: searchParams });
   }
 
   // Handle quick filter buttons
   onQuickFilter(filterType: string, value: string): void {
     const queryParams: any = {};
-    
+
     switch (filterType) {
       case 'workplaceType':
         queryParams.workplaceType = value;
@@ -88,7 +84,6 @@ export class Home implements OnInit{
         break;
     }
 
-    // Navigate to explore page with the specific filter
     this.router.navigate(['/explore'], { queryParams });
   }
 

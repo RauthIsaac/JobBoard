@@ -61,11 +61,8 @@ export class EditSeekerProfile implements OnInit {
       dateOfBirth: [''],
       address: ['', [Validators.maxLength(200)]],
       phoneNumber: ['', [Validators.pattern(/^\+?\d{7,15}$/)]],
-      // cvURL: ['', [Validators.pattern('https?://.+')]],
       gender: [''],
       summary: ['', [Validators.maxLength(1000)]],
-      // profileImageURL: ['', [Validators.pattern('https?://.+')]],
-      // email: ['', [Validators.email]],
       skillName: [[]],
       seekerExperiences: this.fb.array([]),
       seekerEducations: this.fb.array([]),
@@ -73,7 +70,6 @@ export class EditSeekerProfile implements OnInit {
       interestName: [[]],
       trainingName: [[]]
     });
-
 
   }
 
@@ -110,11 +106,8 @@ export class EditSeekerProfile implements OnInit {
       dateOfBirth: dateOfBirth,
       address: data.address || '',
       phoneNumber: data.phoneNumber || '', 
-      // cvURL: data.cvURL || '',
       gender: data.gender || '',
       summary: data.summary || '',
-      // profileImageURL: data.profileImageURL || '',
-      // email: data.email || '',
       skillName: Array.isArray(data.skillName) ? data.skillName : [],
       certificateName: Array.isArray(data.certificateName) ? data.certificateName : [],
       interestName: Array.isArray(data.interestName) ? data.interestName : [],
@@ -282,15 +275,12 @@ export class EditSeekerProfile implements OnInit {
       // Create the payload matching the backend DTO structure
       const payload = {
         Name: formData.name,
-        // Email: formData.email,
         PhoneNumber: null, // Add if needed
         Title: formData.title,
         Address: formData.address,
         DateOfBirth: formData.dateOfBirth ? new Date(formData.dateOfBirth).toISOString() : null,
         Gender: formData.gender,
         Summary: formData.summary,
-        // CV_Url: formData.cvURL,
-        // ProfileImageUrl: formData.profileImageURL,
         Skills: formData.skillName || [],
         Interests: formData.interestName || [],
         Certificates: formData.certificateName || [],

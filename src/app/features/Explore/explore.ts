@@ -3,15 +3,15 @@ import { ActivatedRoute } from '@angular/router';
 import { JobsService } from '../Jobs/jobs-service';
 import { IJob } from '../../shared/models/ijob';
 import { ICategory } from '../../shared/models/icategory';
-import { JobView } from '../Jobs/job-view/job-view';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
 import { JobFilterParams, SortingOptions } from '../../shared/models/job-filter-params';
+import { JobExploreView } from '../Jobs/job-explore-view/job-explore-view';
 
 
 @Component({
   selector: 'app-explore',
-  imports: [JobView, FormsModule, ReactiveFormsModule],
+  imports: [JobExploreView, FormsModule, ReactiveFormsModule],
   templateUrl: './explore.html',
   styleUrl: './explore.css'
 })

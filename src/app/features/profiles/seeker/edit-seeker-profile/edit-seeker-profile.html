@@ -52,24 +52,7 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-
-                    <!-- Email -->
-                    <!-- <mat-form-field appearance="outline">
-                        <mat-label>Email</mat-label>
-                        <input matInput formControlName="email" placeholder="Email Address" />
-                        <mat-error *ngIf="profileForm.get('email')?.hasError('email')">
-                            Please enter a valid email
-                        </mat-error>
-                    </mat-form-field> -->
-
-                    <!-- Profile Image URL -->
-                    <!-- <mat-form-field appearance="outline">
-                        <mat-label>Profile Image URL</mat-label>
-                        <input matInput formControlName="profileImageURL" placeholder="Profile Image URL" />
-                        <mat-error *ngIf="profileForm.get('profileImageURL')?.hasError('pattern')">
-                            Please enter a valid URL (http:// or https://)
-                        </mat-error>
-                    </mat-form-field> -->
+  
                 </div>
 
                 <!-- Address -->
@@ -80,15 +63,6 @@
                         Maximum 200 characters allowed
                     </mat-error>
                 </mat-form-field>
-
-                <!-- CV Upload -->
-                <!-- <div class="w-full mb-4">
-                    <label for="cvFile">Upload CV</label>
-                    <input type="file" class="form-control my-2" id="cvFile" (change)="onFileSelected($event)" accept=".pdf,.doc,.docx" />
-                    <p *ngIf="profileForm.get('cvURL')?.value">
-                        Current CV: <a [href]="profileForm.get('cvURL')?.value" target="_blank">Download</a>
-                    </p>
-                </div> -->
 
 
                 <!-- Summary -->

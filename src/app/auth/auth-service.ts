@@ -159,6 +159,7 @@ export class AuthService {
     });
   }
 
+  
   /*---------------------------- Update Seeker Profile ----------------------------*/
   updateSeekerProfile(profileData: any): Observable<any> {
     const headers = new HttpHeaders({
@@ -167,6 +168,56 @@ export class AuthService {
     });
 
     return this.http.put(`${this.baseUrl}/api/Seeker`, profileData, { headers });
+  }
+
+
+
+  
+  /*********************************************************************************/
+  /*---------------------------- Upload Resume ----------------------------*/
+  uploadResume(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('CV_Url', file);
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.getToken()}`
+      // Note: Don't set Content-Type for FormData, let browser set it with boundary
+    });
+
+    return this.http.post(`${this.baseUrl}/api/Seeker/upload-files`, formData, { headers });
+  }
+
+  /*---------------------------- Download Resume ----------------------------*/
+  downloadResume(): Observable<Blob> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.getToken()}`
+    });
+
+    return this.http.get(`${this.baseUrl}/api/Seeker/download-resume`, { 
+      headers,
+      responseType: 'blob'
+    });
+  }
+
+  /*---------------------------- Delete Resume ----------------------------*/
+  deleteResume(): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.getToken()}`
+    });
+
+    return this.http.delete(`${this.baseUrl}/api/Seeker/upload-files`, { 
+      headers,
+      responseType: 'text' as 'json'
+    });
+  }
+
+  /*---------------------------- Get Resume URL ----------------------------*/
+  getResumeUrl(): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.getToken()}`
+    });
+
+    return this.http.get(`${this.baseUrl}/api/Seeker/resume-url`, { headers });
   }
 
 }

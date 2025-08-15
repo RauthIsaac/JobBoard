@@ -172,3 +172,117 @@
 .mat-mdc-card-content, .mat-mdc-card-actions {
   padding: 0;
 }
+
+
+
+
+/* Resume Section Styles */
+.resume-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.resume-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.resume-actions button {
+  flex: 1;
+  min-width: 100px;
+  font-size: 0.875rem;
+}
+
+/* Upload Button Styles */
+button[mat-button] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+}
+
+button[mat-button]:hover:not(:disabled) {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+button[mat-button]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Loading Spinner */
+mat-spinner {
+  display: inline-block;
+}
+
+/* Success and Error Snackbar Styles */
+.success-snackbar {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+.error-snackbar {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+/* Responsive Design for Resume Actions */
+@media (max-width: 768px) {
+  .resume-actions {
+    flex-direction: column;
+  }
+  
+  .resume-actions button {
+    width: 100%;
+    margin-bottom: 4px;
+  }
+  
+  .action-buttons {
+    margin-top: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .resume-section {
+    width: 100%;
+  }
+  
+  .resume-actions button {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+}
+
+/* File Input Styling (hidden but accessible) */
+input[type="file"] {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Resume Status Indicator */
+.resume-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.875rem;
+  color: #666;
+  margin-top: 4px;
+}
+
+.resume-status.uploaded {
+  color: #4caf50;
+}
+
+.resume-status mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}

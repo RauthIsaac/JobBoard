@@ -1,6 +1,6 @@
 .job-container{
     background: var(--basic-gray);
-    padding: 40px;
+    padding: 20px;
     border-radius: 15px;
     transition: all 0.3s ease;
     cursor: pointer; 
