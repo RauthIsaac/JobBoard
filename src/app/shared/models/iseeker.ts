@@ -5,10 +5,10 @@ export interface Iseeker {
     title? : string,
     dateOfBirth? : Date,
     address? : string,
-    cvURL? : string,
+    cV_Url? : string,
     gender? : Gender,
     summary? : string,
-    profileImageURL? : string,
+    profileImageUrl? : string,
     email? : string,
     skillName? : string[],
     seekerExperiences? : SeekerExperience[],
@@ -41,7 +41,7 @@ interface SeekerEducation{
     university? : string,
     date? : Date,
     location? : string,
-    GPA? : number,        
+    gpa? : number,        
     educationLevel? : EducationLevel
 }
 

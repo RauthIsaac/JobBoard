@@ -200,6 +200,31 @@ export class AuthService {
     return this.http.put(`${this.baseUrl}/api/Seeker`, profileData, { headers });
   }
 
+  /*---------------------------- Upload Profile Image ----------------------------*/
+  uploadProfileImage(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('ProfileImageURL', file); // Same field name as CV upload
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.getToken()}`
+    });
+
+    return this.http.post(`${this.baseUrl}/api/Seeker/upload-files`, formData, { headers });
+  }
+
+  /*---------------------------- Delete Profile Image ----------------------------*/
+  deleteProfileImage(): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.getToken()}`
+    });
+
+    // You might need to adjust this endpoint based on your API
+    return this.http.delete(`${this.baseUrl}/api/Seeker/profile-image`, { 
+      headers,
+      responseType: 'text' as 'json'
+    });
+  }
+
   /*---------------------------- Upload Resume ----------------------------*/
   uploadResume(file: File): Observable<any> {
     const formData = new FormData();
