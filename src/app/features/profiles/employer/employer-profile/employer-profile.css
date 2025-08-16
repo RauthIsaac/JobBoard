@@ -1,6 +1,5 @@
 .emp-profile{
-    margin-top: 100px;
-    margin: 100px;
+    margin: 0px 100px 30px;
 }
 
 /* ------------------------- Profile Section ------------------------- */
@@ -19,8 +18,9 @@
 .image{
     display: flex;
     justify-content: center;
-    border-radius: 50%;  
-    height: fit-content; 
+    width: 200px;
+    height: 130px;
+    overflow: hidden;
 }
 
 .post-new-job-btn{

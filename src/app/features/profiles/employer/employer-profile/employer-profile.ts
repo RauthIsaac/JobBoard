@@ -2,11 +2,12 @@ import { Component, signal, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProfilesService } from '../../profiles-service';
 import { AuthService } from '../../../../auth/auth-service';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-employer-profile',
-  imports: [RouterLink],
+  imports: [RouterLink,CommonModule],
   templateUrl: './employer-profile.html',
   styleUrl: './employer-profile.css'
 })
@@ -19,6 +20,7 @@ export class EmployerProfile implements OnInit {
 
   }
   ngOnInit(): void {
+    window.scrollTo(0, 0);
     this.loadEmployerProfile();
   }
 

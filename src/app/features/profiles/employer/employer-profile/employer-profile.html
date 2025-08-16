@@ -5,7 +5,7 @@
 
         <div class="info row">
 
-            <div class="image col-lg-3 col-md-3 col-sm-12 me-3">
+            <div class="image col-lg-4 col-md-3 col-sm-12 me-3">
                 <img src="{{empData().companyImage}}" alt="image">
             </div>
 
@@ -14,22 +14,22 @@
                     <h2 style="font-weight: 700;">{{empData().companyName}}</h2>
                 </div>
                 <div class="emp-target">
-                    <span>{{empData().industry}}</span>
+                    <span>{{empData().industry ? empData().industry : 'No Industry Provided Yet!'}}</span>
                 </div>
                 <div class="my-3">
                     <div class="d-flex">
                         <div class="me-4">
                             <i class="bi bi-geo-alt me-2"></i>
-                            <span>{{empData().companyLocation}}</span>
+                            <span>{{empData().companyLocation ? empData().companyLocation : 'No Location Provided Yet!'}}</span>
                         </div>
                         <div>
                             <i class="bi bi-link-45deg me-2" style="font-size: larger;"></i>
-                            <span>{{empData().website}}</span>
+                            <span>{{empData().website ? empData().website : 'No Website Provided Yet!'}}</span>
                         </div>
                     </div>
                     <div class="mt-1">
                         <i class="bi bi-people me-2"></i>
-                        <span>{{empData().employeeRange}} Employees </span>
+                        <span>{{empData().employeeRange ? empData().employeeRange : 'No Employee Range Provided Yet!'}} Employees </span>
                     </div>
                 </div>
 
@@ -60,47 +60,49 @@
                 <span style="color: rgb(161, 161, 161);">Website</span>
                 <div class="d-flex col-lg-4 col-md-12 col-sm-12">
                     <i class="bi bi-link-45deg me-2" style="font-size: larger;"></i>
-                    <a href="" style="text-decoration: none;">{{empData().website}}</a>
+                    <a  style="text-decoration: none;">{{empData().website ? empData().website : 'No Website Provided Yet!'}}</a>
                     <i class="bi bi-box-arrow-up-right ms-2"></i>
                 </div>
             </div>
             <div class="col-lg-6 d-flex flex-column mb-4">
                 <span style="color: rgb(161, 161, 161);">Industry</span>
-                <span>{{empData().industry}}</span>
+                <span>{{empData().industry ? empData().industry : 'No Industry Provided Yet!'}}</span>
             </div>
             <div class="col-lg-6 d-flex flex-column mb-4">
                 <span style="color: rgb(161, 161, 161);">Email</span>
                 <div class="d-flex col-lg-4 col-md-12 col-sm-12">
                     <i class="bi bi-envelope me-2"></i>
-                    <a href="mailto:contact@techstart.com" style="text-decoration: none;">contact&#64;techstart.com</a>
+                    <a *ngIf="empData().email" href="mailto:{{empData().email}}" style="text-decoration: none;">{{empData().email}}</a>
+                    <a *ngIf="!empData().email" style="text-decoration: none;">No Email Provided Yet!</a>
                 </div>
             </div>
             <div class="col-lg-6 d-flex flex-column mb-4">
                 <span style="color: rgb(161, 161, 161);">Company Size</span>
                 <div class="d-flex mt-lg-2">
                     <i class="bi bi-people me-2"></i>
-                    <span>{{empData().employeeRange}} Employees</span>
+                    <span *ngIf="empData().employeeRange">{{empData().employeeRange}} Employees</span>
+                    <span *ngIf="!empData().employeeRange">No Employee Range Provided Yet!</span>
                 </div>   
             </div>
             <div class="col-lg-6 d-flex flex-column mb-4">
                 <span style="color: rgb(161, 161, 161);">Phone</span>
                 <div class="d-flex mt-lg-2">
                     <i class="bi bi-telephone me-2"></i>
-                    <span>{{empData().phone}}</span>
+                    <span>{{empData().phone ? empData().phone : 'No Phone Provided Yet!'}}</span>
                 </div>   
             </div>
             <div class="col-lg-6 d-flex flex-column mb-4">
                 <span style="color: rgb(161, 161, 161);">Founded</span>
                 <div class="d-flex mt-lg-2">
                     <i class="bi bi-calendar me-2"></i>
-                    <span>{{empData().establishedYear}}</span>
+                    <span>{{empData().establishedYear ? empData().establishedYear : 'No Established Year Provided Yet!'}}</span>
                 </div>   
             </div> 
             <div class="col-lg-6 d-flex flex-column mb-4">
                 <span style="color: rgb(161, 161, 161);">Address</span>
                 <div class="d-flex mt-lg-2">
                     <i class="bi bi-geo-alt me-2"></i>
-                    <span>{{empData().companyLocation}}</span>
+                    <span>{{empData().companyLocation ? empData().companyLocation : 'No Address Provided Yet!'}}</span>
                 </div>   
             </div>
         </div>
@@ -112,16 +114,13 @@
         <div class="mt-3">
             <div style="color: rgb(161, 161, 161); margin-bottom: 5px;"> Company Description </div>
             <div>
-                <!-- TechStart Solutions is a leading technology company focused on creating innovative software solutions that transform how businesses operate. We specialize in cloud computing, artificial intelligence, and data analytics to help our clients achieve their digital transformation goals. -->
-                {{empData().companyDescription}}
+                {{empData().companyDescription ? empData().companyDescription : 'No Company Description Provided Yet!'}}
             </div>
         </div>
         <div class="mt-3">
             <div style="color: rgb(161, 161, 161); margin-bottom: 5px;"> Mission </div>
             <div>
-               <!-- To democratize access to advanced technology and empower businesses of all sizes to compete in the digital economy. -->
-               {{empData().companyMission}}
-            
+               {{empData().companyMission ? empData().companyMission : 'No Company Mission Provided Yet!'}}
             </div>
         </div>
         <div class="mt-3">
@@ -143,15 +142,15 @@
         <div class="d-flex mt-4">
             <div class="me-3">
                 <i class="bi bi-linkedin me-2 text-primary"></i>
-                <a href="">LinkedIn</a>
+                <a href="https://www.linkedin.com/feed/">LinkedIn</a>
             </div>
             <div class="me-3">
                 <i class="bi bi-twitter me-2 text-primary"></i>
-                <a href="">Twitter</a>
+                <a href="https://x.com/">Twitter</a>
             </div>
             <div>
                 <i class="bi bi-facebook me-2 text-primary"></i>
-                <a href="">Facebook</a>
+                <a href="https://www.facebook.com/">Facebook</a>
             </div>
         </div>
      </div>
