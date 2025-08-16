@@ -1,0 +1,182 @@
+/* General Layout */
+.analytics-dashboard-card {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: #f7f9fc;
+}
+
+mat-card-header {
+  padding-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.button-primary {
+  background-color: #007bff;
+  color: white;
+  border-radius: 20px;
+  padding: 0 1rem;
+}
+
+.button-secondary {
+  border: 1px solid #ccc;
+  color: #333;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+/* Performance Cards Section */
+.performance-section {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.variant-tabs {
+  margin-bottom: 1.5rem;
+}
+
+.variant-tabs button {
+  border-bottom: 2px solid transparent;
+  padding: 0.5rem 1rem;
+  border-radius: 0;
+}
+
+.variant-tabs button.active {
+  border-color: #007bff;
+  color: #007bff;
+}
+
+.performance-cards-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.performance-card {
+  flex: 1 1 250px;
+  text-align: left;
+  border-left: 5px solid;
+  border-radius: 8px;
+}
+
+.performance-card:nth-child(1) { border-color: #ffc107; } /* Yellow */
+.performance-card:nth-child(2) { border-color: #dc3545; } /* Red */
+.performance-card:nth-child(3) { border-color: #28a745; } /* Green */
+
+.performance-icon-wrapper {
+  background-color: #f8f9fa;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  float: left;
+  margin-right: 1rem;
+}
+
+.performance-card .value {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.performance-card .growth-rate {
+  font-size: 0.8rem;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.25rem;
+}
+
+.growth-rate mat-icon {
+  font-size: 1rem;
+}
+
+.full-report-button {
+  background-color: #007bff;
+  color: white;
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+/* Table Section */
+.table-section {
+  margin-top: 2rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.full-width-table {
+  width: 100%;
+}
+
+.mat-icon-button {
+  margin: 0 0.25rem;
+}
+
+mat-tab-group {
+    margin-top: 1.5rem;
+}
+
+/* Charts Section */
+.secondary-sections {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.chart-card {
+  flex: 1 1 500px;
+}
+
+.chart-container {
+  height: 300px;
+  width: 100%;
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 992px) {
+  .performance-cards-container,
+  .secondary-sections {
+    flex-direction: column;
+    align-items: center;
+  }
+  .performance-card, .chart-card {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .analytics-dashboard-card {
+    padding: 0.5rem;
+  }
+  .header-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .button-primary, .button-secondary {
+    width: 100%;
+  }
+  .button-secondary {
+    border-radius: 20px;
+  }
+}

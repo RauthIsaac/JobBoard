@@ -1,0 +1,187 @@
+<!-- Job Board Analytics Dashboard with Angular Material -->
+<mat-card class="analytics-dashboard-card">
+  <mat-card-header>
+    <mat-card-title>Job Board Analytics</mat-card-title>
+    <mat-card-subtitle>An administrative dashboard to monitor key metrics</mat-card-subtitle>
+    <div class="header-actions">
+      <button mat-flat-button class="button-primary">
+        <mat-icon>add</mat-icon>
+        <span class="button-label">Post a New Job</span>
+      </button>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content>
+    <!-- Performance Section (Job-related stats) -->
+    <div class="performance-section">
+      <div class="variant-tabs">
+        <button mat-button class="active">Jobs Performance</button>
+        <button mat-button>User Performance</button>
+      </div>
+      <div class="performance-cards-container">
+        <!-- Total Jobs Card -->
+        <mat-card class="performance-card">
+          <mat-card-content>
+            <div class="performance-icon-wrapper">
+              <mat-icon class="card-icon">work</mat-icon>
+            </div>
+            <h4>Total Jobs</h4>
+            <p class="value">1.7K</p>
+            <p class="growth-rate"><mat-icon>trending_up</mat-icon> 20% increase</p>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Pending Jobs Card -->
+        <mat-card class="performance-card">
+          <mat-card-content>
+            <div class="performance-icon-wrapper">
+              <mat-icon class="card-icon">pending_actions</mat-icon>
+            </div>
+            <h4>Pending Jobs</h4>
+            <p class="value">120</p>
+            <p class="growth-rate"><mat-icon>trending_up</mat-icon> 15% new pending</p>
+          </mat-card-content>
+        </mat-card>
+        
+        <!-- Approved Jobs Card -->
+        <mat-card class="performance-card">
+          <mat-card-content>
+            <div class="performance-icon-wrapper">
+              <mat-icon class="card-icon">check_circle</mat-icon>
+            </div>
+            <h4>Approved Jobs</h4>
+            <p class="value">1.58K</p>
+            <p class="growth-rate"><mat-icon>trending_up</mat-icon> 73.9% increase</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Users Management Section -->
+    <div class="table-section">
+      <h3 class="section-title">Users Management</h3>
+      <mat-tab-group>
+        <mat-tab label="Job Seekers">
+          <table mat-table [dataSource]="seekersDataSource" class="full-width-table mat-elevation-z2">
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Name</th>
+              <td mat-cell *matCellDef="let seeker"> {{ seeker.name }} </td>
+            </ng-container>
+            <!-- Email Column -->
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef>Email</th>
+              <td mat-cell *matCellDef="let seeker"> {{ seeker.email }} </td>
+            </ng-container>
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let seeker">
+                <button mat-icon-button color="warn" (click)="deleteUser(seeker.id)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="userDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: userDisplayedColumns;"></tr>
+          </table>
+        </mat-tab>
+
+        <mat-tab label="Employers">
+          <table mat-table [dataSource]="employersDataSource" class="full-width-table mat-elevation-z2">
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Company Name</th>
+              <td mat-cell *matCellDef="let employer"> {{ employer.name }} </td>
+            </ng-container>
+            <!-- Email Column -->
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef>Email</th>
+              <td mat-cell *matCellDef="let employer"> {{ employer.email }} </td>
+            </ng-container>
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let employer">
+                <button mat-icon-button color="warn" (click)="deleteUser(employer.id)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="userDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: userDisplayedColumns;"></tr>
+          </table>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Job Applications & Pending Jobs Section -->
+    <div class="table-section">
+      <h3 class="section-title">Pending Job Listings</h3>
+      <table mat-table [dataSource]="pendingJobsDataSource" class="full-width-table mat-elevation-z2">
+        <!-- Job Title Column -->
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef>Job Title</th>
+          <td mat-cell *matCellDef="let job"> {{ job.title }} </td>
+        </ng-container>
+        <!-- Company Column -->
+        <ng-container matColumnDef="company">
+          <th mat-header-cell *matHeaderCellDef>Company</th>
+          <td mat-cell *matCellDef="let job"> {{ job.company }} </td>
+        </ng-container>
+        <!-- Posted Date Column -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>Posted Date</th>
+          <td mat-cell *matCellDef="let job"> {{ job.date | date }} </td>
+        </ng-container>
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let job">
+            <button mat-icon-button color="primary" (click)="approveJob(job.id)">
+              <mat-icon>check_circle</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="rejectJob(job.id)">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="jobDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: jobDisplayedColumns;"></tr>
+      </table>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Analytics Charts Section -->
+    <div class="secondary-sections">
+      <!-- Users Chart -->
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>User Registration Over Time</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="chart-container">
+            <canvas #userChart></canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Jobs Chart -->
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>Jobs Status Distribution</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="chart-container">
+            <canvas #jobStatusChart></canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-card-content>
+</mat-card>

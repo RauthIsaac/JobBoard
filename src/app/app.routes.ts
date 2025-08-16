@@ -17,6 +17,7 @@ import { ResetPassword } from './auth/reset-password/reset-password';
 import { SeekerProfile } from './features/profiles/seeker/seeker-profile/seeker-profile';
 import { UserProfile } from './user-profile/user-profile';
 import { SeekerApplication } from './seeker-application/seeker-application';
+import { AdminDashboardAnalytics } from './admin-dashboard-analytics/admin-dashboard-analytics';
 // import { VerifyEmailComponent } from './verify-email/verify-email';
 
 
@@ -32,7 +33,8 @@ export const routes: Routes = [
             {path: 'savedJobs', component: SavedJobs},
             {path: 'profile', component: SeekerProfile},
             {path: 'userProfile', component: UserProfile},
-            {path: 'userApplication', component: SeekerApplication}
+            {path: 'userApplication', component: SeekerApplication},
+            {path: 'admin', component: AdminDashboardAnalytics}
         ]
     },
     
