@@ -3,10 +3,11 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Footer } from "../footer/footer";
 import { AuthService } from '../../../auth/auth-service';
+import { ChatButton } from "../../../features/AIChat/chat-button/chat-button";
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, RouterLinkActive, RouterOutlet, Footer, MatSnackBarModule],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet, Footer, MatSnackBarModule,ChatButton],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css'
 })

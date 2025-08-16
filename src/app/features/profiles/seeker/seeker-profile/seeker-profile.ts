@@ -120,24 +120,38 @@ export class SeekerProfile implements OnInit {
   }
 
   deleteProfileImage(): void {
-    if (!this.seekerData().profileImageUrl) {
-      this.showSnackBar('No profile image to delete', 'error');
-      return;
-    }
-
-    if (confirm('Are you sure you want to delete your profile image?')) {
-      this.AuthService.deleteProfileImage().subscribe({
-        next: (response: any) => {
-          this.showSnackBar('Profile image deleted successfully!', 'success');
-          this.loadSeekerProfile();
-        },
-        error: (err: any) => {
-          console.error('Error deleting profile image:', err);
-          this.showSnackBar('Error deleting profile image. Please try again.', 'error');
-        }
-      });
-    }
+  if (!this.seekerData().profileImageUrl) {
+    this.showSnackBar('No profile image to delete', 'error');
+    return;
   }
+
+  if (confirm('Are you sure you want to delete your profile image?')) {
+    this.isUploadingImage.set(true);
+    
+    this.AuthService.deleteProfileImage().subscribe({
+      next: () => {
+        this.isUploadingImage.set(false);
+        this.showSnackBar('Profile image deleted successfully!', 'success');
+        this.loadSeekerProfile();
+      },
+      error: (err: any) => {
+        console.error('Error deleting profile image:', err);
+        
+        this.loadSeekerProfile();
+
+        setTimeout(() => {
+          if (!this.seekerData().profileImageUrl) {
+            this.showSnackBar('Profile image deleted successfully!', 'success');
+          } else {
+            this.showSnackBar('Error deleting profile image. Please try again.', 'error');
+          }
+          this.isUploadingImage.set(false);
+        }, 1000);
+      }
+    });
+  }
+}
+
 
   // ===== Resume Functions =====
   openResumeFileDialog(): void {
@@ -184,30 +198,6 @@ export class SeekerProfile implements OnInit {
     });
   }
 
-  downloadResume(): void {
-    if (!this.seekerData().cV_Url) {
-      this.showSnackBar('No resume available to download', 'error');
-      return;
-    }
-
-    this.AuthService.downloadResume().subscribe({
-      next: (blob: any) => {
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `${this.seekerData().name}_Resume.pdf`;
-        link.click();
-        
-        window.URL.revokeObjectURL(url);
-        
-        this.showSnackBar('Resume downloaded successfully!', 'success');
-      },
-      error: (err: any) => {
-        console.error('Error downloading resume:', err);
-        this.showSnackBar('Error downloading resume. Please try again.', 'error');
-      }
-    });
-  }
 
   deleteResume(): void {
     if (!this.seekerData().cV_Url) {
@@ -216,18 +206,32 @@ export class SeekerProfile implements OnInit {
     }
 
     if (confirm('Are you sure you want to delete your resume?')) {
+      this.isUploadingResume.set(true);
+      
       this.AuthService.deleteResume().subscribe({
-        next: (response: any) => {
+        next: () => {
+          this.isUploadingResume.set(false);
           this.showSnackBar('Resume deleted successfully!', 'success');
           this.loadSeekerProfile();
         },
         error: (err: any) => {
           console.error('Error deleting resume:', err);
-          this.showSnackBar('Error deleting resume. Please try again.', 'error');
+
+          this.loadSeekerProfile();
+
+          setTimeout(() => {
+            if (!this.seekerData().cV_Url) {
+              this.showSnackBar('Resume deleted successfully!', 'success');
+            } else {
+              this.showSnackBar('Error deleting resume. Please try again.', 'error');
+            }
+            this.isUploadingResume.set(false);
+          }, 1000);
         }
       });
     }
   }
+
 
   // ===== Helper Functions =====
   private showSnackBar(message: string, type: 'success' | 'error'): void {

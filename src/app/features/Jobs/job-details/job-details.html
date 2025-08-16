@@ -52,7 +52,9 @@
 
             </div>
             <div class="col-lg-3">
-                <input type="button" class="apply-now-btn form-control" routerLink="/seekerApp" value="Apply Now">
+                <button class="apply-now-btn form-control" [routerLink]="['/seekerApp', jobId()]">
+                    Apply Now
+                </button>
                 <button class="save-job-btn form-control" (click)="toggleSaved()" [class.saved]="isSavedFlag()">
                     <i class="bi" [class.bi-bookmark-check]="isSavedFlag()" [class.bi-bookmark]="!isSavedFlag()"></i> {{ isSavedFlag() ? 'Saved' : ' Save' }}
                 </button>  
@@ -168,7 +170,9 @@
                                     <p>Apply now and take the next step in your career.</p>
                                 </div>
                                 <div class="col-lg-4 col-md-5 col-sm-12">
-                                    <button class="apply-now-btn form-control" routerLink="/seekerApp" value="Apply Now">Apply Now <i class="bi bi-arrow-right px-2"></i></button>
+                                    <button class="apply-now-btn form-control" [routerLink]="['/seekerApp', jobId()]">
+                                        Apply Now <i class="bi bi-arrow-right px-2"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>

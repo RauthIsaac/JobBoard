@@ -203,7 +203,7 @@ export class AuthService {
   /*---------------------------- Upload Profile Image ----------------------------*/
   uploadProfileImage(file: File): Observable<any> {
     const formData = new FormData();
-    formData.append('ProfileImageURL', file); // Same field name as CV upload
+    formData.append('ProfileImageUrl', file);
 
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.getToken()}`
@@ -214,12 +214,14 @@ export class AuthService {
 
   /*---------------------------- Delete Profile Image ----------------------------*/
   deleteProfileImage(): Observable<any> {
+    const formData = new FormData();
+    formData.append('RemoveProfileImage', 'true');
+
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.getToken()}`
     });
 
-    // You might need to adjust this endpoint based on your API
-    return this.http.delete(`${this.baseUrl}/api/Seeker/profile-image`, { 
+    return this.http.post(`${this.baseUrl}/api/Seeker/upload-files`, formData, { 
       headers,
       responseType: 'text' as 'json'
     });
@@ -237,25 +239,17 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/api/Seeker/upload-files`, formData, { headers });
   }
 
-  /*---------------------------- Download Resume ----------------------------*/
-  downloadResume(): Observable<Blob> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.getToken()}`
-    });
-
-    return this.http.get(`${this.baseUrl}/api/Seeker/download-resume`, { 
-      headers,
-      responseType: 'blob'
-    });
-  }
 
   /*---------------------------- Delete Resume ----------------------------*/
   deleteResume(): Observable<any> {
+    const formData = new FormData();
+    formData.append('RemoveCV', 'true');
+
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.getToken()}`
     });
 
-    return this.http.delete(`${this.baseUrl}/api/Seeker/upload-files`, { 
+    return this.http.post(`${this.baseUrl}/api/Seeker/upload-files`, formData, { 
       headers,
       responseType: 'text' as 'json'
     });

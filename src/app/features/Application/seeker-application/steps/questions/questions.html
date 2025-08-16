@@ -1,26 +1,61 @@
-<h3>Additional Questions</h3>
-<form>
-  <div class="mb-3">
-    <label class="form-label">Portfolio URL *</label>
-    <input type="text" class="form-control">
-  </div>
+<div class="container mt-4">
+  <h3>Additional Questions</h3>
+  <form #form="ngForm" (ngSubmit)="saveAndNext(form)" ngForm>
+    <div class="mb-3">
+      <label class="form-label">Portfolio URL *</label>
+      <input 
+        name="portfolioUrl" 
+        [(ngModel)]="formData.portfolioUrl"
+        type="url"
+        class="form-control" 
+        required
+        placeholder="https://your-portfolio.com"
+        #portfolioUrl="ngModel">
+      <div *ngIf="portfolioUrl.invalid && portfolioUrl.touched" class="text-danger">
+        <small *ngIf="portfolioUrl.errors?.['required']">Portfolio URL is required</small>
+        <small *ngIf="portfolioUrl.errors?.['url']">Please enter a valid URL</small>
+      </div>
+    </div>
+    
+    <div class="mb-3">
+      <label class="form-label">LinkedIn URL *</label>
+      <input 
+        name="linkedInUrl" 
+        [(ngModel)]="formData.linkedInUrl"
+        type="url"
+        class="form-control" 
+        required
+        placeholder="https://linkedin.com/in/your-profile"
+        #linkedInUrl="ngModel">
+      <div *ngIf="linkedInUrl.invalid && linkedInUrl.touched" class="text-danger">
+        <small *ngIf="linkedInUrl.errors?.['required']">LinkedIn URL is required</small>
+        <small *ngIf="linkedInUrl.errors?.['url']">Please enter a valid URL</small>
+      </div>
+    </div>
+    
+    <div class="mb-3">
+      <label class="form-label">GitHub URL *</label>
+      <input 
+        name="gitHubUrl" 
+        [(ngModel)]="formData.gitHubUrl"
+        type="url"
+        class="form-control" 
+        required
+        placeholder="https://github.com/your-username"
+        #gitHubUrl="ngModel">
+      <div *ngIf="gitHubUrl.invalid && gitHubUrl.touched" class="text-danger">
+        <small *ngIf="gitHubUrl.errors?.['required']">GitHub URL is required</small>
+        <small *ngIf="gitHubUrl.errors?.['url']">Please enter a valid URL</small>
+      </div>
+    </div>
 
-  <div class="mb-3">
-    <label class="form-label">LinkedIn URL *</label>
-    <input type="text" class="form-control">
-  </div>
-
-  <div class="mb-3">
-    <label class="form-label">GitHub URL *</label>
-    <input type="text" class="form-control">
-  </div>
-
-  <hr class="mt-4">
-
-  <div class="d-flex justify-content-between mt-4">
-    <button routerLink="/seekerApp/documents" class="btn btn-secondary">Previous</button>
-    <button class="btn btn-success">Submit Application</button>
-  </div>
-
-
-</form>
+    <div class="d-flex justify-content-between mt-4">
+      <button type="button" (click)="goToPrevious()" class="btn btn-secondary">
+        Previous
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+        Review Application
+      </button>
+    </div>
+  </form>
+</div>

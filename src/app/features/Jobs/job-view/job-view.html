@@ -57,8 +57,10 @@
                 <i class="bi bi-box-arrow-up-right me-2"></i> View Details
             </button>
         </div>
-        <div class="col-lg-2 col-md-12 col-sm-12">
-            <input type="button" class="apply-now-btn " routerLink="/seekerApp" value="Apply Now">
+        <div class="col-lg-4 col-md-12 col-sm-12">
+            <button class="apply-now-btn my-2" [routerLink]="['/seekerApp', job.id, 'personal-info']">
+                Apply Now
+            </button>
         </div>
     </div>
 </div> 

@@ -21,7 +21,8 @@ import { PersonalInfo } from './features/Application/seeker-application/steps/pe
 import { Documents } from './features/Application/seeker-application/steps/documents/documents';
 import { Questions } from './features/Application/seeker-application/steps/questions/questions';
 import { Review } from './features/Application/seeker-application/steps/review/review';
-
+import { ChatButton } from './features/AIChat/chat-button/chat-button';
+import { ApplicationForm } from './features/Application/application-form/application-form';
 
 
 
@@ -48,7 +49,7 @@ export const routes: Routes = [
 
 
     {
-        path: 'seekerApp',
+        path: 'seekerApp/:jobId',
         component: Layout,
         children: [
             { path: 'personal-info', component: PersonalInfo },
@@ -67,7 +68,8 @@ export const routes: Routes = [
     {path: 'forget-password', component: ForgetPassword},
     {path: 'reset-password', component: ResetPassword},
 
-
+    {path: 'chatBtn', component: ChatButton},
+    {path: 'appForm', component: ApplicationForm},
 
     {path: '**', component: NotFound}
     

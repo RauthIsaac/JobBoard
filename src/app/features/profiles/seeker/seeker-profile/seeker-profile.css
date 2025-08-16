@@ -106,6 +106,12 @@
   color: #dc3545 !important;
 }
 
+/* Disabled Menu Item */
+button[mat-menu-item]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .info-details {
   flex-grow: 1;
 }
@@ -256,7 +262,7 @@
 }
 
 /* Upload Button Styles */
-button[mat-button] {
+button[mat-button]{
   display: flex;
   align-items: center;
   justify-content: center;
@@ -274,6 +280,29 @@ button[mat-button]:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+
+.openCv{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.openCv:hover:not(:disabled) {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.openCv:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
 
 /* Loading Spinner */
 mat-spinner {
@@ -354,8 +383,3 @@ input[type="file"] {
   width: 16px;
   height: 16px;
 }
-
-/* 
-h2,h3{
-  color: #3f3ce1;
-} */
