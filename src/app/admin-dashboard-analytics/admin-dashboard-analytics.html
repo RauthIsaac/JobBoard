@@ -75,17 +75,37 @@
               <th mat-header-cell *matHeaderCellDef>Email</th>
               <td mat-cell *matCellDef="let seeker"> {{ seeker.email }} </td>
             </ng-container>
+            <!-- Phone Number Column -->
+            <ng-container matColumnDef="phoneNumber">
+              <th mat-header-cell *matHeaderCellDef>Phone</th>
+              <td mat-cell *matCellDef="let seeker"> {{ seeker.phoneNumber }} </td>
+            </ng-container>
+            <!-- Address Column -->
+            <ng-container matColumnDef="address">
+              <th mat-header-cell *matHeaderCellDef>Address</th>
+              <td mat-cell *matCellDef="let seeker"> {{ seeker.address }} </td>
+            </ng-container>
+            <!-- Skills Column -->
+            <ng-container matColumnDef="skills">
+              <th mat-header-cell *matHeaderCellDef>Skills</th>
+              <td mat-cell *matCellDef="let seeker">
+                {{ seeker.skillName?.join(', ') || 'N/A' }}
+              </td>
+            </ng-container>
             <!-- Actions Column -->
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef>Actions</th>
               <td mat-cell *matCellDef="let seeker">
-                <button mat-icon-button color="warn" (click)="deleteUser(seeker.id)">
+                <button mat-icon-button color="primary" (click)="showDetails(seeker)">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteUser(seeker.userId)">
                   <mat-icon>delete</mat-icon>
                 </button>
               </td>
             </ng-container>
-            <tr mat-header-row *matHeaderRowDef="userDisplayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: userDisplayedColumns;"></tr>
+            <tr mat-header-row *matHeaderRowDef="seekerDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: seekerDisplayedColumns;"></tr>
           </table>
         </mat-tab>
 
@@ -110,8 +130,8 @@
                 </button>
               </td>
             </ng-container>
-            <tr mat-header-row *matHeaderRowDef="userDisplayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: userDisplayedColumns;"></tr>
+            <tr mat-header-row *matHeaderRowDef="employerDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: employerDisplayedColumns;"></tr>
           </table>
         </mat-tab>
       </mat-tab-group>
@@ -185,3 +205,76 @@
     </div>
   </mat-card-content>
 </mat-card>
+
+<!-- Details Card Overlay (Conditional) -->
+<div class="details-card-overlay" *ngIf="showDetailsCard">
+  <mat-card class="details-card">
+    <mat-card-header>
+      <mat-card-title>Job Seeker Details</mat-card-title>
+      <button mat-icon-button class="close-button" (click)="closeDetails()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-header>
+    <mat-card-content *ngIf="selectedSeeker">
+      <div class="profile-header">
+        <img [src]="selectedSeeker.profileImageUrl || 'https://via.placeholder.com/150'" alt="Profile Image" class="profile-image">
+        <div>
+          <h3>{{ selectedSeeker.name }}</h3>
+          <p class="profile-title">{{ selectedSeeker.title || 'N/A' }}</p>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="details-grid">
+        <div class="details-row">
+          <span class="details-label">User ID:</span>
+          <span class="details-value">{{ selectedSeeker.userId }}</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">Email:</span>
+          <span class="details-value">{{ selectedSeeker.email }}</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">Phone:</span>
+          <span class="details-value">{{ selectedSeeker.phoneNumber || 'N/A' }}</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">Address:</span>
+          <span class="details-value">{{ selectedSeeker.address || 'N/A' }}</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">Gender:</span>
+          <span class="details-value">{{ selectedSeeker.gender || 'N/A' }}</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">Date of Birth:</span>
+          <span class="details-value">{{ selectedSeeker.dateOfBirth || 'N/A' }}</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">Summary:</span>
+          <span class="details-value">{{ selectedSeeker.summary || 'N/A' }}</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">CV URL:</span>
+          <a [href]="selectedSeeker.cV_Url" target="_blank" class="details-value" *ngIf="selectedSeeker.cV_Url">View CV</a>
+          <span class="details-value" *ngIf="!selectedSeeker.cV_Url">N/A</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">Skills:</span>
+          <span class="details-value">{{ selectedSeeker.skillName?.join(', ') || 'N/A' }}</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">Certificates:</span>
+          <span class="details-value">{{ selectedSeeker.certificateName?.join(', ') || 'N/A' }}</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">Training:</span>
+          <span class="details-value">{{ selectedSeeker.trainingName?.join(', ') || 'N/A' }}</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">Interests:</span>
+          <span class="details-value">{{ selectedSeeker.interestName?.join(', ') || 'N/A' }}</span>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
