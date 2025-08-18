@@ -104,28 +104,28 @@
 
                         <!-- Key Requirements -->
                         <div class="mb-3">
-                            <label for="requirements" class="form-label">Key Requirements*</label>
+                            <label for="requirements" class="form-label">Key Requirements</label>
                             <textarea class="form-control" id="requirements" formControlName="requirements" rows="4" placeholder="List the key requirements for this position..."></textarea>
                             <div *ngIf="jobForm.get('requirements')?.invalid && jobForm.get('requirements')?.touched" class="text-danger">
-                                <small>Requirements are required</small>
+                                <small>Requirements must be at least 50 characters long</small>
                             </div>
                         </div>
 
                         <!-- Key Responsibilities -->
                         <div class="mb-3">
-                            <label for="responsabilities" class="form-label">Key Responsibilities*</label>
+                            <label for="responsabilities" class="form-label">Key Responsibilities</label>
                             <textarea class="form-control" id="responsabilities" formControlName="responsabilities" rows="4" placeholder="List the key responsibilities for this position..."></textarea>
                             <div *ngIf="jobForm.get('responsabilities')?.invalid && jobForm.get('responsabilities')?.touched" class="text-danger">
-                                <small>Responsibilities are required</small>
+                                <small>Responsibilities must be at least 50 characters long</small>
                             </div>
                         </div>
 
                         <!-- Benefits -->
                         <div class="mb-3">
-                            <label for="benefits" class="form-label">Benefits*</label>
+                            <label for="benefits" class="form-label">Benefits</label>
                             <textarea class="form-control" id="benefits" formControlName="benefits" rows="4" placeholder="List the key benefits for this position..."></textarea>
                             <div *ngIf="jobForm.get('benefits')?.invalid && jobForm.get('benefits')?.touched" class="text-danger">
-                                <small>Benefits are required</small>
+                                <small>Benefits must be at least 50 characters long</small>
                             </div>
                         </div>
 

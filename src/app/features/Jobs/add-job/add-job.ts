@@ -2,10 +2,10 @@ import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { JobsService } from '../../../Jobs/jobs-service';
-import { IJob } from '../../../../shared/models/ijob';
-import { ISkill } from '../../../../shared/models/iskill';
-import { ICategory } from '../../../../shared/models/icategory';
+import { JobsService } from '../jobs-service';
+import { IJob } from '../../../shared/models/ijob';
+import { ISkill } from '../../../shared/models/iskill';
+import { ICategory } from '../../../shared/models/icategory';
 
 @Component({
   selector: 'app-add-job',
@@ -134,14 +134,14 @@ export class AddJob implements OnInit {
       workplaceType: ['', Validators.required],
       jobType: ['', Validators.required],
       expireDate: ['', Validators.required],
-      requirements: ['', Validators.required],
+      requirements: ['', ],
       minTeamSize: [1, [Validators.required, Validators.min(1)]],
       maxTeamSize: [10, [Validators.required, Validators.min(1)]],
       educationLevel: ['', Validators.required],
       experienceLevel: ['', Validators.required],
       website: ['', [Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]],
-      responsabilities: ['', [Validators.required, Validators.minLength(50)]],
-      benefits: ['', [Validators.required, Validators.minLength(50)]],
+      responsabilities: ['', [ Validators.minLength(50)]],
+      benefits: ['', [ Validators.minLength(50)]],
       categories: [[]],
       skills: [[]],
     });

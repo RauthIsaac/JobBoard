@@ -1,0 +1,45 @@
+
+/* ------------------------- Nav Bar ------------------------- */
+.navbar-custom {
+    background: #f8f7fc;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 10px 20px;
+    margin-left: 4px;
+    height: 10vh;
+}
+
+.search-box {
+    border-radius: 20px;
+    padding-left: 35px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: gray;
+}
+
+.badge-notify {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 10px;
+}
+
+.avatar {
+    background: #2563eb;
+    color: white;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notifications {
+    width: 400px;
+}

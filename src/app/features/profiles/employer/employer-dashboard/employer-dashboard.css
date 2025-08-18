@@ -1,0 +1,148 @@
+/* ------------------------- Left Side Bar ------------------------- */
+.left-side-bar {
+    width: 260px;
+    height: 100vh;
+    background: #fff;
+    border-right: 1px solid #eaeaea;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.logo-icon {
+    font-size: 20px;
+    color: white;
+    background: var(--basic-color);
+    padding: 6px 10px;
+    border-radius: 30%;
+    margin-right: 10px;
+    height: fit-content;
+}
+
+.left-side-bar h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.left-side-bar span {
+    font-size: 13px;
+}
+.sidebar{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 85%;
+}
+
+.sidebar h6 {
+    color: gray;
+    font-size: 13px;
+    margin: 20px 10px 10px;
+    text-transform: uppercase;
+}
+
+.sidebar .nav-link {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 500;
+    color: rgb(25, 103, 192);
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.sidebar .nav-link i {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #f0f4ff;
+    color: #1e40af;
+}
+
+
+.content{
+    padding: 50px;
+}
+
+/* ------------------------- Profile Section ------------------------- */
+.profile-section{
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 15px;
+    overflow: hidden;
+    background: var(--basic-color);
+    color: white;
+}
+
+
+.info{
+    padding: 30px;
+}
+
+.image{
+    display: flex;
+    justify-content: center;
+    width: 200px;
+    height: 130px;
+    overflow: hidden;
+}
+
+.post-new-job-btn{
+    padding: 6px 23px;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    background: var(--basic-color);
+    color:white;
+    border-radius: 10px;
+    height: fit-content;
+}
+.post-new-job-btn:hover{
+    background: var(--basic-color-hover);
+}
+
+
+.edit-profile-btn{
+    padding: 5px 30px;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    background: var(--basic-gray);
+    color:black;
+    border-radius: 10px;
+    height: fit-content;
+}
+.edit-profile-btn:hover{
+    background: var(--basic-gray-hover);
+}
+
+
+.selected-route{
+    padding: 8px 16px;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    background-color: #f0f4ff; 
+    color:black;
+    border-radius: 10px;
+    height: fit-content;
+    text-decoration: none;
+    margin-right: 15px;
+    color: #2563eb;
+    font-weight: 500;
+}
+
+
+.selected-route:hover {
+  background-color: #f0f4ff;
+}
+
+.active-route {
+  background: var(--basic-color);
+  color: #fff !important;
+  font-weight: 600;
+}
