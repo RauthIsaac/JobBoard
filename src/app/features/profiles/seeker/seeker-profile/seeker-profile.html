@@ -1,59 +1,109 @@
 <div class="container">
   <mat-card class="profile-card header-card">
     <div class="header-content row">
-      <img src="{{seekerData().profileImageURL}}" alt="{{seekerData().name}}" class="profile-pic mx-auto col-lg-3 col-md-4 col-sm-12">
+      <!-- Profile Image Section with Upload/Delete functionality -->
+      <div class="profile-image-container col-lg-2 col-md-4 col-sm-12">
+        <div class="image-wrapper">
+          <img [src]="seekerData().profileImageUrl || getDefaultProfileImage()" 
+               [alt]="seekerData().name" 
+               class="profile-pic mx-auto">
+          
+          <!-- Image overlay for actions -->
+          <div class="image-overlay" *ngIf="!isUploadingImage()">
+            <button mat-icon-button 
+                    class="image-action-btn" 
+                    [matMenuTriggerFor]="imageMenu"
+                    matTooltip="Manage Profile Image">
+              <mat-icon>camera_alt</mat-icon>
+            </button>
+          </div>
+
+          <!-- Image Menu -->
+          <mat-menu #imageMenu="matMenu">
+            <button mat-menu-item 
+                    (click)="openImageFileDialog()" 
+                    [disabled]="isUploadingImage()">
+              <mat-icon>cloud_upload</mat-icon>
+              <span *ngIf="!seekerData().profileImageUrl">Upload Image</span>
+              <span *ngIf="seekerData().profileImageUrl">Change Image</span>
+            </button>
+            
+            <button mat-menu-item 
+                    (click)="deleteProfileImage()" 
+                    *ngIf="seekerData().profileImageUrl"
+                    [disabled]="isUploadingImage()"
+                    class="delete-action">
+              <mat-icon>delete</mat-icon>
+              <span>Delete Image</span>
+            </button>
+          </mat-menu>
+
+          <!-- Upload Progress Indicator for Image -->
+          <div *ngIf="isUploadingImage()" class="upload-progress">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Processing...</p>
+          </div>
+        </div>
+
+        <!-- Hidden file input for images -->
+        <input #imageFileInput 
+               type="file" 
+               accept="image/jpeg,image/jpg,image/png,image/gif" 
+               style="display: none;" 
+               (change)="onImageSelected($event)">
+      </div>
+
       <div class="info-details col-lg-5 col-md-8 col-sm-12">
         <h2>{{seekerData().name}}</h2>
         <p class="role">{{seekerData().title}}</p>
-        <p class="contact-info"><mat-icon>location_on</mat-icon> {{seekerData().address}}</p>
-        <p class="contact-info"><mat-icon>mail</mat-icon> {{seekerData().email}}</p>
-        <p class="contact-info"><mat-icon>phone</mat-icon> {{seekerData().phoneNumber}}</p>
+        <p class="contact-info"><i class="bi bi-geo-alt me-2"></i> {{seekerData().address}}</p>
+        <p class="contact-info"><i class="bi bi-envelope me-2"></i> {{seekerData().email}}</p>
+        <p class="contact-info"><i class="bi bi-telephone me-2"></i> {{seekerData().phoneNumber}}</p>
       </div>
+
       <div class="action-buttons col-lg-3 col-md-12 col-sm-12">
         <button mat-button routerLink="/editSeeker" class="mt-2"><mat-icon class="mx-1">edit</mat-icon> Edit Profile</button>
         
         <!-- Resume Upload Section -->
         <div class="resume-section">
           <!-- Hidden file input -->
-          <input #fileInput 
+          <input #resumeFileInput 
                  type="file" 
                  accept=".pdf,.doc,.docx" 
                  style="display: none;" 
-                 (change)="onFileSelected($event)">
+                 (change)="onResumeSelected($event)">
           
           <!-- Upload Button -->
           <button mat-button 
-                  (click)="openFileDialog()" 
+                  (click)="openResumeFileDialog()" 
                   [disabled]="isUploadingResume()"
-                  *ngIf="!seekerData().resumeUrl">
+                  *ngIf="!seekerData().cV_Url">
             <mat-icon>cloud_upload</mat-icon>
             <span *ngIf="!isUploadingResume()">Upload Resume</span>
             <mat-spinner diameter="20" *ngIf="isUploadingResume()"></mat-spinner>
           </button>
 
           <!-- Resume Management Buttons (when resume exists) -->
-          <div *ngIf="seekerData().resumeUrl" class="resume-actions">
+          <div *ngIf="seekerData().cV_Url" class="resume-actions">
             <!-- View/Download Button -->
-            <button mat-button (click)="downloadResume()" title="Download Resume">
-              <mat-icon>download</mat-icon> Download
+            <button class="openCv">
+              <div *ngIf="seekerData().cV_Url" >
+                <a [href]="seekerData().cV_Url" download="uploaded-file.pdf" style="text-decoration: none; color:#1564ca; font-weight: 600;">
+                  <span><i class="bi bi-box-arrow-in-right me-3 fs-4 mt-2"></i>Open CV</span>
+                </a>
+            </div>
             </button>
             
-            <!-- Replace Button -->
-            <button mat-button 
-                    (click)="openFileDialog()" 
-                    [disabled]="isUploadingResume()"
-                    title="Replace Resume">
-              <mat-icon>refresh</mat-icon>
-              <span *ngIf="!isUploadingResume()">Replace</span>
-              <mat-spinner diameter="20" *ngIf="isUploadingResume()"></mat-spinner>
-            </button>
             
             <!-- Delete Button -->
             <button mat-button 
                     (click)="deleteResume()" 
+                    [disabled]="isUploadingResume()"
                     color="warn" 
                     title="Delete Resume">
-              <mat-icon>delete</mat-icon> Delete
+              <mat-icon>delete</mat-icon> 
+              <span *ngIf="!isUploadingResume()">Delete</span>
+              <mat-spinner diameter="16" *ngIf="isUploadingResume()"></mat-spinner>
             </button>
           </div>
         </div>
@@ -105,11 +155,11 @@
         <div class="experience-item p-3 my-3" *ngFor="let edu of seekerData().seekerEducations; trackBy: trackByIndex">
           <div class="job-header">
             <div>
-              <h5>{{edu.educationLevel | educationLevelName}} of {{edu.major}} in {{edu.faculty}}</h5>
+              <h5>{{edu.educationLevel}} of {{edu.major}} in {{edu.faculty}}</h5>
               <p>{{edu.university}}</p>
-              <p *ngIf="edu.GPA"><strong>GPA: </strong> {{edu.GPA}}/4.0 </p>
+              <p *ngIf="edu.gpa"><strong>GPA: </strong> {{edu.gpa}}/4.0 </p>
             </div>
-            <p>{{edu.date | date:'MMM yyyy'}} • {{edu.location}}</p>
+            <p>{{edu.date | date:'MMM yyyy'}} - {{edu.location}}</p>
           </div>
         </div>
         
@@ -144,20 +194,20 @@
     <div class="right-section col-lg-4 col-md-12 col-sm-12">
       <mat-card class="sidebar-card connect-card">
         <h3>Connect</h3>
-        <mat-list>
-          <mat-list-item>
-            <mat-icon matListItemIcon>linkedin</mat-icon>
-            <span matListItemTitle>LinkedIn</span>
-          </mat-list-item>
-          <mat-list-item>
-            <mat-icon matListItemIcon>code</mat-icon> 
-            <span matListItemTitle>GitHub</span>
-          </mat-list-item>
-          <mat-list-item>
-            <mat-icon matListItemIcon>link</mat-icon> 
-            <span matListItemTitle>Portfolio</span>
-          </mat-list-item>
-        </mat-list>
+        <div class=" p-2">
+          <div class="mt-2 d-flex">
+            <i class="bi bi-linkedin me-3 fs-4"></i>
+            <a href="https://www.linkedin.com/" style="text-decoration: none; font-size: large; margin-top: 3px; color: black;">LinkedIn</a>
+          </div>
+          <div class="mt-2 d-flex">
+            <i class="bi bi-github me-3 fs-4"></i> 
+            <a href="https://github.com/" style="text-decoration: none; font-size: large; margin-top: 3px; color: black;">GitHub</a>
+          </div>
+          <div class="mt-2 d-flex">
+            <i class="bi bi-link-45deg me-3 fs-4"></i> 
+            <a routerLink="/seekerProfile" style="text-decoration: none; font-size: large; margin-top: 3px; color: black;">Portfolio</a>
+          </div>
+        </div>
       </mat-card>
 
       <mat-card class="sidebar-card interests-card">

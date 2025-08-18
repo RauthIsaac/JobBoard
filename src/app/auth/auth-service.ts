@@ -13,7 +13,12 @@ export class AuthService {
   private readonly USER_NAME_KEY = 'user_name';
   private readonly USER_EMAIL_KEY = 'user_email';
 
-  /*---------------------------- Constructor ----------------------------*/
+  // ================= Cached values =================
+  private cachedUserName: string | null = null;
+  private cachedUserType: string | null = null;
+  private empData = signal<any>({});
+  private isEmployerProfileLoaded = false;
+
   constructor(private http: HttpClient) {}
 
   /*---------------------------- Register ----------------------------*/
@@ -32,17 +37,19 @@ export class AuthService {
     localStorage.setItem(this.USER_TYPE_KEY, userType);
     if (userName) {
       localStorage.setItem(this.USER_NAME_KEY, userName);
+      this.cachedUserName = userName; // update cache
     }
     if (userEmail) {
       localStorage.setItem(this.USER_EMAIL_KEY, userEmail);
     }
+    this.cachedUserType = userType; // update cache
+
     console.log('Auth data saved:', {
       token,
       userType,
       userName,
       userEmail
     });
-
   }
 
   /*---------------------------- Get Token ----------------------------*/
@@ -50,25 +57,36 @@ export class AuthService {
     return localStorage.getItem(this.TOKEN_KEY);
   }
 
-  /*---------------------------- Get User Type ----------------------------*/
-  getUserType(): string | null {
-    return localStorage.getItem(this.USER_TYPE_KEY);
-  }
-
   /*---------------------------- Get User Name ----------------------------*/
   getUserName(): string {
-    return localStorage.getItem(this.USER_NAME_KEY) || 'User';
+    if (this.cachedUserName === null) {
+      this.cachedUserName = localStorage.getItem(this.USER_NAME_KEY) || 'User';
+    }
+    return this.cachedUserName;
   }
 
-    /*---------------------------- Get User Name ----------------------------*/
-  private empData = signal<any>({});
-  
-  getCompanyName(): string{
-    this.getEmployerProfile().subscribe({
-      next: (data:any) => {
-        this.empData.set(data);
-      }
-    });
+  /*---------------------------- Get User Type ----------------------------*/
+  getUserType(): string | null {
+    if (this.cachedUserType === null) {
+      this.cachedUserType = localStorage.getItem(this.USER_TYPE_KEY);
+    }
+    return this.cachedUserType;
+  }
+
+  /*---------------------------- Get Company Name ----------------------------*/
+  getCompanyName(): string {
+    if (!this.isEmployerProfileLoaded) {
+      this.isEmployerProfileLoaded = true;
+
+      this.getEmployerProfile().subscribe({
+        next: (data: any) => {
+          this.empData.set(data);
+        },
+        error: (err) => {
+          console.error('Error loading employer profile for company name:', err);
+        }
+      });
+    }
 
     return this.empData().companyName || 'Company';
   }
@@ -84,6 +102,8 @@ export class AuthService {
     localStorage.removeItem(this.USER_TYPE_KEY);
     localStorage.removeItem(this.USER_NAME_KEY);
     localStorage.removeItem(this.USER_EMAIL_KEY);
+    this.cachedUserName = null;
+    this.cachedUserType = null;
   }
 
   /*---------------------------- Check if logged in ----------------------------*/
@@ -147,19 +167,29 @@ export class AuthService {
   }
 
   /*---------------------------- Update Employer Profile ----------------------------*/
-  updateEmployerProfile(profileData: any): Observable<any> {
+  updateEmployerProfile(profileData: any, imageFile?: File): Observable<any> {
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.getToken()}`,
-      'Content-Type': 'application/json'
+      'Authorization': `Bearer ${this.getToken()}`
+      // Don't set Content-Type for FormData, let browser set it with boundary
     });
 
-    return this.http.put(`${this.baseUrl}/api/Employer`, profileData, { 
+    const formData = new FormData();
+    Object.keys(profileData).forEach(key => {
+      if (profileData[key] !== null && profileData[key] !== undefined) {
+        formData.append(key, profileData[key].toString());
+      }
+    });
+    
+    if (imageFile) {
+      formData.append('companyImage', imageFile);
+    }
+
+    return this.http.put(`${this.baseUrl}/api/Employer`, formData, { 
       headers,
-      responseType: 'text' as 'json' // Handle plain text response
+      responseType: 'text' as 'json'
     });
   }
 
-  
   /*---------------------------- Update Seeker Profile ----------------------------*/
   updateSeekerProfile(profileData: any): Observable<any> {
     const headers = new HttpHeaders({
@@ -170,10 +200,33 @@ export class AuthService {
     return this.http.put(`${this.baseUrl}/api/Seeker`, profileData, { headers });
   }
 
+  /*---------------------------- Upload Profile Image ----------------------------*/
+  uploadProfileImage(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('ProfileImageUrl', file);
 
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.getToken()}`
+    });
 
-  
-  /*********************************************************************************/
+    return this.http.post(`${this.baseUrl}/api/Seeker/upload-files`, formData, { headers });
+  }
+
+  /*---------------------------- Delete Profile Image ----------------------------*/
+  deleteProfileImage(): Observable<any> {
+    const formData = new FormData();
+    formData.append('RemoveProfileImage', 'true');
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.getToken()}`
+    });
+
+    return this.http.post(`${this.baseUrl}/api/Seeker/upload-files`, formData, { 
+      headers,
+      responseType: 'text' as 'json'
+    });
+  }
+
   /*---------------------------- Upload Resume ----------------------------*/
   uploadResume(file: File): Observable<any> {
     const formData = new FormData();
@@ -181,31 +234,22 @@ export class AuthService {
 
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.getToken()}`
-      // Note: Don't set Content-Type for FormData, let browser set it with boundary
     });
 
     return this.http.post(`${this.baseUrl}/api/Seeker/upload-files`, formData, { headers });
   }
 
-  /*---------------------------- Download Resume ----------------------------*/
-  downloadResume(): Observable<Blob> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.getToken()}`
-    });
-
-    return this.http.get(`${this.baseUrl}/api/Seeker/download-resume`, { 
-      headers,
-      responseType: 'blob'
-    });
-  }
 
   /*---------------------------- Delete Resume ----------------------------*/
   deleteResume(): Observable<any> {
+    const formData = new FormData();
+    formData.append('RemoveCV', 'true');
+
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.getToken()}`
     });
 
-    return this.http.delete(`${this.baseUrl}/api/Seeker/upload-files`, { 
+    return this.http.post(`${this.baseUrl}/api/Seeker/upload-files`, formData, { 
       headers,
       responseType: 'text' as 'json'
     });

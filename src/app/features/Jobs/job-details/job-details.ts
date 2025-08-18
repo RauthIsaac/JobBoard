@@ -40,7 +40,10 @@ export class JobDetails implements OnInit {
   // حالة الـ saved job
   isSavedFlag = signal<boolean>(false);
 
-  constructor(private jobService: JobsService, private route: ActivatedRoute) {
+  constructor(
+    private jobService: JobsService, 
+    private route: ActivatedRoute
+  ) {
     // Listen to changes in savedJobsState
     effect(() => {
       const currentJobId = this.jobId();

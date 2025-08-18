@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { Home } from './features/Home/home/home';
 import { NotFound } from './Pages/not-found/not-found';
 import { JobDetails } from './features/Jobs/job-details/job-details';
-import { JobApplication } from './features/Jobs/job-application/job-application';
 import { JobView } from './features/Jobs/job-view/job-view';
 import { SavedJobs } from './features/Jobs/saved-jobs/saved-jobs';
 import { EmployerProfile } from './features/profiles/employer/employer-profile/employer-profile';
@@ -17,11 +16,13 @@ import { Explore } from './features/Explore/explore';
 import { EditEmpProfile } from './features/profiles/employer/edit-emp-profile/edit-emp-profile';
 import { EditSeekerProfile} from './features/profiles/seeker/edit-seeker-profile/edit-seeker-profile';
 import { SeekerProfile } from './features/profiles/seeker/seeker-profile/seeker-profile';
-import { Layout } from './features/profiles/seeker/seeker-application/layout/layout';
-import { PersonalInfo } from './features/profiles/seeker/seeker-application/steps/personal-info/personal-info';
-import { Documents } from './features/profiles/seeker/seeker-application/steps/documents/documents';
-import { Questions } from './features/profiles/seeker/seeker-application/steps/questions/questions';
-import { Review } from './features/profiles/seeker/seeker-application/steps/review/review';
+import { Layout } from './features/Application/seeker-application/layout/layout';
+import { PersonalInfo } from './features/Application/seeker-application/steps/personal-info/personal-info';
+import { Documents } from './features/Application/seeker-application/steps/documents/documents';
+import { Questions } from './features/Application/seeker-application/steps/questions/questions';
+import { Review } from './features/Application/seeker-application/steps/review/review';
+import { ChatButton } from './features/AIChat/chat-button/chat-button';
+import { ApplicationForm } from './features/Application/application-form/application-form';
 
 
 
@@ -48,7 +49,7 @@ export const routes: Routes = [
 
 
     {
-        path: 'seekerApp',
+        path: 'seekerApp/:jobId',
         component: Layout,
         children: [
             { path: 'personal-info', component: PersonalInfo },
@@ -60,7 +61,6 @@ export const routes: Routes = [
     },
 
 
-    {path: 'jobApp', component: JobApplication},
     {path: 'addJob', component: AddJob},
     {path: 'register', component: Signup },
     {path: 'login', component: Login },
@@ -68,7 +68,8 @@ export const routes: Routes = [
     {path: 'forget-password', component: ForgetPassword},
     {path: 'reset-password', component: ResetPassword},
 
-
+    {path: 'chatBtn', component: ChatButton},
+    {path: 'appForm', component: ApplicationForm},
 
     {path: '**', component: NotFound}
     
