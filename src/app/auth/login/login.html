@@ -1,61 +1,56 @@
-<mat-card>
-  <h2 class="title text-center fs-1 p-2 mb-5">Login to your account</h2>
+<div class="container">
+  <div class="form-container">
+    <div class="my-4 text-center">
+      <span class="fs-2 fw-medium">Login to your account</span>
+    </div>
 
-  <form class="w-100" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <form class="w-100" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Email -->
+      <div class="full-width my-3">
+        <label class="fs-5">Email</label>
+        <input type="email" formControlName="email" class="form-control" placeholder="ex: user@gmail.com" />
+        <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="valid-form">
+          <div *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</div>
+          <div *ngIf="loginForm.get('email')?.errors?.['email']">Invalid email format</div>
+        </div>
+      </div>
 
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label class="fs-4">Email</mat-label>
-      <input
-        matInput
-        type="email"
-        formControlName="email"
-        placeholder="ex: userName@gmail.com"
-      />
-      <mat-error *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
-        <small *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</small>
-      </mat-error>
-    </mat-form-field>
+      <!-- Password -->
+      <div class="full-width my-3">
+        <label class="fs-5">Password</label>
+        <input [type]="hidePassword ? 'password' : 'text'" formControlName="password" class="form-control" placeholder="********" />
+        <button type="button" class="btn btn-sm btn-light mt-1" (click)="togglePasswordVisibility()">
+          {{ hidePassword ? "Show" : "Hide" }}
+        </button>
+        <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="valid-form">
+          <div *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</div>
+          <div *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</div>
+        </div>
+      </div>
 
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label class="fs-4">Password</mat-label>
-      <input
-        matInput
-        [type]="hidePassword ? 'password' : 'text'"
-        formControlName="password"
-        placeholder="********"
-      />
-      <button
-        mat-icon-button
-        matSuffix
-        (click)="hidePassword = !hidePassword"
-        type="button"
-      >
-        <mat-icon>{{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon>
+      <!-- Remember Me -->
+      <div class="my-2">
+        <input type="checkbox" formControlName="rememberMe" />
+        <label>Remember Me</label>
+      </div>
+
+      <!-- Submit -->
+      <button class="reset-btn fs-4 my-3 w-100" type="submit" [disabled]="isLoading || loginForm.invalid">
+        <span *ngIf="isLoading">Logging in...</span>
+        <span *ngIf="!isLoading">Login</span>
       </button>
-      <mat-error *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
-        <small *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</small>
-      </mat-error>
-    </mat-form-field>
 
-    <mat-checkbox formControlName="rememberMe">Remember Me</mat-checkbox>
+      <!-- Links -->
+      <p class="text-center fs-5 mt-3">
+        Don’t have an account?
+        <a routerLink="/register" class="text-primary" style="cursor: pointer; text-decoration: underline">Register</a>
+      </p>
 
-
-    <button class="fs-4" mat-raised-button color="primary" type="submit">
-      Login
-    </button>
-
-    <p class="text-center fs-5 my-1">
-      Don't have an account?
-      <a routerLink="/register" class="title" style="cursor: pointer; text-decoration: underline">
-        Register
-      </a>
-    </p>
-
-    <p class="text-center fs-5 my-1">
-      Forgot your password?
-      <a routerLink="/forget-password" class="title" style="cursor: pointer; text-decoration: underline">
-        Reset it
-      </a>
-    </p>
-  </form>
-</mat-card>
+      <p class="text-center fs-5 mt-2">
+        Forgot your password?
+        <a routerLink="/forget-password" class="text-primary" style="cursor: pointer; text-decoration: underline">Reset it</a>
+      </p>
+    </form>
+  </div>
+</div>
