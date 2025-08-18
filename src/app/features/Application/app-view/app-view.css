@@ -1,0 +1,80 @@
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+}
+
+.person-icon{
+    font-size: 2rem;
+    color: #2563eb;
+    background-color: #e7f1ff;
+    padding: 5px 10px;
+    height: fit-content;
+    border-radius: 10px;
+}
+
+.icon{
+    font-size: 1.5rem;
+    color: #6c757d;
+    padding: 5px 13px;
+}
+
+
+
+.card-custom {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    display: flex;
+}
+
+.info-label {
+    font-size: 1rem;
+    color: gray;
+}
+
+.info-value {
+    font-weight: 600;
+}
+
+.btn-custom {
+    border-radius: 10px;
+    font-weight: 500;
+}
+.btn-custom:hover {
+    color: white;
+}
+
+.btn-primary {
+    background-color: #2563eb;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #1e4bb8;
+}
+
+.small-badge {
+    background: #f1f5f9;
+    border-radius: 10px;
+    padding: 2px 10px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+
+.reject-btn:hover{
+    background-color: #c82333;
+    color: white;
+}
+
+.bi{
+    color: #2563eb;
+}
