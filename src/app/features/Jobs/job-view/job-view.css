@@ -16,9 +16,12 @@
 .comp-logo{
     background-color:rgb(232, 230, 230);
     border-radius: 15px;
-    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: larger;
     height: fit-content;
+    padding: 15px;
 }
 
 .workplace-type{

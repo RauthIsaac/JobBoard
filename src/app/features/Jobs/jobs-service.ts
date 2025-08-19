@@ -1,138 +1,283 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable, signal, effect } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Injectable, signal } from '@angular/core';
 import { IJob } from '../../shared/models/ijob';
-import { JobDetails } from './job-details/job-details';
 import { ISkill } from '../../shared/models/iskill';
 import { ICategory } from '../../shared/models/icategory';
+import { JobFilterParams } from '../../shared/models/job-filter-params';
+import { Observable, throwError } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
+import { AuthService } from '../../auth/auth-service';
+
+export interface SavedJobsFilterParams {
+  searchValue?: string;
+  SortingOption?: 'DateAsc' | 'DateDesc';
+}
+
+interface SavedJobMap {
+  jobId: number;       // من جدول الوظائف
+  savedJobId: number;  // من جدول SavedJobs
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class JobsService {
-  //#region 
 
-  private readonly SAVED_JOBS_KEY = 'savedJobs';
-  public savedJobs = signal<Set<number>>(new Set<number>());
-  
-  /*------------------------ Constructor ---------------------------- */
-  constructor(private http: HttpClient) {
+  public savedJobsState = signal<SavedJobMap[]>([]);
 
-    this.loadSavedJobsFromStorage();
-
-    effect(() => {
-      this.saveSavedJobsToStorage(this.savedJobs());
-
-      /*------------------- */
-      this.GetAllHttpJobs();
-    });
-  }
-
-  private loadSavedJobsFromStorage(): void {
-    try {
-      const savedJobsJson = localStorage.getItem(this.SAVED_JOBS_KEY);
-      if (savedJobsJson) {
-        const savedJobsArray: number[] = JSON.parse(savedJobsJson);
-        this.savedJobs.set(new Set(savedJobsArray));
-      }
-    } catch (error) {
-      console.error('Error loading saved jobs from localStorage:', error);
-      this.savedJobs.set(new Set<number>());
-    }
-  }
-
-  private saveSavedJobsToStorage(savedJobsSet: Set<number>): void {
-    try {
-      const savedJobsArray = Array.from(savedJobsSet);
-      localStorage.setItem(this.SAVED_JOBS_KEY, JSON.stringify(savedJobsArray));
-    } catch (error) {
-      console.error('Error saving jobs to localStorage:', error);
-    }
-  }
-
-  toggleSaved(jobId: number): void {
-    this.savedJobs.update(currentSet => {
-      const newSet = new Set(currentSet);
-      if (newSet.has(jobId)) {
-        newSet.delete(jobId);
-      } else {
-        newSet.add(jobId);
-      }
-      return newSet;
-    });
-  }
-
-  isSaved(jobId: number): boolean {
-    return this.savedJobs().has(jobId);
-  }
-
-  getSavedJobsList(): number[] {
-    return Array.from(this.savedJobs());
-  }
-
-  removeSavedJob(jobId: number): void {
-    this.savedJobs.update(currentSet => {
-      const newSet = new Set(currentSet);
-      newSet.delete(jobId);
-      return newSet;
-    });
-  }
-
-  clearAllSavedJobs(): void {
-    this.savedJobs.set(new Set<number>());
-    localStorage.removeItem(this.SAVED_JOBS_KEY);
-  }
-
-  getSavedJobsCount(): number {
-    return this.savedJobs().size;
-  }
-  //#endregion
-  
-  /*---------------------------- API URL ---------------------------- */
   private apiUrl = 'http://localhost:5007/api/Jobs';
+  private savedJobsUrl = 'http://localhost:5007/api/SavedJob';
+  private isSavedJobUrl = 'http://localhost:5007/api/SavedJob/issaved';
 
-  /*--------------------------- Get All Jobs ----------------------------- */
   public JobsList = signal<IJob[]>([]);
+  public isLoading = signal<boolean>(false);
+  public error = signal<string | null>(null);
 
-  GetAllHttpJobs(){
-    this.http.get(this.apiUrl).subscribe(jobs => {
-      if(Array.isArray(jobs)){
-        this.JobsList.set(jobs);
-      }else{
+  constructor(private http: HttpClient, private authService: AuthService) {
+    this.loadSavedJobs();
+  }
+
+  /* ---------------------- Jobs Methods ---------------------- */
+  
+  GetAllJobs(): void {
+    this.isLoading.set(true);
+    this.error.set(null);
+
+    this.http.get<IJob[]>(this.apiUrl).subscribe({
+      next: (jobs) => {
+        this.JobsList.set(Array.isArray(jobs) ? jobs : []);
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading jobs:', error);
+        this.error.set('Failed to load jobs');
+        this.isLoading.set(false);
         this.JobsList.set([]);
       }
-
-      console.log("Loaded Jobs : ", this.JobsList() );
     });
-
   }
 
-  /*-------------------------- Get Job Details ------------------------------ */
+  GetFilteredJobs(filters: JobFilterParams): void {
+    this.isLoading.set(true);
+    this.error.set(null);
 
-  GetJobDetails(jobID: number):any {
+    let params = new HttpParams();
+
+    if (filters.searchValue?.trim()) {
+      params = params.set('searchValue', filters.searchValue.trim());
+    }
+    if (filters.categoryId && filters.categoryId > 0) {
+      params = params.set('categoryId', filters.categoryId.toString());
+    }
+    if (filters.skillId) {
+      params = params.set('skillId', filters.skillId.toString());
+    }
+    if (filters.employerId) {
+      params = params.set('employerId', filters.employerId.toString());
+    }
+    if (filters.workplaceType?.trim()) {
+      params = params.set('workplaceType', filters.workplaceType);
+    }
+    if (filters.jobType?.trim()) {
+      params = params.set('jobType', filters.jobType);
+    }
+    if (filters.experienceLevel?.trim()) {
+      params = params.set('experienceLevel', filters.experienceLevel);
+    }
+    if (filters.educationLevel?.trim()) {
+      params = params.set('educationLevel', filters.educationLevel);
+    }
+    if (filters.isActive !== undefined) {
+      params = params.set('isActive', filters.isActive.toString());
+    }
+    if (filters.sortingOption !== undefined) {
+      params = params.set('sortingOption', filters.sortingOption.toString());
+    }
+
+    this.http.get<IJob[]>(this.apiUrl, { params }).subscribe({
+      next: (jobs) => {
+        this.JobsList.set(Array.isArray(jobs) ? jobs : []);
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading filtered jobs:', error);
+        this.error.set('Failed to load filtered jobs');
+        this.isLoading.set(false);
+        this.JobsList.set([]);
+      }
+    });
+  }
+
+  GetJobDetails(jobID: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/${jobID}`);
   }
 
-
-  /*-------------------------- Post New Job ------------------------------ */
-
-  createJob(jobData: any): any {
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjRjNGZjYzlkLWJiZTUtNDMyOC05MWY1LTk0ZDczYWQwNGJhMiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJUZWNoU29sdXRpb25zTHRkIiwianRpIjoiNjc1MzZmYjgtMjhkMi00YzUyLTk2N2ItMTQyMTExN2Q3ODA0IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiRW1wbG95ZXIiLCJleHAiOjE3NTUzMjU2MzksImlzcyI6IkpvYkJvYXJkQVBJIiwiYXVkIjoiSm9iQm9hcmRVc2VyIn0.i9zQ5XBxFmtJO1FJNivBvfbdgJBgCnUiks7cnc-Vwnk"; 
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-    const newJob = this.http.post<IJob>(this.apiUrl, jobData, {headers});
-    
-    return newJob;
+  /*-------------------- Create Job -------------------- */
+  createJob(jobData: any): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.post<IJob>(this.apiUrl, jobData, { headers });
   }
 
+  /*-------------------- Update Job -------------------- */
+  updateJob(jobId: number, jobData: any): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.put<IJob>(`${this.apiUrl}/${jobId}`, jobData, { headers });
+  }
 
-  /*-------------------------- Get All Jobs Skills ------------------------------ */
-  GetAllJobsSkills(): any {
+  GetAllJobsSkills(): Observable<ISkill[]> {
     return this.http.get<ISkill[]>(`${this.apiUrl}/skills`);
   }
 
-  /*-------------------------- Get All Jobs Categories ------------------------------ */
-  GetAllJobsCategories(): any {
+  GetAllJobsCategories(): Observable<ICategory[]> {
     return this.http.get<ICategory[]>(`${this.apiUrl}/categories`);
   }
 
+  /* ---------------------- Saved Jobs Methods ---------------------- */
+
+  private getAuthHeaders(): HttpHeaders {
+    const token = this.authService.getToken();
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  }
+
+  getSavedJobs(filters?: SavedJobsFilterParams): Observable<any[]> {
+    let params = new HttpParams();
+    
+    if (filters?.searchValue?.trim()) {
+      params = params.set('searchValue', filters.searchValue.trim());
+    }
+    if (filters?.SortingOption) {
+      params = params.set('SortingOption', filters.SortingOption);
+    }
+
+    return this.http.get<any[]>(this.savedJobsUrl, {
+      headers: this.getAuthHeaders(),
+      params
+    }).pipe(
+      catchError(error => {
+        console.error('Error fetching saved jobs:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  getSavedJobIdByJobId(jobId: number): number | null {
+    const entry = this.savedJobsState().find(s => s.jobId === jobId);
+    return entry ? entry.savedJobId : null;
+  }
+
+  addToSavedJobs(jobId: number): Observable<any> {
+    return this.http.post(
+      this.savedJobsUrl,
+      { jobId },
+      { headers: this.getAuthHeaders() }
+    ).pipe(
+      tap((response: any) => {
+        // تحديث الـ state فوراً بعد نجاح العملية
+        const current = this.savedJobsState();
+        const newEntry: SavedJobMap = { 
+          jobId, 
+          savedJobId: response.id || response.savedJobId || Date.now()
+        };
+        
+        // تأكد من عدم وجود duplicate
+        if (!current.some(s => s.jobId === jobId)) {
+          this.savedJobsState.set([...current, newEntry]);
+          console.log(`Job ${jobId} added to saved jobs with savedJobId: ${newEntry.savedJobId}`);
+        }
+      }),
+      catchError(error => {
+        console.error('Error adding job to saved:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  // الطريقة الجديدة - حذف باستخدام jobId مباشرة
+  removeFromSavedJobsByJobId(jobId: number): Observable<any> {
+    return this.http.delete(`${this.savedJobsUrl}/${jobId}`, {
+      headers: this.getAuthHeaders()
+    }).pipe(
+      tap(() => {
+        // تحديث الـ state فوراً بعد نجاح العملية
+        const updated = this.savedJobsState().filter(s => s.jobId !== jobId);
+        this.savedJobsState.set(updated);
+        console.log(`Job ${jobId} removed from saved jobs`);
+      }),
+      catchError(error => {
+        console.error('Error removing saved job:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  // الطريقة القديمة - محتفظ بها للتوافق مع الكود الموجود
+  removeFromSavedJobs(savedJobId: number): Observable<any> {
+    return this.http.delete(`${this.savedJobsUrl}/${savedJobId}`, {
+      headers: this.getAuthHeaders()
+    }).pipe(
+      tap(() => {
+        const updated = this.savedJobsState().filter(s => s.savedJobId !== savedJobId);
+        this.savedJobsState.set(updated);
+        console.log(`Saved job with savedJobId ${savedJobId} removed`);
+      }),
+      catchError(error => {
+        console.error('Error removing saved job:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  isJobSaved(jobId: number): boolean {
+    return this.savedJobsState().some(s => s.jobId === jobId);
+  }
+
+  isSaved(jobId: number): Observable<boolean> {
+    // أولاً تحقق من الـ local state
+    const isInLocalState = this.isJobSaved(jobId);
+    if (isInLocalState) {
+      return new Observable(observer => {
+        observer.next(true);
+        observer.complete();
+      });
+    }
+    
+    // إذا لم توجد في الـ local state، اسأل الـ API
+    return this.http.get<boolean>(`${this.isSavedJobUrl}/${jobId}`, { 
+      headers: this.getAuthHeaders() 
+    }).pipe(
+      catchError(error => {
+        console.error('Error checking if job is saved:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  loadSavedJobs(): void {
+    this.getSavedJobs().subscribe({
+      next: (savedJobs: any[]) => {
+        // تحويل البيانات إلى SavedJobMap format
+        const savedMap: SavedJobMap[] = savedJobs.map(savedJob => ({
+          jobId: savedJob.job?.id || savedJob.jobId,
+          savedJobId: savedJob.id
+        })).filter(item => item.jobId);
+
+        this.savedJobsState.set(savedMap);
+        console.log('Loaded saved jobs state:', savedMap);
+      },
+      error: (error) => {
+        console.error('Error loading saved jobs:', error);
+        this.savedJobsState.set([]);
+      }
+    });
+  }
+
+  refreshSavedJobsState(): void {
+    this.loadSavedJobs();
+  }
+
+  getSavedJobsCount(): number {
+    return this.savedJobsState().length;
+  }
 }

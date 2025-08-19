@@ -1,0 +1,123 @@
+
+body {
+    background-color: #f9fbfd;
+    color: #2c3e50;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.metric-card {
+    background: var(--basic-gray);
+    padding: 25px;
+    border-radius: 18px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+.metric-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.metric-card h6 {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+.metric-card h2 {
+    font-size: 2.4rem;
+    margin-bottom: 0;
+}
+.metric-card small {
+    font-size: 0.85rem;
+    display: block;
+}
+
+.trend-card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+}
+
+.job-card {
+    background: #f0f4ff;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    color: #2c3e50;
+    transition: all 0.3s;
+}
+.job-card:hover {
+    background: #e0ecff;
+    transform: translateX(5px);
+}
+.job-card i {
+    color: #4a90e2;
+    margin-right: 8px;
+}
+
+
+/* Hiring Pipeline Overview */
+.total-application, .accepted{
+    background-color:  #e2ecfa;
+    padding: 15px;
+    text-align: center;
+    border-radius: 18px;
+    transition: all 0.3s ease;
+}
+.total-application:hover , .accepted:hover{
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+.total-application h2 , .accepted h2{
+    font-size: 2.6rem;
+    color: rgb(61, 103, 252);
+}
+.total-application p , .accepted p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin: 0;
+}
+
+
+.under-review{
+    background-color:  #faebd9;
+    padding: 15px;
+    text-align: center;
+    border-radius: 18px;
+    transition: all 0.3s ease;
+}
+.under-review:hover{
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+.under-review h2{
+    font-size: 2.6rem;
+    color: rgb(228, 136, 29);
+}
+.under-review p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin: 0;
+}
+
+
+.pending{
+    background-color:  #e6f9e4;
+    padding: 15px;
+    text-align: center;
+    border-radius: 18px;
+    transition: all 0.3s ease;
+}
+.pending:hover{
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+.pending h2{
+    font-size: 2.6rem;
+    color: rgb(37, 197, 98);
+}
+.pending p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin: 0;
+}

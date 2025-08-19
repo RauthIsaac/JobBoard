@@ -1,142 +1,224 @@
-<mat-card class="seeker-profile-card">
-  <mat-card-header>
-    <div mat-card-avatar class="profile-avatar">
-      <img mat-card-avatar [src]="profile.profilePictureUrl || 'profile-icon-design-free-vector.jpg'" alt="Profile Picture">
-      <label for="profilePicture" class="upload-overlay">
-        <mat-icon>edit</mat-icon>
-      </label>
-      <input id="profilePicture" type="file" class="hidden-file-input" (change)="onFileSelected($event)">
-    </div>
-    <mat-card-title>Seeker Profile</mat-card-title>
-    <mat-card-subtitle>Update your personal information and experience</mat-card-subtitle>
-  </mat-card-header>
+<div class="container">
+  <mat-card class="profile-card header-card">
+    <div class="header-content row">
+      <!-- Profile Image Section with Upload/Delete functionality -->
+      <div class="profile-image-container col-lg-2 col-md-4 col-sm-12">
+        <div class="image-wrapper">
+          <img [src]="seekerData().profileImageUrl || getDefaultProfileImage()" 
+               [alt]="seekerData().name" 
+               class="profile-pic mx-auto">
+          
+          <!-- Image overlay for actions -->
+          <div class="image-overlay" *ngIf="!isUploadingImage()">
+            <button mat-icon-button 
+                    class="image-action-btn" 
+                    [matMenuTriggerFor]="imageMenu"
+                    matTooltip="Manage Profile Image">
+              <mat-icon>camera_alt</mat-icon>
+            </button>
+          </div>
 
-  <mat-card-content class="space-y-6">
-    <div class="info-section">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <mat-form-field appearance="outline">
-          <mat-label>First Name</mat-label>
-          <input matInput placeholder="First Name" [(ngModel)]="profile.firstName" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Last Name</mat-label>
-          <input matInput placeholder="Last Name" [(ngModel)]="profile.lastName" />
-        </mat-form-field>
-      </div>
+          <!-- Image Menu -->
+          <mat-menu #imageMenu="matMenu">
+            <button mat-menu-item 
+                    (click)="openImageFileDialog()" 
+                    [disabled]="isUploadingImage()">
+              <mat-icon>cloud_upload</mat-icon>
+              <span *ngIf="!seekerData().profileImageUrl">Upload Image</span>
+              <span *ngIf="seekerData().profileImageUrl">Change Image</span>
+            </button>
+            
+            <button mat-menu-item 
+                    (click)="deleteProfileImage()" 
+                    *ngIf="seekerData().profileImageUrl"
+                    [disabled]="isUploadingImage()"
+                    class="delete-action">
+              <mat-icon>delete</mat-icon>
+              <span>Delete Image</span>
+            </button>
+          </mat-menu>
 
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Address</mat-label>
-        <input matInput placeholder="Address" [(ngModel)]="profile.address" />
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>CV URL</mat-label>
-        <input matInput placeholder="CV URL" [(ngModel)]="profile.CV_URL" />
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Bio</mat-label>
-        <textarea matInput placeholder="Tell us a little about yourself..." [(ngModel)]="profile.bio" matTextareaAutosize matAutosizeMinRows="3" matAutosizeMaxRows="6"></textarea>
-      </mat-form-field>
-    </div>
-
-    <mat-divider></mat-divider>
-    <div class="dynamic-section">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="mat-subheading-2">Work Experience</h3>
-        <button mat-icon-button color="primary" (click)="addExperience()">
-          <mat-icon>add_circle_outline</mat-icon>
-        </button>
-      </div>
-      <div *ngFor="let exp of profile.experience; let i = index" class="item-card">
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label>Job Title</mat-label>
-          <input matInput placeholder="Job Title" [(ngModel)]="exp.jobTitle" />
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label>Company</mat-label>
-          <input matInput placeholder="Company" [(ngModel)]="exp.company" />
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label>Job Description</mat-label>
-          <textarea matInput placeholder="Job Description..." [(ngModel)]="exp.description" matTextareaAutosize matAutosizeMinRows="2"></textarea>
-        </mat-form-field>
-        <div class="grid grid-cols-2 gap-4">
-          <mat-form-field appearance="fill">
-            <mat-label>Start Date</mat-label>
-            <input matInput type="month" [(ngModel)]="exp.startDate" />
-          </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>End Date</mat-label>
-            <input matInput type="month" [(ngModel)]="exp.endDate" />
-          </mat-form-field>
+          <!-- Upload Progress Indicator for Image -->
+          <div *ngIf="isUploadingImage()" class="upload-progress">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Processing...</p>
+          </div>
         </div>
-        <button mat-mini-fab color="warn" (click)="removeExperience(i)" class="remove-btn">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
-    </div>
 
-    <mat-divider></mat-divider>
-    <div class="dynamic-section">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="mat-subheading-2">Education</h3>
-        <button mat-icon-button color="primary" (click)="addEducation()">
-          <mat-icon>add_circle_outline</mat-icon>
-        </button>
+        <!-- Hidden file input for images -->
+        <input #imageFileInput 
+               type="file" 
+               accept="image/jpeg,image/jpg,image/png,image/gif" 
+               style="display: none;" 
+               (change)="onImageSelected($event)">
       </div>
-      <div *ngFor="let edu of profile.education; let i = index" class="item-card">
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label>Degree</mat-label>
-          <input matInput placeholder="Degree" [(ngModel)]="edu.degree" />
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label>University</mat-label>
-          <input matInput placeholder="University" [(ngModel)]="edu.university" />
-        </mat-form-field>
-        <div class="grid grid-cols-2 gap-4">
-          <mat-form-field appearance="fill">
-            <mat-label>Start Date</mat-label>
-            <input matInput type="month" [(ngModel)]="edu.startDate" />
-          </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>Graduation Date</mat-label>
-            <input matInput type="month" [(ngModel)]="edu.endDate" />
-          </mat-form-field>
-        </div>
-        <button mat-mini-fab color="warn" (click)="removeEducation(i)" class="remove-btn">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
-    </div>
 
-    <mat-divider></mat-divider>
-    <div class="dynamic-section">
-      <h3 class="mat-subheading-2 mb-4">Skills</h3>
-      <mat-chip-grid aria-label="Skills selection" #chipList>
-        <mat-chip-row *ngFor="let skill of profile.skills; let i = index" (removed)="removeSkill(i)">
-          {{ skill }}
-          <button matChipRemove [attr.aria-label]="'remove ' + skill">
-            <mat-icon>cancel</mat-icon>
+      <div class="info-details col-lg-5 col-md-8 col-sm-12">
+        <h2>{{seekerData().name}}</h2>
+        <p class="role">{{seekerData().title}}</p>
+        <p class="contact-info"><i class="bi bi-geo-alt me-2"></i> {{seekerData().address}}</p>
+        <p class="contact-info"><i class="bi bi-envelope me-2"></i> {{seekerData().email}}</p>
+        <p class="contact-info"><i class="bi bi-telephone me-2"></i> {{seekerData().phoneNumber}}</p>
+      </div>
+
+      <div class="action-buttons col-lg-3 col-md-12 col-sm-12">
+        <button mat-button routerLink="/editSeeker" class="mt-2"><mat-icon class="mx-1">edit</mat-icon> Edit Profile</button>
+        
+        <!-- Resume Upload Section -->
+        <div class="resume-section">
+          <!-- Hidden file input -->
+          <input #resumeFileInput 
+                 type="file" 
+                 accept=".pdf,.doc,.docx" 
+                 style="display: none;" 
+                 (change)="onResumeSelected($event)">
+          
+          <!-- Upload Button -->
+          <button mat-button 
+                  (click)="openResumeFileDialog()" 
+                  [disabled]="isUploadingResume()"
+                  *ngIf="!seekerData().cV_Url">
+            <mat-icon>cloud_upload</mat-icon>
+            <span *ngIf="!isUploadingResume()">Upload Resume</span>
+            <mat-spinner diameter="20" *ngIf="isUploadingResume()"></mat-spinner>
           </button>
-        </mat-chip-row>
-      </mat-chip-grid>
-      <mat-form-field appearance="fill" class="w-full mt-4">
-        <mat-label>Add a new skill</mat-label>
-        <input
-          matInput
-          placeholder="Type a skill and press Enter"
-          #skillInput
-          [matChipInputFor]="chipList"
-          (matChipInputTokenEnd)="addSkill($event)"
-        />
-      </mat-form-field>
-    </div>
-  </mat-card-content>
 
-  <mat-card-actions class="flex justify-center mt-6">
-    <button mat-raised-button color="primary" class="w-full md:w-auto" (click)="saveProfile()">
-      <mat-icon>save</mat-icon> Save Profile
-    </button>
-  </mat-card-actions>
-</mat-card>
+          <!-- Resume Management Buttons (when resume exists) -->
+          <div *ngIf="seekerData().cV_Url" class="resume-actions">
+            <!-- View/Download Button -->
+            <button class="openCv">
+              <div *ngIf="seekerData().cV_Url" >
+                <a [href]="seekerData().cV_Url" download="uploaded-file.pdf" style="text-decoration: none; color:#1564ca; font-weight: 600;">
+                  <span><i class="bi bi-box-arrow-in-right me-3 fs-4 mt-2"></i>Open CV</span>
+                </a>
+            </div>
+            </button>
+            
+            
+            <!-- Delete Button -->
+            <button mat-button 
+                    (click)="deleteResume()" 
+                    [disabled]="isUploadingResume()"
+                    color="warn" 
+                    title="Delete Resume">
+              <mat-icon>delete</mat-icon> 
+              <span *ngIf="!isUploadingResume()">Delete</span>
+              <mat-spinner diameter="16" *ngIf="isUploadingResume()"></mat-spinner>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div> 
+  </mat-card>
+
+  <div class="row">
+    <div class="left-section col-lg-8 col-md-12 col-sm-12">
+      <mat-card class="profile-card summary-card">
+        <h3>Professional Summary</h3>
+        <p>{{seekerData().summary}}</p>
+      </mat-card>
+
+      <mat-card class="profile-card experience-card">
+        <h3>Work Experience</h3>
+        <div class="experience-item p-3 my-3" *ngFor="let exp of seekerData().seekerExperiences; trackBy: trackByIndex">
+          <div class="job-header">
+            <div>
+              <h4>{{exp.jobTitle}}</h4>
+              <p class="company">{{exp.companyName}}</p>
+              <p class="location" *ngIf="exp.location"><i class="bi bi-geo-alt me-2"></i> {{exp.location}}</p>
+            </div>
+            <span class="dates">{{exp.startDate | date:'MMM yyyy'}} - {{exp.endDate ? (exp.endDate | date:'MMM yyyy') : 'Present'}}</span>
+          </div>
+          <div class="job-description" *ngIf="exp.description">
+            <p>{{exp.description}}</p>
+          </div>
+        </div>
+        
+        <!-- Show message if no experience -->
+        <div *ngIf="!seekerData().seekerExperiences || seekerData().seekerExperiences.length === 0" class="no-data-message">
+          <p>No work experience added yet.</p>
+        </div>
+      </mat-card>
+
+      <mat-card class="profile-card skills-card">
+        <h3>Skills & Technologies</h3>
+        <div class="tags-container my-3">
+          <span class="tech-chip" *ngFor="let skill of seekerData().skillName; trackBy: trackByIndex">{{skill}}</span>
+        </div>
+        <div *ngIf="!seekerData().skillName || seekerData().skillName.length === 0" class="no-data-message">
+          <p>No skills added yet.</p>
+        </div>
+      </mat-card>
+
+      <mat-card class="profile-card certifications-card">
+        <h3><mat-icon>school</mat-icon> Education</h3>
+        <div class="experience-item p-3 my-3" *ngFor="let edu of seekerData().seekerEducations; trackBy: trackByIndex">
+          <div class="job-header">
+            <div>
+              <h5>{{edu.educationLevel}} of {{edu.major}} in {{edu.faculty}}</h5>
+              <p>{{edu.university}}</p>
+              <p *ngIf="edu.gpa"><strong>GPA: </strong> {{edu.gpa}}/4.0 </p>
+            </div>
+            <p>{{edu.date | date:'MMM yyyy'}} - {{edu.location}}</p>
+          </div>
+        </div>
+        
+        <!-- Show message if no education -->
+        <div *ngIf="!seekerData().seekerEducations || seekerData().seekerEducations.length === 0" class="no-data-message">
+          <p>No education added yet.</p>
+        </div>
+
+        <h3 class="my-4"><mat-icon>verified</mat-icon> Certifications</h3>
+        <div class="certification-item">
+          <div class="info">
+            <h5 *ngFor="let cert of seekerData().certificateName; trackBy: trackByIndex">{{cert}}</h5>
+          </div>
+        </div>
+        <div *ngIf="!seekerData().certificateName || seekerData().certificateName.length === 0" class="no-data-message">
+          <p>No certificates added yet.</p>
+        </div>
+        <mat-divider class="my-3"></mat-divider>
+      </mat-card>
+
+      <mat-card class="profile-card training-card">
+        <h3>Additional Training</h3>
+        <ul *ngIf="seekerData().trainingName && seekerData().trainingName.length > 0">
+          <li *ngFor="let training of seekerData().trainingName; trackBy: trackByIndex">{{training}}</li>
+        </ul>
+        <div *ngIf="!seekerData().trainingName || seekerData().trainingName.length === 0" class="no-data-message">
+          <p>No training added yet.</p>
+        </div>
+      </mat-card>
+    </div>
+
+    <div class="right-section col-lg-4 col-md-12 col-sm-12">
+      <mat-card class="sidebar-card connect-card">
+        <h3>Connect</h3>
+        <div class=" p-2">
+          <div class="mt-2 d-flex">
+            <i class="bi bi-linkedin me-3 fs-4"></i>
+            <a href="https://www.linkedin.com/" style="text-decoration: none; font-size: large; margin-top: 3px; color: black;">LinkedIn</a>
+          </div>
+          <div class="mt-2 d-flex">
+            <i class="bi bi-github me-3 fs-4"></i> 
+            <a href="https://github.com/" style="text-decoration: none; font-size: large; margin-top: 3px; color: black;">GitHub</a>
+          </div>
+          <div class="mt-2 d-flex">
+            <i class="bi bi-link-45deg me-3 fs-4"></i> 
+            <a routerLink="/seekerProfile" style="text-decoration: none; font-size: large; margin-top: 3px; color: black;">Portfolio</a>
+          </div>
+        </div>
+      </mat-card>
+
+      <mat-card class="sidebar-card interests-card">
+        <h3>Professional Interests</h3>
+        <div class="tags-container my-3">
+          <span class="tech-chip" *ngFor="let interest of seekerData().interestName; trackBy: trackByIndex">{{interest}}</span>
+        </div>
+        <div *ngIf="!seekerData().interestName || seekerData().interestName.length === 0" class="no-data-message">
+          <p>No interests added yet.</p>
+        </div>
+      </mat-card>
+    </div>
+  </div>  
+</div>

@@ -1,4 +1,4 @@
-<div style="margin: 100px;">
+<div style="margin: 0px 100px;">
     <!-- Loading indicator -->
     @if (loading()) {
         <div class="text-center p-5">
@@ -52,9 +52,11 @@
 
             </div>
             <div class="col-lg-3">
-                <input type="button" class="apply-now-btn form-control" routerLink="/jobApp" value="Apply Now">
-                <button class="save-job-btn form-control" (click)="AddToSaved()" [class.saved]="isSaved">
-                    <i class="bi" [class.bi-bookmark-check]="isSaved" [class.bi-bookmark]="!isSaved"></i> {{ isSaved ? 'Saved' : ' Save' }}
+                <button class="apply-now-btn form-control" [routerLink]="['/seekerApp', jobId()]">
+                    Apply Now
+                </button>
+                <button class="save-job-btn form-control" (click)="toggleSaved()" [class.saved]="isSavedFlag()">
+                    <i class="bi" [class.bi-bookmark-check]="isSavedFlag()" [class.bi-bookmark]="!isSavedFlag()"></i> {{ isSavedFlag() ? 'Saved' : ' Save' }}
                 </button>  
             </div>
 
@@ -168,7 +170,9 @@
                                     <p>Apply now and take the next step in your career.</p>
                                 </div>
                                 <div class="col-lg-4 col-md-5 col-sm-12">
-                                    <button class="apply-now-btn form-control" routerLink="/jobApp" value="Apply Now">Apply Now <i class="bi bi-arrow-right px-2"></i></button>
+                                    <button class="apply-now-btn form-control" [routerLink]="['/seekerApp', jobId()]">
+                                        Apply Now <i class="bi bi-arrow-right px-2"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>

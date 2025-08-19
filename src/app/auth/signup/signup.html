@@ -1,150 +1,79 @@
-<mat-card>
-  <h2 class="title text-center fs-1 p-2 mb-5">Create your account</h2>
+<div class="container">
+  <div class="form-container">
+    <div class="my-4 text-center">
+      <span class="fs-2 fw-medium">Create your account</span>
+    </div>
 
-  <form class="w-100" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
-    <!-- Username -->
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label class="fs-4">Username</mat-label>
-      <input
-        matInput
-        type="text"
-        formControlName="userName"
-        placeholder="ex: Samaa"
-      />
-      <mat-error *ngIf="signupForm.get('userName')?.errors">
-        <small *ngIf="signupForm.get('userName')?.errors?.['required']">
-          Username is required
-        </small>
-        <small *ngIf="signupForm.get('userName')?.errors?.['notUnique']">
-          Username already exists
-        </small>
-      </mat-error>
-    </mat-form-field>
+    <form class="w-100" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
 
-    <!-- Email -->
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label class="fs-4">Email</mat-label>
-      <input
-        matInput
-        type="email"
-        formControlName="email"
-        placeholder="ex: samaa@gmail.com"
-      />
-      <mat-error *ngIf="signupForm.get('email')?.errors">
-        <small *ngIf="signupForm.get('email')?.errors?.['required']">
-          Email is required
-        </small>
-        <small *ngIf="signupForm.get('email')?.errors?.['email']">
-          Invalid email format
-        </small>
-        <small *ngIf="signupForm.get('email')?.errors?.['notUnique']">
-          Email already exists
-        </small>
-      </mat-error>
-    </mat-form-field>
+      <!-- Username -->
+      <div class="full-width my-3">
+        <label class="fs-5">Username</label>
+        <input type="text" formControlName="userName" class="form-control" placeholder="ex: userName" />
+        <div *ngIf="signupForm.get('userName')?.invalid && signupForm.get('userName')?.touched" class="valid-form">
+          <div *ngIf="signupForm.get('userName')?.errors?.['required']">Username is required</div>
+          <div *ngIf="signupForm.get('userName')?.errors?.['notUnique']">Username already exists</div>
+        </div>
+      </div>
 
-    <!-- Password -->
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label class="fs-4">Password</mat-label>
-      <input
-        matInput
-        [type]="hidePassword ? 'password' : 'text'"
-        formControlName="password"
-        placeholder="********"
-      />
-      <button
-        mat-icon-button
-        matSuffix
-        (click)="hidePassword = !hidePassword"
-        type="button"
-      >
-        <mat-icon>{{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon>
+      <!-- Email -->
+      <div class="full-width my-3">
+        <label class="fs-5">Email</label>
+        <input type="email" formControlName="email" class="form-control" placeholder="ex: user@gmail.com" />
+        <div *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched" class="valid-form">
+          <div *ngIf="signupForm.get('email')?.errors?.['required']">Email is required</div>
+          <div *ngIf="signupForm.get('email')?.errors?.['email']">Invalid email format</div>
+          <div *ngIf="signupForm.get('email')?.errors?.['notUnique']">Email already exists</div>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="full-width my-3">
+        <label class="fs-5">Password</label>
+        <input [type]="hidePassword ? 'password' : 'text'" formControlName="password" class="form-control" placeholder="********" />
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="full-width my-3">
+        <label class="fs-5">Confirm Password</label>
+        <input [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword" class="form-control" placeholder="********" />
+      </div>
+
+      <!-- Error for mismatch -->
+      <div *ngIf="signupForm.errors?.['passwordMismatch']" class="valid-form">Passwords do not match</div>
+
+      <!-- User Type -->
+      <div class="my-3">
+        <label class="fs-5 d-block">User Type</label>
+        <mat-radio-group formControlName="user_type">
+          <mat-radio-button value="Employer">Employer</mat-radio-button>
+          <mat-radio-button value="Seeker">Seeker</mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <!-- Employer Only -->
+      <div *ngIf="signupForm.get('user_type')?.value === 'Employer'">
+        <div class="full-width my-3">
+          <label class="fs-5">Company Name</label>
+          <input type="text" formControlName="companyName" class="form-control" placeholder="ex: Google LLC" />
+        </div>
+
+        <div class="full-width my-3">
+          <label class="fs-5">Company Location</label>
+          <input type="text" formControlName="companyLocation" class="form-control" placeholder="ex: New York, USA" />
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button class="reset-btn fs-4 my-4" type="submit">
+        Register
       </button>
-      <mat-error *ngIf="signupForm.get('password')?.errors">
-        <small *ngIf="signupForm.get('password')?.errors?.['required']">
-          Password is required
-        </small>
-      </mat-error>
-    </mat-form-field>
 
-    <!-- Confirm Password -->
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label class="fs-4">Confirm Password</mat-label>
-      <input
-        matInput
-        [type]="hideConfirmPassword ? 'password' : 'text'"
-        formControlName="confirmPassword"
-        placeholder="********"
-      />
-      <button
-        mat-icon-button
-        matSuffix
-        (click)="hideConfirmPassword = !hideConfirmPassword"
-        type="button"
-      >
-        <mat-icon>{{ hideConfirmPassword ? "visibility_off" : "visibility" }}</mat-icon>
-      </button>
-      <mat-error *ngIf="signupForm.get('confirmPassword')?.errors">
-        <small *ngIf="signupForm.get('confirmPassword')?.errors?.['required']">
-          Password confirmation is required
-        </small>
-      </mat-error>
-    </mat-form-field>
-
-    <!-- Password Mismatch Error -->
-    <div *ngIf="signupForm.errors?.['passwordMismatch']">
-      <small style="color: red">Passwords do not match</small>
-    </div>
-
-    <!-- User Type -->
-    <div class="mb-3 mt-3">
-      <label class="fs-5 d-block mb-2">User Type</label>
-      <mat-radio-group formControlName="user_type">
-        <mat-radio-button value="Employer">Employer</mat-radio-button>
-        <mat-radio-button value="Seeker">Seeker</mat-radio-button>
-      </mat-radio-group>
-    </div>
-
-    <!-- Company Name & Location - Shown only for Employer -->
-    <div *ngIf="signupForm.get('user_type')?.value === 'Employer'">
-      <!-- Company Name -->
-      <mat-form-field appearance="fill" class="full-width">
-        <mat-label class="fs-4">Company Name</mat-label>
-        <input
-          matInput
-          type="text"
-          formControlName="companyName"
-          placeholder="ex: Google LLC"
-        />
-      </mat-form-field>
-
-      <!-- Company Location -->
-      <mat-form-field appearance="fill" class="full-width">
-        <mat-label class="fs-4">Company Location</mat-label>
-        <input
-          matInput
-          type="text"
-          formControlName="companyLocation"
-          placeholder="ex: New York, USA"
-        />
-      </mat-form-field>
-    </div>
-
-    <!-- Submit -->
-    <button class="fs-4" mat-raised-button color="primary" type="submit">
-      Register
-    </button>
-
-    <!-- Login Redirect -->
-    <p class="text-center fs-5 mt-3">
-      Already have an account?
-      <a
-        routerLink="/login"
-        class="title"
-        style="cursor: pointer; text-decoration: underline"
-      >
-        Login
-      </a>
-    </p>
-  </form>
-</mat-card>
+      <!-- Redirect -->
+      <p class="text-center fs-5 mt-3">
+        Already have an account?
+        <a routerLink="/login" class="text-primary" style="cursor: pointer; text-decoration: underline">Login</a>
+      </p>
+    </form>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-<div class="home-container mt-5">
+<div class="home-container">
     <!-----------------------------Hero Section--------------------------->
     <section class="hero-section">
         <div class="hero-container p-5">
@@ -32,51 +32,62 @@
                 </div>
             </div>
 
-
-            <form class="hero-fourth-div-form">
+            <!-- Updated Search Form -->
+            <form class="hero-fourth-div-form" (ngSubmit)="onSearchSubmit()">
                 <div class="hero-fourth-div">
-                <div>
-                    <i class="bi bi-search me-2"></i>
-                    <input type="text" class="filter-input form-control" placeholder="Search for jobs...">
-                </div>
+                    <div>
+                        <i class="bi bi-search me-2"></i>
+                        <input 
+                            type="text" 
+                            class="filter-input form-control" 
+                            placeholder="Search for jobs..."
+                            [formControl]="searchControl"
+                        >
+                    </div>
 
-                <div class="vl"></div>
+                    <div class="vl"></div>
 
-                <div>
-                    <i class="bi bi-geo-alt me-2"></i>
-                    <input type="text" class="filter-input form-control" placeholder="Search by location...">
-                </div>
+                    <div>
+                        <i class="bi bi-geo-alt me-2"></i>
+                        <input 
+                            type="text" 
+                            class="filter-input form-control" 
+                            placeholder="Search by location..."
+                            [formControl]="locationControl"
+                        >
+                    </div>
 
-                <div class="vl"></div>
+                    <div class="vl"></div>
 
-                <div>
-                    <i class="bi bi-funnel me-2"></i>
-                    <select class="form-select">
-                        <option selected>Filter by category</option>
-                        <option value="1">Engineering</option>
-                        <option value="2">Marketing</option>
-                        <option value="3">Finance</option>
-                        <option value="4">Education</option>
-                    </select>
-                </div>
+                    <div>
+                        <i class="bi bi-funnel me-2"></i>
+                        <select class="form-select" [formControl]="categoryControl">
+                            <option value="">Filter by category</option>
+                            @for(category of categories(); track category.id) {
+                                <option [value]="category.id">{{ category.categoryName }}</option>
+                            }
+                        </select>
+                    </div>
 
-                <div>
-                    <input type="submit" class="search-btn" value="Search Jobs">
-                </div>
-
+                    <!-- Search Button -->
+                    <div>
+                        <button type="submit" class="btn btn-primary px-4" (click)="onSearchSubmit()">
+                            <i class="bi bi-search me-1"></i>
+                            Search
+                        </button>
+                    </div>
                 </div>
             </form>
-        
 
+            <!-- Updated Quick Filter Buttons -->
             <div class="hero-fifth-div">
-                <input type="button" value="Remote" class="filter-btn">
-                <input type="button" value="Full-Time" class="filter-btn">
-                <input type="button" value="Part-Time" class="filter-btn">
-                <input type="button" value="Entry-Level" class="filter-btn">
-                <input type="button" value="Senior" class="filter-btn">
-                <input type="button" value="Manager" class="filter-btn">
+                <input type="button" value="Remote" class="filter-btn" (click)="onQuickFilter('workplaceType', 'Remote')">
+                <input type="button" value="Full-Time" class="filter-btn" (click)="onQuickFilter('jobType', 'FullTime')">
+                <input type="button" value="Part-Time" class="filter-btn" (click)="onQuickFilter('jobType', 'PartTime')">
+                <input type="button" value="Entry-Level" class="filter-btn" (click)="onQuickFilter('experienceLevel', 'EntryLevel')">
+                <input type="button" value="Experienced" class="filter-btn" (click)="onQuickFilter('experienceLevel', 'Experienced')">
+                <input type="button" value="Manager" class="filter-btn" (click)="onQuickFilter('experienceLevel', 'Manager')">
             </div>
-
 
             <div class="hero-sixth-div">
                 <div class="mx-5">
@@ -175,14 +186,13 @@
             <div class="row">
                   @for(job of jobsList(); track job.id){
                     <app-job-view [job]="job" class="col-lg-4 col-md-6 col-sm-10 my-4"></app-job-view>
+                    <!-- <app-job-view [job]="job" class="col-lg-9 col-md-6 col-sm-10 my-4"></app-job-view> -->
                 }
             </div>
            
         </section>
 
         <hr>
-
-
 
         <!-- Why HireSmart Section -->
         <section class="Why-hireSmart-section">
@@ -242,8 +252,6 @@
 
             </div>
 
-
-
         </section>
 
         <section class="End-section row mb-5">
@@ -282,11 +290,14 @@
                         </div>
                     </div>
 
-                    <input type="button" class="form-control for-job-seeker-btn" value="Start Job Searching">
-
+                    <input 
+                        type="button" 
+                        class="form-control for-job-seeker-btn" 
+                        value="Start Job Searching"
+                        (click)="onStartJobSearching()"
+                    >
 
                 </div>
-
 
             </div>
 
@@ -323,28 +334,18 @@
                         </div>
                     </div>
 
-                    <input type="button" class="form-control for-employer-btn" value="Post Your First Job">
+                    <input 
+                        type="button" 
+                        class="form-control for-employer-btn" 
+                        value="Post Your First Job"
+                        (click)="onPostJob()"
+                    >
 
                 </div>
             </div>
-
 
         </section>
 
     </article>
 
-
-
-
-
-
-
-
-
-
-    
-
 </div>
-
-
-    

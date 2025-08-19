@@ -1,0 +1,125 @@
+.job-container{
+    background: var(--basic-gray);
+    padding: 20px;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    cursor: pointer; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.job-container:hover{
+    transform: translateY(-5px);
+}
+
+.comp-logo{
+    background-color:rgb(232, 230, 230);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: larger;
+    height: fit-content;
+    padding: 15px;
+}
+
+.workplace-type{
+    background-color:rgb(175, 202, 207);
+    padding: 5px 10px;
+    width: fit-content;
+    border-radius: 15px;
+    font-weight: 400;
+    margin-right:10px;
+}
+.workplace-type:hover{
+    background-color:rgb(142, 165, 170);
+}
+
+.job-type{
+    background-color:rgb(109, 159, 235);
+    padding:5px 10px;
+    width: fit-content;
+    border-radius: 15px;
+    font-weight: 400;
+    color:white;
+}
+.job-type:hover{
+    background-color: rgb(78, 117, 174);
+}
+
+.save-job-btn{
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    outline: none;
+    box-shadow: none;
+    border: none;
+}
+.save-job-btn:hover{
+    background:var(--basic-orange);
+    color: white;
+}
+
+.saved{
+    outline: none;
+    box-shadow: none;
+    background:var(--basic-orange);
+    color:white;
+}
+
+
+
+.skill{
+    background-color: rgb(232, 230, 230);
+    border-radius: 15px;
+    padding: 5px 10px;
+    width: fit-content;
+    margin: 5px 5px;
+}
+.skill:hover{
+    background-color: rgb(218, 217, 217);
+}
+
+.more{
+    background-color: rgb(218, 217, 217);
+    border-radius: 15px;
+    padding: 5px 10px;
+    width: fit-content;
+    margin: 5px 5px;
+}
+.more:hover{
+    background-color: green;
+    color:white;
+}
+
+
+
+.view-dtl-btn{
+    background-color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    box-shadow: none;
+}
+.view-dtl-btn:hover{
+    background: var(--basic-orange);
+    color: white;
+}
+
+
+.apply-now-btn{
+    background: var(--basic-color);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    box-shadow: none;
+}
+.apply-now-btn:hover{
+    background: var(--basic-color-hover);
+}

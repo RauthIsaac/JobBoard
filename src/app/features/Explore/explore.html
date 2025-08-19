@@ -1,0 +1,251 @@
+<div class="hero">
+    <div class="row mb-3">
+        <div class="col-lg-10 col-md-12 col-sm-12">
+            <h1>Explore Job Opportunities</h1>
+            <p>Find your dream job from a wide range of listings.</p>
+            <div class="mt-2">
+                <small class="text-muted">
+                    @if (isLoading()) {
+                        Loading jobs...
+                    } @else {
+                        Found {{ getJobsCount() }} jobs
+                        @if (hasActiveFilters()) {
+                            <span class="badge bg-primary ms-2">Filtered</span>
+                        }
+                    }
+                </small>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-5">
+            <div>
+                <select class="form-select" [formControl]="sortingControl" (change)="onSortingChange($event)">
+                    @for(option of sortingOptions; track option.value) {
+                        <option [value]="option.value">{{ option.label }}</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <div class="search-div mb-3 form-control">
+        <i class="bi bi-search mx-2 my-1"></i>
+        <input 
+            type="text" 
+            placeholder="Search for job..." 
+            class="form-control" 
+            [formControl]="searchControl"
+            (keyup.enter)="onSearch()"
+        />
+        @if (searchTerm()) {
+            <button type="button" class="btn btn-sm btn-link p-1" (click)="searchControl.setValue(''); searchTerm.set(''); ">
+                <i class="bi bi-x"></i>
+            </button>
+        }
+    </div>
+
+    <div class="popular-searches-div">
+        <span class="me-4">Popular Searches:</span>
+        <div class="row">
+            <input type="button" value="Remote" class="filter-btn" (click)="applyQuickFilter('workplaceType', 'Remote')">
+            <input type="button" value="Full-Time" class="filter-btn" (click)="applyQuickFilter('jobType', 'FullTime')">
+            <input type="button" value="Part-Time" class="filter-btn" (click)="applyQuickFilter('jobType', 'PartTime')">
+            <input type="button" value="Entry-Level" class="filter-btn" (click)="applyQuickFilter('experienceLevel', 'EntryLevel')">
+            <input type="button" value="Senior" class="filter-btn" (click)="applyQuickFilter('experienceLevel', 'Experienced')">
+            <input type="button" value="Manager" class="filter-btn" (click)="applyQuickFilter('experienceLevel', 'Manager')">
+        </div>
+    </div>
+
+    @if (hasActiveFilters()) {
+        <div class="mt-3">
+            <button type="button" class="btn btn-outline-secondary btn-sm" (click)="clearAllFilters()">
+                <i class="bi bi-funnel"></i> Clear All Filters
+            </button>
+        </div>
+    }
+  
+</div>
+
+<div class="row content">
+    
+    <div class="col-lg-3 col-md-3 col-sm-12" >
+        <div class="side-bar">
+            <h5 class="my-3 fs-3">Filters</h5>
+
+            <!-- Location Filter -->
+            <div class="my-2">
+                <span class="fs-5">Location</span>
+                <div class="search-div mb-3 form-control mt-2">
+                    <i class="bi bi-search mx-2 my-2"></i>
+                    <input type="text" placeholder="Search location..." class="form-control" />
+                </div>
+                <small class="text-muted">Location filtering coming soon...</small>
+            </div>
+
+            <hr class="my-4">
+
+            <!-- Category Filter -->
+            <div [formGroup]="filtersForm">
+                <div class="my-2">
+                    <span class="fs-5">Category</span>
+                    <select class="form-select mt-2" formControlName="categoryId">
+                        <option value="">All Categories</option>
+                        @for(category of categories(); track category.id) {
+                            <option [value]="category.id">{{ category.categoryName }}</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <!-- Job Type Filter -->
+            <div [formGroup]="filtersForm">
+                <div class="my-2">
+                    <span class="fs-5">Job Type</span>
+
+                    <div class="job-type-options mt-3">
+                        @for(type of jobTypes; track type.value) {
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" 
+                                    type="radio" 
+                                    name="jobType" 
+                                    id="jobType-{{type.value}}" 
+                                    [value]="type.value" 
+                                    formControlName="jobType">
+                                <label class="form-check-label" for="jobType-{{type.value}}">
+                                    {{type.label}}
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>  
+
+            <hr class="my-4">
+
+            <!-- Workplace Type Filter -->
+            <div [formGroup]="filtersForm">
+                <div class="my-2">
+                    <span class="fs-5">Workplace Type</span>
+
+                    <div class="workplace-type-options mt-3">
+                        @for(type of WorkplaceType; track type.value) {
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" 
+                                    type="radio" 
+                                    name="workplaceType" 
+                                    id="workplaceType-{{type.value}}" 
+                                    [value]="type.value" 
+                                    formControlName="workplaceType">
+                                <label class="form-check-label" for="workplaceType-{{type.value}}">
+                                    {{type.label}}
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-4">
+            
+            <!-- Education Level Filter -->
+            <div [formGroup]="filtersForm">
+                <div class="my-2">
+                    <span class="fs-5">Education Level</span>
+
+                    <div class="education-level-options mt-3">
+                        @for(level of EducationLevel; track level.value) {
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" 
+                                    type="radio" 
+                                    name="educationLevel" 
+                                    id="educationLevel-{{level.value}}" 
+                                    [value]="level.value" 
+                                    formControlName="educationLevel">
+                                <label class="form-check-label" for="educationLevel-{{level.value}}">
+                                    {{level.label}}
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <!-- Experience Level Filter -->
+            <div [formGroup]="filtersForm">
+                <div class="my-2">
+                    <span class="fs-5">Experience Level</span>
+
+                    <div class="experience-level-options mt-3">
+                        @for(level of ExperienceLevel; track level.value) {
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" 
+                                    type="radio" 
+                                    name="experienceLevel" 
+                                    id="experienceLevel-{{level.value}}" 
+                                    [value]="level.value" 
+                                    formControlName="experienceLevel">
+                                <label class="form-check-label" for="experienceLevel-{{level.value}}">
+                                    {{level.label}}
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div> 
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-lg-9 col-md-9 col-sm-12" >
+        <div class="main-content">
+            
+            <!-- Loading State -->
+            @if (isLoading()) {
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3">Loading jobs...</p>
+                </div>
+            }
+
+            <!-- Error State -->
+            @if (error()) {
+                <div class="alert alert-danger" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    {{ error() }}
+                    <button type="button" class="btn btn-outline-danger btn-sm ms-3" (click)="clearAllFilters()">
+                        Try Again
+                    </button>
+                </div>
+            }
+
+            <!-- No Results -->
+            @if (!isLoading() && !error() && jobsList().length === 0) {
+                <div class="text-center py-5">
+                    <i class="bi bi-search display-1 text-muted"></i>
+                    <h4 class="mt-3">No jobs found</h4>
+                    <p class="text-muted">Try adjusting your search criteria or clearing filters</p>
+                    @if (hasActiveFilters()) {
+                        <button type="button" class="btn btn-primary" (click)="clearAllFilters()">
+                            Clear All Filters
+                        </button>
+                    }
+                </div>
+            }
+
+            <!-- Jobs Results -->
+            @if (!isLoading() && !error() && jobsList().length > 0) {
+                <div class="row">
+                    @for(job of jobsList(); track job.id){
+                        <app-job-explore-view [job]="job" class="col-12 my-4"></app-job-explore-view> 
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
