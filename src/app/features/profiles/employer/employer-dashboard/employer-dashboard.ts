@@ -1,34 +1,36 @@
 import { Component, signal, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
-import { ProfilesService } from '../../profiles-service';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../../auth/auth-service';
 import { CommonModule } from '@angular/common';
-import { NgModel } from '@angular/forms';
-import { NavbarEmp } from "../../../../shared/components/navbar-emp/navbar-emp";
+import { FormsModule } from '@angular/forms';
+import { NavbarEmp } from '../../../../shared/components/navbar-emp/navbar-emp';
 import { RouterOutlet } from '@angular/router';
-
 
 @Component({
   selector: 'app-employer-dashboard',
-  imports: [RouterLink, CommonModule, NavbarEmp, RouterOutlet,RouterLinkActive],
+  standalone: true,
+  imports: [RouterLink, RouterLinkActive, CommonModule, FormsModule, NavbarEmp, RouterOutlet],
   templateUrl: './employer-dashboard.html',
-  styleUrl: './employer-dashboard.css'
+  styleUrls: ['./employer-dashboard.css']
 })
 export class EmployerDashboard implements OnInit {
-
   empData = signal<any>({});
+  isSidebarOpen = signal<boolean>(true);
+  currentRoute = signal<string>('dashboard');
 
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
-  constructor(private AuthService: AuthService) {
-
-  }
   ngOnInit(): void {
     window.scrollTo(0, 0);
     this.loadEmployerProfile();
   }
 
   loadEmployerProfile(): void {
-    this.AuthService.getEmployerProfile().subscribe({
+    this.authService.getEmployerProfile().subscribe({
       next: (data) => {
         this.empData.set(data);
         console.log(this.empData());
@@ -39,4 +41,7 @@ export class EmployerDashboard implements OnInit {
     });
   }
 
+  toggleSidebar(): void {
+    this.isSidebarOpen.update(isOpen => !isOpen);
+  }
 }

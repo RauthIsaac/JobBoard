@@ -1,0 +1,64 @@
+
+body {
+    background-color: #f8f9ff;
+    font-family: "Inter", sans-serif;
+}
+
+.stat-card {
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    transition: transform 0.2s ease-in-out;
+}
+.stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.quick-actions .btn {
+    width: 100%;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    padding: 12px;
+    font-weight: 500;
+}
+
+.card-custom {
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.activity-item {
+    padding: 12px;
+    border-bottom: 1px solid #f1f1f1;
+}
+.activity-item:last-child {
+    border-bottom: none;
+}
+.activity-item:hover{
+    background-color: #f7f7f7;
+    border-radius: 15px;
+}
+
+.job-status {
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+.status-active {
+    background: #e6f4ea;
+    color: #137333;
+}
+.status-filled {
+    background: #fce8e6;
+    color: #c5221f;
+}
+
+.section-title {
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+

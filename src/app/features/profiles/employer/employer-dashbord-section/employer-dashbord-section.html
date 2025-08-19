@@ -1,1 +1,126 @@
-<p>employer-dashbord-section works!</p>
+
+<body>
+  <div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-4 col-md-8 col-sm-6">
+
+            <div class="row g-4">
+            <!-- Stats -->
+            <div class="col-6 col-sm-6">
+                <div class="stat-card">
+                <h4 class="fw-bold">12</h4>
+                <p class="text-muted mb-1">Active Jobs</p>
+                <small class="text-success">+3 this week</small>
+                </div>
+            </div>
+            <div class="col-6 col-sm-6">
+                <div class="stat-card">
+                <h4 class="fw-bold">47</h4>
+                <p class="text-muted mb-1">New Applications</p>
+                <small class="text-success">+12 today</small>
+                </div>
+            </div>
+            <div class="col-6 col-sm-6">
+                <div class="stat-card">
+                <h4 class="fw-bold">8</h4>
+                <p class="text-muted mb-1">Interviews Scheduled</p>
+                <small class="text-info">5 this week</small>
+                </div>
+            </div>
+            <div class="col-6 col-sm-6">
+                <div class="stat-card">
+                <h4 class="fw-bold">3</h4>
+                <p class="text-muted mb-1">Hired This Month</p>
+                <small class="text-primary">Goal: 5</small>
+                </div>
+            </div>
+            </div>
+
+
+             <!-- Quick Actions -->
+            <div class="my-3">
+                <div class="card card-custom p-4 quick-actions">
+                    <h3 class="mb-3 fw-bold mb-4">⭐ Quick Actions</h3>
+                    <a class="btn btn-primary" routerLink="/addJob">+ Post New Job Opening</a>
+                    <a class="btn btn-outline-secondary">📄 Review Applications</a>
+                    <a class="btn btn-outline-secondary" routerLink="/empAnalytics" >📊 View Analytics</a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-8 col-md-8 col-sm-7">
+            <div class="row">
+           
+                <!-- Recent Activity -->
+                <div class="col-12">
+                    <div class="card card-custom p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h3 >📌 Recent Activity</h3>
+                        <a class="text-primary fw-semibold" style="text-decoration: none;">View All →</a>
+                    </div>
+                    <div class="activity-item">
+                        <strong class="fs-5">New application received</strong>
+                        <p class="text-muted mb-1 ">Sarah Chen applied for Senior Frontend Developer</p>
+                        <small class="text-muted">2 minutes ago</small>
+                    </div>
+                    <div class="activity-item">
+                        <strong class="fs-5">Interview scheduled</strong>
+                        <p class="text-muted mb-1">Interview with Alex Rodriguez for DevOps Engineer</p>
+                        <small class="text-muted">1 hour ago</small>
+                    </div>
+                    <div class="activity-item">
+                        <strong class="fs-5">Candidate hired</strong>
+                        <p class="text-muted mb-1">Emma Wilson accepted offer for Product Manager</p>
+                        <small class="text-muted">3 hours ago</small>
+                    </div>
+                    <div class="activity-item">
+                        <strong class="fs-5">New application received</strong>
+                        <p class="text-muted mb-1">Michael Brown applied for Backend Developer</p>
+                        <small class="text-muted">6 hours ago</small>
+                    </div>
+                    <div class="activity-item">
+                        <strong class="fs-5">Application under review</strong>
+                        <p class="text-muted mb-1">Lisa Park’s application moved to review stage</p>
+                        <small class="text-muted">1 day ago</small>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- Recent Job Postings -->
+                <div class="col-12 my-4">
+                    <div class="card card-custom p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h3>💼 Recent Job Postings</h3>
+                        <a href="#" class="text-primary fw-semibold"  style="text-decoration: none;">Manage Jobs →</a>
+                    </div>
+                    <div class="activity-item d-flex justify-content-between align-items-center">
+                        <div>
+                        <strong class="fs-5">Senior Frontend Developer</strong>
+                        <p class="small text-muted mb-0">2 days ago • 23 applications</p>
+                        </div>
+                        <span class="job-status status-active">Active</span>
+                    </div>
+                    <div class="activity-item d-flex justify-content-between align-items-center">
+                        <div>
+                        <strong class="fs-5">DevOps Engineer</strong>
+                        <p class="small text-muted mb-0">5 days ago • 18 applications</p>
+                        </div>
+                        <span class="job-status status-active">Active</span>
+                    </div>
+                    <div class="activity-item d-flex justify-content-between align-items-center">
+                        <div>
+                        <strong class="fs-5">Product Manager</strong>
+                        <p class="small text-muted mb-0">1 week ago • 45 applications</p>
+                        </div>
+                        <span class="job-status status-filled">Filled</span>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+  </div>
+</body>

@@ -1,25 +1,57 @@
-
 /* ------------------------- Nav Bar ------------------------- */
 .navbar-custom {
     background: #f8f7fc;
     border-bottom: 1px solid #e5e5e5;
     padding: 10px 20px;
-    margin-left: 4px;
     height: 10vh;
+    transition: margin-left 0.3s ease;
+}
+
+.navbar-custom.collapsed {
+    margin-left: 0;
+}
+
+.navbar-brand{
+   color: rgb(31, 68, 143); 
+   font-weight:700;
+   font-family:Arial, Helvetica, sans-serif;
+   text-decoration: none;
+   margin-top: 10px;
+}
+
+.logo-icon{
+    font-size: 20px;
+    color:#f8f7fc;
+    background: var(--basic-color);
+    padding:5px 10px;
+    border-radius: 30%;
+    margin-right: 10px;
+    height: fit-content;
 }
 
 .search-box {
-    border-radius: 20px;
-    padding-left: 35px;
+  position: relative;
+  width: 400px;
 }
 
-.search-icon {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: gray;
+.search-box .form-control {
+  border-radius: 25px;
+  padding-left: 40px; 
+  height: 42px;
+  font-size: 0.95rem;
+  box-shadow: none;
 }
+
+.search-box .search-icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  font-size: 1.1rem;
+  color: #888;
+  pointer-events: none; 
+}
+
 
 .badge-notify {
     position: absolute;
@@ -28,17 +60,6 @@
     font-size: 10px;
 }
 
-.avatar {
-    background: #2563eb;
-    color: white;
-    font-weight: bold;
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
 .notifications {
     width: 400px;
