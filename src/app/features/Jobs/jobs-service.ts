@@ -112,9 +112,16 @@ export class JobsService {
     return this.http.get(`${this.apiUrl}/${jobID}`);
   }
 
+  /*-------------------- Create Job -------------------- */
   createJob(jobData: any): Observable<any> {
     const headers = this.getAuthHeaders();
     return this.http.post<IJob>(this.apiUrl, jobData, { headers });
+  }
+
+  /*-------------------- Update Job -------------------- */
+  updateJob(jobId: number, jobData: any): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.put<IJob>(`${this.apiUrl}/${jobId}`, jobData, { headers });
   }
 
   GetAllJobsSkills(): Observable<ISkill[]> {
