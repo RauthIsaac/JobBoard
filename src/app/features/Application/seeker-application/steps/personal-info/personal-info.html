@@ -1,0 +1,93 @@
+<div class="container mt-4">
+  <h3>Personal Information</h3>
+  <form #form="ngForm" (ngSubmit)="saveAndNext(form)" ngForm>
+    <div class="mb-3">
+      <label class="form-label">Full Name *</label>
+      <input 
+        name="fullName" 
+        [(ngModel)]="formData.fullName"
+        class="form-control" 
+        required 
+        #fullName="ngModel">
+      <div *ngIf="fullName.invalid && fullName.touched" class="text-danger">
+        <small>Full name is required</small>
+      </div>
+    </div>
+    
+    <div class="mb-3">
+      <label class="form-label">Email *</label>
+      <input 
+        name="email" 
+        [(ngModel)]="formData.email"
+        type="email" 
+        class="form-control" 
+        required 
+        #email="ngModel">
+      <div *ngIf="email.invalid && email.touched" class="text-danger">
+        <small *ngIf="email.errors?.['required']">Email is required</small>
+        <small *ngIf="email.errors?.['email']">Please enter a valid email</small>
+      </div>
+    </div>
+    
+    <div class="mb-3">
+      <label class="form-label">Phone Number *</label>
+      <input 
+        name="phoneNumber" 
+        [(ngModel)]="formData.phoneNumber"
+        type="tel" 
+        class="form-control" 
+        required 
+        #phoneNumber="ngModel">
+      <div *ngIf="phoneNumber.invalid && phoneNumber.touched" class="text-danger">
+        <small>Phone number is required</small>
+      </div>
+    </div>
+    
+    <div class="mb-3">
+      <label class="form-label">Current Location *</label>
+      <input 
+        name="currentLocation" 
+        [(ngModel)]="formData.currentLocation"
+        class="form-control" 
+        required 
+        #currentLocation="ngModel">
+      <div *ngIf="currentLocation.invalid && currentLocation.touched" class="text-danger">
+        <small>Current location is required</small>
+      </div>
+    </div>
+    
+    <div class="mb-3">
+      <label class="form-label">Current Job Title *</label>
+      <input 
+        name="currentJobTitle" 
+        [(ngModel)]="formData.currentJobTitle"
+        class="form-control" 
+        required 
+        #currentJobTitle="ngModel">
+      <div *ngIf="currentJobTitle.invalid && currentJobTitle.touched" class="text-danger">
+        <small>Current job title is required</small>
+      </div>
+    </div>
+    
+    <div class="mb-3">
+      <label class="form-label">Years of Experience *</label>
+      <input 
+        name="yearsOfExperience" 
+        [(ngModel)]="formData.yearsOfExperience"
+        type="number" 
+        min="0"
+        class="form-control" 
+        required 
+        #yearsOfExperience="ngModel">
+      <div *ngIf="yearsOfExperience.invalid && yearsOfExperience.touched" class="text-danger">
+        <small>Years of experience is required</small>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end mt-4">
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+        Next
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, Pipe, PipeTransform, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, signal, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,27 +7,10 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService } from '../../../../auth/auth-service';
 import { RouterLink } from '@angular/router';
-
-@Pipe({
-  name: 'educationLevelName',
-  standalone: true
-})
-export class EducationLevelPipe implements PipeTransform {
-  private educationLevels: { [key: number]: string } = {
-    0: 'High School',
-    1: 'Bachelor',
-    2: 'Diploma', 
-    3: 'Master',
-    4: 'Doctorate',
-    5: 'Not Specified'
-  };
-
-  transform(value: number): string {
-    return this.educationLevels[value] || 'Not Specified';
-  }
-}
 
 @Component({
   selector: 'app-user-profile',
@@ -40,9 +23,10 @@ export class EducationLevelPipe implements PipeTransform {
     MatListModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
+    MatMenuModule,
+    MatTooltipModule,
     RouterLink,
-    DatePipe,
-    EducationLevelPipe,
+    DatePipe
   ],
   templateUrl: './seeker-profile.html',
   styleUrl: './seeker-profile.css'
@@ -51,8 +35,10 @@ export class SeekerProfile implements OnInit {
 
   seekerData = signal<any>({});
   isUploadingResume = signal<boolean>(false);
+  isUploadingImage = signal<boolean>(false);
   
-  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('resumeFileInput') resumeFileInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('imageFileInput') imageFileInput!: ElementRef<HTMLInputElement>;
 
   constructor(
     private AuthService: AuthService,
@@ -88,13 +74,91 @@ export class SeekerProfile implements OnInit {
     });
   }
 
- 
-  openFileDialog(): void {
-    this.fileInput.nativeElement.click();
+  // ===== Profile Image Functions =====
+  openImageFileDialog(): void {
+    this.imageFileInput.nativeElement.click();
   }
 
-  /*---------------------------- Save Auth Data ----------------------------*/
-  onFileSelected(event: Event): void {
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    
+    if (!file) return;
+
+    const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+    if (!allowedImageTypes.includes(file.type)) {
+      this.showSnackBar('Please select a valid image file (JPG, PNG, GIF)', 'error');
+      return;
+    }
+
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      this.showSnackBar('Image size should not exceed 5MB', 'error');
+      return;
+    }
+
+    this.uploadProfileImage(file);
+  }
+
+  uploadProfileImage(file: File): void {
+    this.isUploadingImage.set(true);
+
+    this.AuthService.uploadProfileImage(file).subscribe({
+      next: (response: any) => {
+        this.isUploadingImage.set(false);
+        this.showSnackBar('Profile image uploaded successfully!', 'success');
+        this.loadSeekerProfile();
+        this.imageFileInput.nativeElement.value = '';
+      },
+      error: (err: any) => {
+        this.isUploadingImage.set(false);
+        console.error('Error uploading profile image:', err);
+        this.showSnackBar('Error uploading profile image. Please try again.', 'error');
+        this.imageFileInput.nativeElement.value = '';
+      }
+    });
+  }
+
+  deleteProfileImage(): void {
+  if (!this.seekerData().profileImageUrl) {
+    this.showSnackBar('No profile image to delete', 'error');
+    return;
+  }
+
+  if (confirm('Are you sure you want to delete your profile image?')) {
+    this.isUploadingImage.set(true);
+    
+    this.AuthService.deleteProfileImage().subscribe({
+      next: () => {
+        this.isUploadingImage.set(false);
+        this.showSnackBar('Profile image deleted successfully!', 'success');
+        this.loadSeekerProfile();
+      },
+      error: (err: any) => {
+        console.error('Error deleting profile image:', err);
+        
+        this.loadSeekerProfile();
+
+        setTimeout(() => {
+          if (!this.seekerData().profileImageUrl) {
+            this.showSnackBar('Profile image deleted successfully!', 'success');
+          } else {
+            this.showSnackBar('Error deleting profile image. Please try again.', 'error');
+          }
+          this.isUploadingImage.set(false);
+        }, 1000);
+      }
+    });
+  }
+}
+
+
+  // ===== Resume Functions =====
+  openResumeFileDialog(): void {
+    this.resumeFileInput.nativeElement.click();
+  }
+
+  onResumeSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     
@@ -115,79 +179,61 @@ export class SeekerProfile implements OnInit {
     this.uploadResume(file);
   }
 
-
   uploadResume(file: File): void {
     this.isUploadingResume.set(true);
 
     this.AuthService.uploadResume(file).subscribe({
-      next: (response:any) => {
+      next: (response: any) => {
         this.isUploadingResume.set(false);
         this.showSnackBar('Resume uploaded successfully!', 'success');
-
         this.loadSeekerProfile();
-        
-        this.fileInput.nativeElement.value = '';
+        this.resumeFileInput.nativeElement.value = '';
       },
-      error: (err:any) => {
+      error: (err: any) => {
         this.isUploadingResume.set(false);
         console.error('Error uploading resume:', err);
         this.showSnackBar('Error uploading resume. Please try again.', 'error');
-        
-
-        this.fileInput.nativeElement.value = '';
-      }
-    });
-  }
-
-
-  downloadResume(): void {
-    if (!this.seekerData().resumeUrl) {
-      this.showSnackBar('No resume available to download', 'error');
-      return;
-    }
-
-    this.AuthService.downloadResume().subscribe({
-      next: (blob:any) => {
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `${this.seekerData().name}_Resume.pdf`;
-        link.click();
-        
- 
-        window.URL.revokeObjectURL(url);
-        
-        this.showSnackBar('Resume downloaded successfully!', 'success');
-      },
-      error: (err:any) => {
-        console.error('Error downloading resume:', err);
-        this.showSnackBar('Error downloading resume. Please try again.', 'error');
+        this.resumeFileInput.nativeElement.value = '';
       }
     });
   }
 
 
   deleteResume(): void {
-    if (!this.seekerData().resumeUrl) {
+    if (!this.seekerData().cV_Url) {
       this.showSnackBar('No resume to delete', 'error');
       return;
     }
 
     if (confirm('Are you sure you want to delete your resume?')) {
+      this.isUploadingResume.set(true);
+      
       this.AuthService.deleteResume().subscribe({
-        next: (response:any) => {
+        next: () => {
+          this.isUploadingResume.set(false);
           this.showSnackBar('Resume deleted successfully!', 'success');
           this.loadSeekerProfile();
         },
-        error: (err:any) => {
+        error: (err: any) => {
           console.error('Error deleting resume:', err);
-          this.showSnackBar('Error deleting resume. Please try again.', 'error');
+
+          this.loadSeekerProfile();
+
+          setTimeout(() => {
+            if (!this.seekerData().cV_Url) {
+              this.showSnackBar('Resume deleted successfully!', 'success');
+            } else {
+              this.showSnackBar('Error deleting resume. Please try again.', 'error');
+            }
+            this.isUploadingResume.set(false);
+          }, 1000);
         }
       });
     }
   }
 
 
+  // ===== Helper Functions =====
   private showSnackBar(message: string, type: 'success' | 'error'): void {
     this.snackBar.open(message, 'Close', {
       duration: 4000,
@@ -212,5 +258,9 @@ export class SeekerProfile implements OnInit {
 
   trackByIndex(index: number, item: any): any {
     return index;
+  }
+
+  getDefaultProfileImage(): string {
+    return 'assets/images/default-avatar.png'; // Add a default avatar image
   }
 }

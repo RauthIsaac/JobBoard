@@ -2,11 +2,10 @@ import { Routes } from '@angular/router';
 import { Home } from './features/Home/home/home';
 import { NotFound } from './Pages/not-found/not-found';
 import { JobDetails } from './features/Jobs/job-details/job-details';
-import { JobApplication } from './features/Jobs/job-application/job-application';
 import { JobView } from './features/Jobs/job-view/job-view';
 import { SavedJobs } from './features/Jobs/saved-jobs/saved-jobs';
-import { EmployerProfile } from './features/profiles/employer/employer-profile/employer-profile';
-import { AddJob } from './features/profiles/employer/add-job/add-job';
+import { EmployerProfileSection } from './features/profiles/employer/employer-profile-section/employer-profile-section';
+import { AddJob } from './features/Jobs/add-job/add-job';
 import { Navbar } from './shared/components/navbar/navbar';
 import { Login } from './auth/login/login';
 import { Signup } from './auth/signup/signup';
@@ -17,16 +16,25 @@ import { Explore } from './features/Explore/explore';
 import { EditEmpProfile } from './features/profiles/employer/edit-emp-profile/edit-emp-profile';
 import { EditSeekerProfile} from './features/profiles/seeker/edit-seeker-profile/edit-seeker-profile';
 import { SeekerProfile } from './features/profiles/seeker/seeker-profile/seeker-profile';
-import { Layout } from './features/profiles/seeker/seeker-application/layout/layout';
-import { PersonalInfo } from './features/profiles/seeker/seeker-application/steps/personal-info/personal-info';
-import { Documents } from './features/profiles/seeker/seeker-application/steps/documents/documents';
-import { Questions } from './features/profiles/seeker/seeker-application/steps/questions/questions';
-import { Review } from './features/profiles/seeker/seeker-application/steps/review/review';
+import { Layout } from './features/Application/seeker-application/layout/layout';
+import { PersonalInfo } from './features/Application/seeker-application/steps/personal-info/personal-info';
+import { Documents } from './features/Application/seeker-application/steps/documents/documents';
+import { Questions } from './features/Application/seeker-application/steps/questions/questions';
+import { Review } from './features/Application/seeker-application/steps/review/review';
+import { ChatButton } from './features/AIChat/chat-button/chat-button';
+import { ApplicationForm } from './features/Application/application-form/application-form';
+import { EditJob } from './features/Jobs/edit-job/edit-job';
+import { EmployerDashboard } from './features/profiles/employer/employer-dashboard/employer-dashboard';
+import { NavbarEmp } from './shared/components/navbar-emp/navbar-emp';
+import { EmployerDashbordSection } from './features/profiles/employer/employer-dashbord-section/employer-dashbord-section';
+import { EmployerAnalyticsSection } from './features/profiles/employer/employer-analytics-section/employer-analytics-section';
 
 
 
 export const routes: Routes = [
+
     {path: '', redirectTo: 'home', pathMatch: 'full'},
+
     {
         path: '',
         component: Navbar,
@@ -35,9 +43,9 @@ export const routes: Routes = [
             {path: 'jobDtl/:id', component: JobDetails},
             {path: 'jobView', component: JobView},
             {path: 'savedJobs', component: SavedJobs},
-            {path: 'empProfile', component: EmployerProfile},
+
             {path: 'explore', component: Explore},
-            {path: 'editEmp', component: EditEmpProfile},
+
 
             {path: 'savedJobs', component: SavedJobs},
             {path: 'editSeeker', component: EditSeekerProfile},
@@ -48,7 +56,7 @@ export const routes: Routes = [
 
 
     {
-        path: 'seekerApp',
+        path: 'seekerApp/:jobId',
         component: Layout,
         children: [
             { path: 'personal-info', component: PersonalInfo },
@@ -59,9 +67,26 @@ export const routes: Routes = [
         ]
     },
 
+    {
+        path: '',
+        component: EmployerDashboard,
+        children: [
+            {path: 'empDashboard', component: EmployerDashbordSection},
+            {path: 'empProfile', component: EmployerProfileSection},
+            {path: 'empAnalytics', component: EmployerAnalyticsSection},
 
-    {path: 'jobApp', component: JobApplication},
+
+            { path: '', redirectTo: 'empDashboard', pathMatch: 'full' }
+        ]
+    },
+
+
+    {path: 'editEmp', component: EditEmpProfile},
     {path: 'addJob', component: AddJob},
+    {path: 'editJob/:id', component: EditJob},
+
+
+
     {path: 'register', component: Signup },
     {path: 'login', component: Login },
     {path: 'confirm-email', component: ConfirmEmail},
@@ -69,6 +94,11 @@ export const routes: Routes = [
     {path: 'reset-password', component: ResetPassword},
 
 
+    {path: 'chatBtn', component: ChatButton},
+    {path: 'appForm', component: ApplicationForm},
+
+
+        
 
     {path: '**', component: NotFound}
     

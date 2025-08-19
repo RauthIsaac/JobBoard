@@ -1,0 +1,74 @@
+<div class="container mt-4">
+  <h3>Review Your Application</h3>
+
+  <div class="card p-3 mb-3">
+    <h5>Personal Information</h5>
+    <div class="row">
+      <div class="col-md-6">
+        <p><strong>Full Name:</strong> {{ applicationData.fullName || 'N/A' }}</p>
+        <p><strong>Email:</strong> {{ applicationData.email || 'N/A' }}</p>
+        <p><strong>Phone:</strong> {{ applicationData.phoneNumber || 'N/A' }}</p>
+      </div>
+      <div class="col-md-6">
+        <p><strong>Location:</strong> {{ applicationData.currentLocation || 'N/A' }}</p>
+        <p><strong>Job Title:</strong> {{ applicationData.currentJobTitle || 'N/A' }}</p>
+        <p><strong>Years of Experience:</strong> {{ applicationData.yearsOfExperience || 'N/A' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card p-3 mb-3">
+    <h5>Documents</h5>
+    <p><strong>Resume:</strong> 
+      <span *ngIf="applicationData.cvFile" class="text-success">
+        ✓ {{ applicationData.cvFile.name }} ({{ getFileSize(applicationData.cvFile.size) }})
+      </span>
+      <span *ngIf="!applicationData.cvFile" class="text-danger">Not uploaded</span>
+    </p>
+    <p><strong>Cover Letter:</strong> 
+      <span *ngIf="applicationData.coverLetter">{{ applicationData.coverLetter.substring(0, 100) }}{{ applicationData.coverLetter.length > 100 ? '...' : '' }}</span>
+      <span *ngIf="!applicationData.coverLetter" class="text-muted">N/A</span>
+    </p>
+  </div>
+
+  <div class="card p-3 mb-3">
+    <h5>Additional Information</h5>
+    <p><strong>Portfolio:</strong> 
+      <a *ngIf="applicationData.portfolioUrl" [href]="applicationData.portfolioUrl" target="_blank" class="text-primary">
+        {{ applicationData.portfolioUrl }}
+      </a>
+      <span *ngIf="!applicationData.portfolioUrl" class="text-muted">N/A</span>
+    </p>
+    <p><strong>LinkedIn:</strong> 
+      <a *ngIf="applicationData.linkedInUrl" [href]="applicationData.linkedInUrl" target="_blank" class="text-primary">
+        {{ applicationData.linkedInUrl }}
+      </a>
+      <span *ngIf="!applicationData.linkedInUrl" class="text-muted">N/A</span>
+    </p>
+    <p><strong>GitHub:</strong> 
+      <a *ngIf="applicationData.gitHubUrl" [href]="applicationData.gitHubUrl" target="_blank" class="text-primary">
+        {{ applicationData.gitHubUrl }}
+      </a>
+      <span *ngIf="!applicationData.gitHubUrl" class="text-muted">N/A</span>
+    </p>
+  </div>
+
+  <div class="alert alert-info">
+    <i class="fas fa-info-circle"></i>
+    Please review all information carefully before submitting your application.
+  </div>
+
+  <div class="d-flex justify-content-between mt-4">
+    <button type="button" (click)="goToPrevious()" class="btn btn-secondary">
+      Back to Edit
+    </button>
+    <button 
+      type="button" 
+      (click)="confirmAndSubmit()" 
+      class="btn btn-success"
+      [disabled]="isSubmitting">
+      <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+      {{ isSubmitting ? 'Submitting...' : 'Confirm & Submit Application' }}
+    </button>
+  </div>
+</div>

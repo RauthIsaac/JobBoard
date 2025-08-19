@@ -1,0 +1,286 @@
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h3 class="mb-0">Post a New Job</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Success and Error Messages -->
+                    <div *ngIf="submitSuccess" class="alert alert-success">
+                        Job posted successfully! Redirecting to your profile...
+                    </div>
+                    <div *ngIf="submitError" class="alert alert-danger">
+                        {{ submitError }}
+                    </div>
+
+                    <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
+                        <!-- Basic Job Information -->
+                        <h4 class="mb-3">Basic Information</h4>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="title" class="form-label">Job Title*</label>
+                                <input type="text" class="form-control" id="title" formControlName="title" placeholder="e.g. Senior Frontend Developer">
+                                <div *ngIf="jobForm.get('title')?.invalid && jobForm.get('title')?.touched" class="text-danger">
+                                    <small *ngIf="jobForm.get('title')?.errors?.['required']">Job title is required</small>
+                                    <small *ngIf="jobForm.get('title')?.errors?.['minlength']">Job title must be at least 5 characters</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="salary" class="form-label">Salary*</label>
+                                <input type="number" class="form-control" id="salary" formControlName="salary" placeholder="e.g. 75000">
+                                <div *ngIf="jobForm.get('salary')?.invalid && jobForm.get('salary')?.touched" class="text-danger">
+                                    <small *ngIf="jobForm.get('salary')?.errors?.['required']">Salary is required</small>
+                                    <small *ngIf="jobForm.get('salary')?.errors?.['min']">Salary must be a positive number</small>
+                                </div>
+                    </div>
+                </div>
+                
+
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="jobType" class="form-label">Job Type*</label>
+                                <select class="form-select" id="jobType" formControlName="jobType">
+                                    <option value="" disabled>Select job type</option>
+                                    <option *ngFor="let type of jobTypes" [value]="type.value">{{ type.label }}</option>
+                                </select>
+                                <div *ngIf="jobForm.get('jobType')?.invalid && jobForm.get('jobType')?.touched" class="text-danger">
+                                    <small>Job type is required</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="workplaceType" class="form-label">Workplace Type*</label>
+                                <select class="form-select" id="workplaceType" formControlName="workplaceType">
+                                    <option value="" disabled>Select workplace type</option>
+                                    <option *ngFor="let type of workplaceTypes" [value]="type.value">{{ type.label }}</option>
+                                </select>
+                                <div *ngIf="jobForm.get('workplaceType')?.invalid && jobForm.get('workplaceType')?.touched" class="text-danger">
+                                    <small>Workplace type is required</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="expireDate" class="form-label">Application Deadline*</label>
+                                <input type="date" class="form-control" id="expireDate" formControlName="expireDate">
+                                <div *ngIf="jobForm.get('expireDate')?.invalid && jobForm.get('expireDate')?.touched" class="text-danger">
+                                    <small>Application deadline is required</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Job Description*</label>
+                            <textarea class="form-control" id="description" formControlName="description" rows="5" placeholder="Provide a detailed description of the job..."></textarea>
+                            <div *ngIf="jobForm.get('description')?.invalid && jobForm.get('description')?.touched" class="text-danger">
+                                <small *ngIf="jobForm.get('description')?.errors?.['required']">Job description is required</small>
+                                <small *ngIf="jobForm.get('description')?.errors?.['minlength']">Description must be at least 50 characters</small>
+                            </div>
+                        </div>
+
+                        <!-- Requirements Section -->
+                        <h4 class="mb-3 mt-4">Requirements</h4>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="experienceLevel" class="form-label">Experience Level*</label>
+                                <select class="form-select" id="experienceLevel" formControlName="experienceLevel">
+                                    <option value="" disabled>Select experience level</option>
+                                    <option *ngFor="let level of experienceLevels" [value]="level.value">{{ level.label }}</option>
+                                </select>
+                                <div *ngIf="jobForm.get('experienceLevel')?.invalid && jobForm.get('experienceLevel')?.touched" class="text-danger">
+                                    <small>Experience level is required</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="educationLevel" class="form-label">Education Level*</label>
+                                <select class="form-select" id="educationLevel" formControlName="educationLevel">
+                                    <option value="" disabled>Select education level</option>
+                                    <option *ngFor="let level of educationLevels" [value]="level.value">{{ level.label }}</option>
+                                </select>
+                                <div *ngIf="jobForm.get('educationLevel')?.invalid && jobForm.get('educationLevel')?.touched" class="text-danger">
+                                    <small>Education level is required</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Key Requirements -->
+                        <div class="mb-3">
+                            <label for="requirements" class="form-label">Key Requirements</label>
+                            <textarea class="form-control" id="requirements" formControlName="requirements" rows="4" placeholder="List the key requirements for this position..."></textarea>
+                            <div *ngIf="jobForm.get('requirements')?.invalid && jobForm.get('requirements')?.touched" class="text-danger">
+                                <small>Requirements must be at least 50 characters long</small>
+                            </div>
+                        </div>
+
+                        <!-- Key Responsibilities -->
+                        <div class="mb-3">
+                            <label for="responsabilities" class="form-label">Key Responsibilities</label>
+                            <textarea class="form-control" id="responsabilities" formControlName="responsabilities" rows="4" placeholder="List the key responsibilities for this position..."></textarea>
+                            <div *ngIf="jobForm.get('responsabilities')?.invalid && jobForm.get('responsabilities')?.touched" class="text-danger">
+                                <small>Responsibilities must be at least 50 characters long</small>
+                            </div>
+                        </div>
+
+                        <!-- Benefits -->
+                        <div class="mb-3">
+                            <label for="benefits" class="form-label">Benefits</label>
+                            <textarea class="form-control" id="benefits" formControlName="benefits" rows="4" placeholder="List the key benefits for this position..."></textarea>
+                            <div *ngIf="jobForm.get('benefits')?.invalid && jobForm.get('benefits')?.touched" class="text-danger">
+                                <small>Benefits must be at least 50 characters long</small>
+                            </div>
+                        </div>
+
+                        <!-- Skills Section -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-3">Job Skills <i class="bi bi-info-circle-fill text-muted ms-1" title="You can search about skills."></i></h5>
+                        </div>
+
+                        <!-- Selected Skills Display -->
+                        @if (selectedSkills().length > 0) {
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-1"></i>
+                                    Selected Skills ({{ selectedSkills().length }})
+                                </h6>
+                                <div class="selected-items">
+                                    @for(skill of selectedSkills(); track skill.id) {
+                                        <div class="selected-item">
+                                            <span>{{ skill.skillName }}</span>
+                                            <button type="button" class="btn-remove-item" (click)="removeSelectedSkill(skill.id)">
+                                                <i class="bi bi-x"></i>
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                        
+                        <!-- Skills Search Input -->
+                        <div class="mb-3">
+                            <div class="search-container position-relative">
+                                <input 
+                                    type="text" 
+                                    class="form-control search-input" 
+                                    placeholder="Search skills..." 
+                                    #skillSearchInput
+                                    (input)="onSkillSearch(skillSearchInput.value)"
+                                >
+                                <i class="bi bi-search search-icon"></i>
+                                <button 
+                                    *ngIf="skillSearchTerm()" 
+                                    type="button" 
+                                    class="btn-clear-search" 
+                                    (click)="clearSkillSearch(); skillSearchInput.value = ''"
+                                >
+                                    <i class="bi bi-x"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="skill-tags">
+                                @for(skill of filteredSkills(); track $index) {
+                                    <div class="skill-tag" [class.selected]="isSkillSelected(skill.id)" (click)="onSkillChange(skill, !isSkillSelected(skill.id))">
+                                        <span>{{ skill.skillName }}</span>
+                                        <i *ngIf="isSkillSelected(skill.id)" class="bi bi-check-circle-fill ms-1"></i>
+                                    </div>
+                                }
+                                @if (filteredSkills().length === 0 && skillSearchTerm()) {
+                                    <div class="no-results">No skills found matching "{{ skillSearchTerm() }}"</div>
+                                }
+                                @if (filteredSkills().length === 10 && totalMatchingSkills() > 10) {
+                                    <div class="showing-limited">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Showing first 10 of {{ totalMatchingSkills() }} skills. Use search to find more.
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        
+
+                        <!-- Categories Section -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-3">Job Categories <i class="bi bi-info-circle-fill text-muted ms-1" title="You can search about categories."></i></h5>
+                        </div>
+
+                        <!-- Selected Categories Display -->
+                        @if (selectedCategories().length > 0) {
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-1"></i>
+                                    Selected Categories ({{ selectedCategories().length }})
+                                </h6>
+                                <div class="selected-items">
+                                    @for(category of selectedCategories(); track category.id) {
+                                        <div class="selected-item">
+                                            <span>{{ category.categoryName }}</span>
+                                            <button type="button" class="btn-remove-item" (click)="removeSelectedCategory(category.id)">
+                                                <i class="bi bi-x"></i>
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                        
+                        <!-- Categories Search Input -->
+                        <div class="mb-3">
+                            <div class="search-container position-relative">
+                                <input 
+                                    type="text" 
+                                    class="form-control search-input" 
+                                    placeholder="Search categories..." 
+                                    #categorySearchInput
+                                    (input)="onCategorySearch(categorySearchInput.value)"
+                                >
+                                <i class="bi bi-search search-icon"></i>
+                                <button 
+                                    *ngIf="categorySearchTerm()" 
+                                    type="button" 
+                                    class="btn-clear-search" 
+                                    (click)="clearCategorySearch(); categorySearchInput.value = ''"
+                                >
+                                    <i class="bi bi-x"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="category-tags">
+                                @for(category of filteredCategories(); track $index) {
+                                    <div class="category-tag" [class.selected]="isCategorySelected(category.id)" (click)="onCategoryChange(category, !isCategorySelected(category.id))">
+                                        <span>{{ category.categoryName }}</span>
+                                        <i *ngIf="isCategorySelected(category.id)" class="bi bi-check-circle-fill ms-1"></i>
+                                    </div>
+                                }
+                                @if (filteredCategories().length === 0 && categorySearchTerm()) {
+                                    <div class="no-results">No categories found matching "{{ categorySearchTerm() }}"</div>
+                                }
+                                @if (filteredCategories().length === 10 && totalMatchingCategories() > 10) {
+                                    <div class="showing-limited">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Showing first 10 of {{ totalMatchingCategories() }} categories. Use search to find more.
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+
+
+                        <!-- Form Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" class="btn btn-outline-secondary" (click)="onReset()">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                            </button>
+                            <button type="submit" class="post-btn btn btn-primary" [disabled]="isSubmitting || jobForm.invalid">
+                                <i class="bi bi-check-circle me-1"></i> 
+                                <span *ngIf="isSubmitting">Posting...</span>
+                                <span *ngIf="!isSubmitting">Post Job</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

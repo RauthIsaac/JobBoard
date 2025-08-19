@@ -1,0 +1,20 @@
+<!-- chat-dialog.component.html -->
+<div class="chat-header">
+  <h3>Ask Support</h3>
+</div>
+
+
+
+<div class="chat-body">
+  <div class="message bot">Hello! How can I help you?</div>
+  <div class="message user">Hi! I need help.</div>
+</div>
+
+
+
+<div class="chat-footer">
+  <input type="text" placeholder="Type a message..." [(ngModel)]="message" />
+  <button mat-icon-button color="primary" (click)="sendMessage()">
+    <mat-icon>send</mat-icon>
+  </button>
+</div>

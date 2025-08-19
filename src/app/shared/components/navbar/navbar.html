@@ -1,4 +1,3 @@
-
 <nav class="navbar navbar-expand-lg bg-body-tertiary ">
   <div class="container-fluid">
     <!-- Logo and Brand -->
@@ -27,25 +26,20 @@
 
       <!-- Auth Buttons -->
       <div class="d-flex align-items-center">
-        @if (authService.isLoggedIn()) {
+        @if (isLoggedIn) {
           <!-- User Profile Dropdown -->
           <div class="dropdown">
             <button class="btn btn-outline-secondary dropdown-toggle" type="button"
                     data-bs-toggle="dropdown" aria-expanded="false">
               <i class="bi bi-person-circle me-1"></i>
-              @if (authService.getUserType() === 'Seeker'){
-                {{ authService.getUserName() }}
-              }
-              @if (authService.getUserType() === 'Employer'){
-                {{ authService.getCompanyName() }}
-              }
+              {{ displayName }}
               
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
               <!-- Conditional Links for Logged-in Users -->
-              @if (authService.isLoggedIn()) {
+              @if (isLoggedIn) {
                 <!-- Employer Dashboard (if user is employer) -->
-                @if (authService.getUserType() === 'Employer') {
+                @if (isEmployer()) {
                   <li class="nav-item">
                     <a class="nav-link" routerLink="/empProfile" routerLinkActive="active">
                       <i class="bi bi-person-circle ms-3 me-2"></i>My Profile</a>
@@ -53,7 +47,7 @@
                 }
               
                 <!-- Seeker Dashboard (if user is seeker) -->
-                @if (authService.getUserType() === 'Seeker') {
+                @if (isSeeker()) {
                   <li class="nav-item">
                     <a class="nav-link" routerLink="/seekerProfile" routerLinkActive="active">
                       <i class="bi bi-person-circle ms-3 me-2"></i>My Profile</a>
@@ -83,14 +77,11 @@
 </nav>
 
 
-
-
-
-
-
 <main class="mt-5 pt-3">
   <router-outlet></router-outlet>
 </main>
+
+<app-chat-button></app-chat-button>
 
 <footer>
   <app-footer></app-footer>

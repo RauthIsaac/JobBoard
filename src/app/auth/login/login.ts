@@ -54,7 +54,7 @@ export class Login {
       this.authService.login(this.loginForm.value).subscribe({
         next: (response) => {
           console.log('Login successful:', response);
-          
+
           this.authService.saveAuthData(
             response.token, 
             response.role,
@@ -70,29 +70,18 @@ export class Login {
           });
 
           // Redirect based on user type
-          this.router.navigate(['/home']);
+          const userType = response.role?.toLowerCase();
+          console.log(userType);
           
-        },
-        error: (error) => {
-          console.error('Login failed:', error);
-          this.isLoading = false;
-          
-          let errorMessage = 'Login failed';
-          if (error.status === 401) {
-            errorMessage = 'Invalid credentials';
-          } else if (error.status === 0) {
-            errorMessage = 'Connection error';
-          } else if (error.error?.message) {
-            errorMessage = error.error.message;
-          }
 
-          this.snackBar.open(errorMessage, 'Close', {
-            duration: 5000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
+          if (userType === 'employer') {
+            this.router.navigate(['/empProfile']);
+          } else if (userType === 'seeker'){
+            this.router.navigate(['/home']);
+          }
         }
       });
+
     } else {
       this.loginForm.markAllAsTouched();
       this.snackBar.open('Please fill all fields correctly', 'Close', {
