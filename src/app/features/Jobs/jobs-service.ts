@@ -14,11 +14,19 @@ export interface SavedJobsFilterParams {
   SortingOption?: 'DateAsc' | 'DateDesc';
 }
 
-
 export interface EmployerJobFilterParams {
   status?: 'Active' | 'Filled' | 'Expired';
   sortingOption?: 'PostedDateDesc' | 'PostedDateAsc' | 'ApplicationsCountDesc';
   searchValue?: string;
+}
+
+// Add interface for paginated response
+export interface PaginatedJobsResponse {
+  jobs: IJob[];
+  totalCount: number;
+  pageIndex: number;
+  pageSize: number;
+  totalPages: number;
 }
 
 interface SavedJobMap {
@@ -40,6 +48,11 @@ export class JobsService {
   public JobsList = signal<IJob[]>([]);
   public isLoading = signal<boolean>(false);
   public error = signal<string | null>(null);
+  // Add pagination signals
+  public totalCount = signal<number>(0);
+  public currentPage = signal<number>(1);
+  public pageSize = signal<number>(10);
+  public totalPages = signal<number>(0);
 
   constructor(private http: HttpClient, private authService: AuthService) {
     this.loadSavedJobs();
@@ -54,6 +67,9 @@ export class JobsService {
     this.http.get<IJob[]>(this.apiUrl).subscribe({
       next: (jobs) => {
         this.JobsList.set(Array.isArray(jobs) ? jobs : []);
+        this.totalCount.set(jobs.length);
+        this.currentPage.set(1);
+        this.totalPages.set(1);
         this.isLoading.set(false);
       },
       error: (error) => {
@@ -61,6 +77,7 @@ export class JobsService {
         this.error.set('Failed to load jobs');
         this.isLoading.set(false);
         this.JobsList.set([]);
+        this.totalCount.set(0);
       }
     });
   }
@@ -73,6 +90,9 @@ export class JobsService {
 
     if (filters.searchValue?.trim()) {
       params = params.set('searchValue', filters.searchValue.trim());
+    }
+    if (filters.searchByLocationValue?.trim()) {
+      params = params.set('searchByLocationValue', filters.searchByLocationValue.trim());
     }
     if (filters.categoryId && filters.categoryId > 0) {
       params = params.set('categoryId', filters.categoryId.toString());
@@ -101,10 +121,33 @@ export class JobsService {
     if (filters.sortingOption !== undefined) {
       params = params.set('sortingOption', filters.sortingOption.toString());
     }
+    // Add pagination parameters
+    if (filters.pageIndex !== undefined && filters.pageIndex > 0) {
+      params = params.set('pageIndex', filters.pageIndex.toString());
+    }
+    if (filters.pageSize !== undefined && filters.pageSize > 0) {
+      params = params.set('pageSize', filters.pageSize.toString());
+    }
 
-    this.http.get<IJob[]>(this.apiUrl, { params }).subscribe({
-      next: (jobs) => {
-        this.JobsList.set(Array.isArray(jobs) ? jobs : []);
+    this.http.get<any>(this.apiUrl, { params }).subscribe({
+      next: (response) => {
+        // Check if response has pagination structure
+        if (response && typeof response === 'object' && 'jobs' in response) {
+          // Paginated response
+          const paginatedResponse = response as PaginatedJobsResponse;
+          this.JobsList.set(Array.isArray(paginatedResponse.jobs) ? paginatedResponse.jobs : []);
+          this.totalCount.set(paginatedResponse.totalCount || 0);
+          this.currentPage.set(paginatedResponse.pageIndex || 1);
+          this.pageSize.set(paginatedResponse.pageSize || 10);
+          this.totalPages.set(paginatedResponse.totalPages || 0);
+        } else {
+          // Simple array response (fallback)
+          const jobs = Array.isArray(response) ? response : [];
+          this.JobsList.set(jobs);
+          this.totalCount.set(jobs.length);
+          this.currentPage.set(1);
+          this.totalPages.set(1);
+        }
         this.isLoading.set(false);
       },
       error: (error) => {
@@ -112,8 +155,27 @@ export class JobsService {
         this.error.set('Failed to load filtered jobs');
         this.isLoading.set(false);
         this.JobsList.set([]);
+        this.totalCount.set(0);
+        this.totalPages.set(0);
       }
     });
+  }
+
+  // Getter methods for pagination
+  getTotalCount(): number {
+    return this.totalCount();
+  }
+
+  getCurrentPage(): number {
+    return this.currentPage();
+  }
+
+  getPageSize(): number {
+    return this.pageSize();
+  }
+
+  getTotalPages(): number {
+    return this.totalPages();
   }
 
   GetJobDetails(jobID: number): Observable<any> {
@@ -200,7 +262,6 @@ export class JobsService {
     );
   }
 
-
   removeFromSavedJobsByJobId(jobId: number): Observable<any> {
     return this.http.delete(`${this.savedJobsUrl}/${jobId}`, {
       headers: this.getAuthHeaders()
@@ -216,7 +277,6 @@ export class JobsService {
       })
     );
   }
-
 
   removeFromSavedJobs(savedJobId: number): Observable<any> {
     return this.http.delete(`${this.savedJobsUrl}/${savedJobId}`, {
@@ -239,7 +299,6 @@ export class JobsService {
   }
 
   isSaved(jobId: number): Observable<boolean> {
-
     const isInLocalState = this.isJobSaved(jobId);
     if (isInLocalState) {
       return new Observable(observer => {
@@ -248,7 +307,6 @@ export class JobsService {
       });
     }
     
-
     return this.http.get<boolean>(`${this.isSavedJobUrl}/${jobId}`, { 
       headers: this.getAuthHeaders() 
     }).pipe(
@@ -285,8 +343,6 @@ export class JobsService {
     return this.savedJobsState().length;
   }
 
-
-
   /*---------------------------- Get Recent Jobs ----------------------------*/
   getRecentJobs(): Observable<any> {
     const headers = new HttpHeaders({
@@ -296,7 +352,6 @@ export class JobsService {
     return this.http.get(`${this.apiUrl}/recent?limit=3`, {headers });
   }
 
-
   /*---------------------------- Get Top Performing Jobs ----------------------------*/
   getTopPerformingJobs(): Observable<any> {
     const headers = new HttpHeaders({
@@ -305,7 +360,6 @@ export class JobsService {
 
     return this.http.get(`${this.apiUrl}/top-performing?limit=5`, {headers });
   }
-
 
   /*---------------------------- Get Employer Jobs ----------------------------*/
   getEmployerJobs(filters?: EmployerJobFilterParams): Observable<any> {
@@ -333,7 +387,6 @@ export class JobsService {
     });
   }
 
-
   /*---------------------------- Get Expiring Soon Jobs ----------------------------*/
   getExpiringSoonJobs(): Observable<any> {
     const headers = new HttpHeaders({
@@ -343,7 +396,6 @@ export class JobsService {
     return this.http.get(`${this.apiUrl}/stats`, {headers });
   }
 
-  
   /*---------------------------- Delete Job ----------------------------*/
   deleteJob(jobId: number): Observable<any> {
     const headers = new HttpHeaders({
@@ -353,30 +405,20 @@ export class JobsService {
 
     return this.http.delete(`${this.apiUrl}/${jobId}`, { 
       headers,
-      // This ensures the response body is returned
       observe: 'response'
     }).pipe(
-      // Transform the response to just return the body or a success message
       tap((response) => {
         console.log('Delete response:', response);
-        // You might want to update any cached data here
       }),
       catchError((error) => {
         console.error('Delete job error:', error);
         
-        // Log detailed error information
         if (error.error) {
           console.error('Error details:', error.error);
         }
         
-        // Re-throw the error so the component can handle it
         return throwError(() => error);
       })
     );
   }
-
-
-
-
-  //#endregion Employer Profile Methods
 }

@@ -1,5 +1,6 @@
 export interface JobFilterParams {
   searchValue?: string;
+  searchByLocationValue?: string; 
   categoryId?: number;
   skillId?: number;
   employerId?: number;
@@ -9,7 +10,8 @@ export interface JobFilterParams {
   educationLevel?: string;
   isActive?: boolean;
   sortingOption?: SortingOptions;
-  location?: string; 
+  pageIndex?: number;
+  pageSize?: number;
 }
 
 export enum SortingOptions {
