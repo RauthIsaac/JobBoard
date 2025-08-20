@@ -157,7 +157,7 @@
 }
 
 .info-box:hover{
-    transform: translateY(-5px);
+    transform: translateY(-5px) scale(1.02);
 }
 
 .info-icon{
@@ -203,7 +203,7 @@
 }
 
 .why-hireSmart-box:hover{
-    transform: translateY(-5px);
+    transform: translateY(-5px) scale(1.02);
 }
 
 .ai-powered-icon{
@@ -310,6 +310,16 @@
 }
 
 
+.explore-btn{
+    border:none;
+    background: var(--basic-color);
+    padding: 10px 30px;
+    color:white ;
+    border-radius: 10px;
+    font-size: medium;
+    font-weight: 600;
+}
 
-
-
+.explore-btn:hover{
+    background: var(--basic-color-hover);
+}

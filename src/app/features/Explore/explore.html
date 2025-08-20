@@ -1,6 +1,6 @@
 <div class="hero">
     <div class="row mb-3">
-        <div class="col-lg-10 col-md-12 col-sm-12">
+        <div class="col-lg-8 col-md-8 col-sm-12">
             <h1>Explore Job Opportunities</h1>
             <p>Find your dream job from a wide range of listings.</p>
             <div class="mt-2">
@@ -8,7 +8,7 @@
                     @if (isLoading()) {
                         Loading jobs...
                     } @else {
-                        Found {{ getJobsCount() }} jobs
+                        Showing {{ (currentPage() - 1) * pageSize() + 1 }} - {{ Math.min(currentPage() * pageSize(), totalJobs()) }} of {{ totalJobs() }} jobs
                         @if (hasActiveFilters()) {
                             <span class="badge bg-primary ms-2">Filtered</span>
                         }
@@ -16,7 +16,7 @@
                 </small>
             </div>
         </div>
-        <div class="col-lg-2 col-md-4 col-sm-5">
+        <div class="col-lg-2 col-md-2 col-sm-6">
             <div>
                 <select class="form-select" [formControl]="sortingControl" (change)="onSortingChange($event)">
                     @for(option of sortingOptions; track option.value) {
@@ -25,22 +25,53 @@
                 </select>
             </div>
         </div>
+        <div class="col-lg-2 col-md-2 col-sm-6">
+            <div>
+                <select class="form-select" [formControl]="pageSizeControl" (change)="onPageSizeChange($event)">
+                    @for(option of pageSizeOptions; track option.value) {
+                        <option [value]="option.value">{{ option.label }}</option>
+                    }
+                </select>
+            </div>
+        </div>
     </div>
-    
-    <div class="search-div mb-3 form-control">
-        <i class="bi bi-search mx-2 my-1"></i>
-        <input 
-            type="text" 
-            placeholder="Search for job..." 
-            class="form-control" 
-            [formControl]="searchControl"
-            (keyup.enter)="onSearch()"
-        />
-        @if (searchTerm()) {
-            <button type="button" class="btn btn-sm btn-link p-1" (click)="searchControl.setValue(''); searchTerm.set(''); ">
-                <i class="bi bi-x"></i>
-            </button>
-        }
+
+    <!-- Search Row -->
+    <div class="row mb-3">
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="search-div form-control">
+                <i class="bi bi-search mx-2 my-1"></i>
+                <input 
+                    type="text" 
+                    placeholder="Search for job..." 
+                    class="form-control" 
+                    [formControl]="searchControl"
+                    (keyup.enter)="onSearch()"
+                />
+                @if (searchTerm()) {
+                    <button type="button" class="btn btn-sm btn-link p-1" (click)="searchControl.setValue(''); searchTerm.set(''); ">
+                        <i class="bi bi-x"></i>
+                    </button>
+                }
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="search-div form-control">
+                <i class="bi bi-geo-alt mx-2 my-1"></i>
+                <input 
+                    type="text" 
+                    placeholder="Search by location..." 
+                    class="form-control" 
+                    [formControl]="locationSearchControl"
+                    (keyup.enter)="onLocationSearch()"
+                />
+                @if (locationSearchTerm()) {
+                    <button type="button" class="btn btn-sm btn-link p-1" (click)="locationSearchControl.setValue(''); locationSearchTerm.set(''); ">
+                        <i class="bi bi-x"></i>
+                    </button>
+                }
+            </div>
+        </div>
     </div>
 
     <div class="popular-searches-div">
@@ -70,18 +101,6 @@
     <div class="col-lg-3 col-md-3 col-sm-12" >
         <div class="side-bar">
             <h5 class="my-3 fs-3">Filters</h5>
-
-            <!-- Location Filter -->
-            <div class="my-2">
-                <span class="fs-5">Location</span>
-                <div class="search-div mb-3 form-control mt-2">
-                    <i class="bi bi-search mx-2 my-2"></i>
-                    <input type="text" placeholder="Search location..." class="form-control" />
-                </div>
-                <small class="text-muted">Location filtering coming soon...</small>
-            </div>
-
-            <hr class="my-4">
 
             <!-- Category Filter -->
             <div [formGroup]="filtersForm">
@@ -245,6 +264,54 @@
                         <app-job-explore-view [job]="job" class="col-12 my-4"></app-job-explore-view> 
                     }
                 </div>
+
+                <!-- Pagination -->
+                @if (totalPages() > 1) {
+                    <div class="pagination-container mt-4">
+                        <nav aria-label="Jobs pagination">
+                            <ul class="pagination justify-content-center">
+                                <!-- Previous Button -->
+                                <li class="page-item" [class.disabled]="currentPage() === 1">
+                                    <button class="page-link" (click)="goToPreviousPage()" [disabled]="currentPage() === 1">
+                                        <i class="bi bi-chevron-left"></i>
+                                        Previous
+                                    </button>
+                                </li>
+
+                                <!-- Page Numbers -->
+                                @for(page of getVisiblePages(); track page) {
+                                    @if (page === -1) {
+                                        <li class="page-item disabled">
+                                            <span class="page-link">...</span>
+                                        </li>
+                                    } @else {
+                                        <li class="page-item" [class.active]="page === currentPage()">
+                                            <button class="page-link" (click)="goToPage(page)">
+                                                {{ page }}
+                                            </button>
+                                        </li>
+                                    }
+                                }
+
+                                <!-- Next Button -->
+                                <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+                                    <button class="page-link" (click)="goToNextPage()" [disabled]="currentPage() === totalPages()">
+                                        Next
+                                        <i class="bi bi-chevron-right"></i>
+                                    </button>
+                                </li>
+                            </ul>
+                        </nav>
+
+                        <!-- Pagination Info -->
+                        <div class="pagination-info text-center mt-3">
+                            <small class="text-muted">
+                                Page {{ currentPage() }} of {{ totalPages() }} 
+                                ({{ totalJobs() }} total jobs)
+                            </small>
+                        </div>
+                    </div>
+                }
             }
         </div>
     </div>

@@ -186,8 +186,11 @@
             <div class="row">
                   @for(job of jobsList(); track job.id){
                     <app-job-view [job]="job" class="col-lg-4 col-md-6 col-sm-10 my-4"></app-job-view>
-                    <!-- <app-job-view [job]="job" class="col-lg-9 col-md-6 col-sm-10 my-4"></app-job-view> -->
                 }
+            </div>
+
+            <div class="d-flex justify-content-center align-content-center my-5">
+                <button class="explore-btn" routerLink="/explore"> Explore All Jobs <i class="bi bi-arrow-right mx-3"></i></button>
             </div>
            
         </section>
@@ -254,7 +257,7 @@
 
         </section>
 
-        <section class="End-section row mb-5">
+        <section class="End-section row mb-5" *ngIf="!isLoggin()">
 
             <div class="for-job-seeker col-lg-6 col-md-10 col-sm-9 p-5">
 

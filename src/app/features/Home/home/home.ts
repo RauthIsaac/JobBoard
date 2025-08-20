@@ -1,14 +1,16 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { JobsService } from '../../Jobs/jobs-service';
 import { IJob } from '../../../shared/models/ijob';
 import { ICategory } from '../../../shared/models/icategory';
 import { JobView } from '../../Jobs/job-view/job-view';
+import { AuthService } from '../../../auth/auth-service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
-  imports: [JobView, ReactiveFormsModule],
+  imports: [JobView, ReactiveFormsModule, RouterLink, CommonModule],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -17,6 +19,8 @@ export class Home implements OnInit {
   jobsList = signal<IJob[]>([]); 
   categories = signal<ICategory[]>([]);
 
+  isLoggin = signal<boolean>(false);
+
   // Form controls for search
   searchControl = new FormControl('');
   locationControl = new FormControl('');
@@ -24,7 +28,8 @@ export class Home implements OnInit {
 
   constructor(
     private jobService: JobsService,
-    private router: Router
+    private router: Router,
+    private AuthService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -34,6 +39,8 @@ export class Home implements OnInit {
 
     this.jobService.GetAllJobs();
     this.loadCategories();
+
+    this.isUserloggin();
   }
 
   private loadCategories(): void {
@@ -89,11 +96,18 @@ export class Home implements OnInit {
 
   // Handle "Start Job Searching" button
   onStartJobSearching(): void {
-    this.router.navigate(['/explore']);
+    this.router.navigate(['/login']);
   }
 
   // Handle "Post Your First Job" button  
   onPostJob(): void {
-    this.router.navigate(['/addJob']);
+    this.router.navigate(['/login']);
   }
+
+  isUserloggin(){
+    this.isLoggin.set(this.AuthService.isLoggedIn());
+    console.log(this.isLoggin());
+  }
+
+
 }

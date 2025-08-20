@@ -3,7 +3,6 @@
     padding: 20px 70px
 }
 
-
 .search-div{
     display: flex;
     border: none;
@@ -28,7 +27,6 @@
     color: #888;
 }
 
-
 .popular-searches-div{
     display: flex;
     align-items: center;
@@ -51,14 +49,11 @@
     color: white;
 }
 
-
-
 /* ------------------------Container------------------------- */
 .content{
     background: var(--basic-gray);
     padding:30px;
 }
-
 
 /* ------------------------Sidebar------------------------- */
 .side-bar{
@@ -66,7 +61,6 @@
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-
 }
 
 /* Job Type Radio Buttons Styles */
@@ -95,21 +89,13 @@
     border: var(--basic-color);
 }
 
-
-
-
-
 /* ------------------------Main Content------------------------- */
-
 .main-content{
     background: white;
     padding: 20px 40px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
-
-
-
 
 /* Active filter indicator */
 .filter-active {
@@ -126,4 +112,86 @@
     background: #28a745;
     border-radius: 50%;
     border: 2px solid white;
+}
+
+/* ------------------------Pagination Styles------------------------- */
+.pagination-container {
+    border-top: 1px solid #dee2e6;
+    padding-top: 20px;
+}
+
+.pagination {
+    margin-bottom: 0;
+}
+
+.pagination .page-link {
+    border-color: #dee2e6;
+    padding: 0.75rem 1rem;
+    margin: 0 2px;
+    border-radius: 0.375rem;
+    transition: all 0.15s ease-in-out;
+}
+
+.pagination .page-link:hover {
+    color: white;
+    background: var(--basic-color-hover);
+}
+
+.pagination .page-link:focus {
+    background: var(--basic-color);
+    box-shadow: 0 0 0 0.25rem rgba(var(--basic-color-rgb), 0.25);
+}
+
+.pagination .page-item.active .page-link {
+    color: white;
+    background: var(--basic-color);
+    border-color: var(--basic-color);
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #6c757d;
+    background-color: white;
+    border-color: #dee2e6;
+    cursor: not-allowed;
+}
+
+.pagination .page-link[disabled] {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.pagination-info {
+    margin-top: 15px;
+}
+
+.pagination-info small {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* Responsive pagination */
+@media (max-width: 768px) {
+    .pagination {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .pagination .page-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        margin: 1px;
+    }
+    
+    .pagination-container {
+        padding: 15px 0;
+    }
+}
+
+/* Hide some pagination elements on very small screens */
+@media (max-width: 576px) {
+    .pagination .page-link {
+        padding: 0.375rem 0.5rem;
+        font-size: 0.8rem;
+    }
 }
