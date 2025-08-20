@@ -28,10 +28,8 @@ import { EmployerDashboard } from './features/profiles/employer/employer-dashboa
 import { NavbarEmp } from './shared/components/navbar-emp/navbar-emp';
 import { EmployerDashbordSection } from './features/profiles/employer/employer-dashbord-section/employer-dashbord-section';
 import { EmployerAnalyticsSection } from './features/profiles/employer/employer-analytics-section/employer-analytics-section';
-<<<<<<< HEAD
-=======
 import { EmpPostedJobs } from './features/Jobs/emp-posted-jobs/emp-posted-jobs';
->>>>>>> Rauth
+
 
 
 
@@ -78,21 +76,6 @@ export const routes: Routes = [
             {path: 'empDashboard', component: EmployerDashbordSection},
             {path: 'empProfile', component: EmployerProfileSection},
             {path: 'empAnalytics', component: EmployerAnalyticsSection},
-<<<<<<< HEAD
-
-
-            { path: '', redirectTo: 'empDashboard', pathMatch: 'full' }
-        ]
-    },
-
-
-    {path: 'editEmp', component: EditEmpProfile},
-    {path: 'addJob', component: AddJob},
-    {path: 'editJob/:id', component: EditJob},
-
-
-
-=======
 
             
             { path: '', redirectTo: 'empDashboard', pathMatch: 'full' }
@@ -119,7 +102,6 @@ export const routes: Routes = [
 
 
 
->>>>>>> Rauth
     {path: 'register', component: Signup },
     {path: 'login', component: Login },
     {path: 'confirm-email', component: ConfirmEmail},
