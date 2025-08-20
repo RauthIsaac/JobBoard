@@ -1,10 +1,18 @@
 import { Component, Input } from '@angular/core';
 import { AuthService } from '../../../auth/auth-service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+<<<<<<< HEAD
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+=======
+import { Router, RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+
+>>>>>>> Rauth
 @Component({
   selector: 'app-navbar-emp',
   imports: [CommonModule, FormsModule],

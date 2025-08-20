@@ -8,14 +8,22 @@ import { Observable, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { AuthService } from '../../auth/auth-service';
 
+
 export interface SavedJobsFilterParams {
   searchValue?: string;
   SortingOption?: 'DateAsc' | 'DateDesc';
 }
 
+
+export interface EmployerJobFilterParams {
+  status?: 'Active' | 'Filled' | 'Expired';
+  sortingOption?: 'PostedDateDesc' | 'PostedDateAsc' | 'ApplicationsCountDesc';
+  searchValue?: string;
+}
+
 interface SavedJobMap {
-  jobId: number;       // من جدول الوظائف
-  savedJobId: number;  // من جدول SavedJobs
+  jobId: number;       
+  savedJobId: number;  
 }
 
 @Injectable({
@@ -174,14 +182,12 @@ export class JobsService {
       { headers: this.getAuthHeaders() }
     ).pipe(
       tap((response: any) => {
-        // تحديث الـ state فوراً بعد نجاح العملية
         const current = this.savedJobsState();
         const newEntry: SavedJobMap = { 
           jobId, 
           savedJobId: response.id || response.savedJobId || Date.now()
         };
         
-        // تأكد من عدم وجود duplicate
         if (!current.some(s => s.jobId === jobId)) {
           this.savedJobsState.set([...current, newEntry]);
           console.log(`Job ${jobId} added to saved jobs with savedJobId: ${newEntry.savedJobId}`);
@@ -194,13 +200,12 @@ export class JobsService {
     );
   }
 
-  // الطريقة الجديدة - حذف باستخدام jobId مباشرة
+
   removeFromSavedJobsByJobId(jobId: number): Observable<any> {
     return this.http.delete(`${this.savedJobsUrl}/${jobId}`, {
       headers: this.getAuthHeaders()
     }).pipe(
       tap(() => {
-        // تحديث الـ state فوراً بعد نجاح العملية
         const updated = this.savedJobsState().filter(s => s.jobId !== jobId);
         this.savedJobsState.set(updated);
         console.log(`Job ${jobId} removed from saved jobs`);
@@ -212,7 +217,7 @@ export class JobsService {
     );
   }
 
-  // الطريقة القديمة - محتفظ بها للتوافق مع الكود الموجود
+
   removeFromSavedJobs(savedJobId: number): Observable<any> {
     return this.http.delete(`${this.savedJobsUrl}/${savedJobId}`, {
       headers: this.getAuthHeaders()
@@ -234,7 +239,7 @@ export class JobsService {
   }
 
   isSaved(jobId: number): Observable<boolean> {
-    // أولاً تحقق من الـ local state
+
     const isInLocalState = this.isJobSaved(jobId);
     if (isInLocalState) {
       return new Observable(observer => {
@@ -243,7 +248,7 @@ export class JobsService {
       });
     }
     
-    // إذا لم توجد في الـ local state، اسأل الـ API
+
     return this.http.get<boolean>(`${this.isSavedJobUrl}/${jobId}`, { 
       headers: this.getAuthHeaders() 
     }).pipe(
@@ -257,7 +262,6 @@ export class JobsService {
   loadSavedJobs(): void {
     this.getSavedJobs().subscribe({
       next: (savedJobs: any[]) => {
-        // تحويل البيانات إلى SavedJobMap format
         const savedMap: SavedJobMap[] = savedJobs.map(savedJob => ({
           jobId: savedJob.job?.id || savedJob.jobId,
           savedJobId: savedJob.id
@@ -280,4 +284,99 @@ export class JobsService {
   getSavedJobsCount(): number {
     return this.savedJobsState().length;
   }
+
+
+
+  /*---------------------------- Get Recent Jobs ----------------------------*/
+  getRecentJobs(): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+
+    return this.http.get(`${this.apiUrl}/recent?limit=3`, {headers });
+  }
+
+
+  /*---------------------------- Get Top Performing Jobs ----------------------------*/
+  getTopPerformingJobs(): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+
+    return this.http.get(`${this.apiUrl}/top-performing?limit=5`, {headers });
+  }
+
+
+  /*---------------------------- Get Employer Jobs ----------------------------*/
+  getEmployerJobs(filters?: EmployerJobFilterParams): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+
+    let params = new HttpParams();
+    
+    if (filters) {
+      if (filters.searchValue?.trim()) {
+        params = params.set('searchValue', filters.searchValue.trim());
+      }
+      if (filters.status) {
+        params = params.set('status', filters.status);
+      }
+      if (filters.sortingOption) {
+        params = params.set('sortingOption', filters.sortingOption);
+      }
+    }
+
+    return this.http.get(`${this.apiUrl}/my-jobs`, { 
+      headers,
+      params 
+    });
+  }
+
+
+  /*---------------------------- Get Expiring Soon Jobs ----------------------------*/
+  getExpiringSoonJobs(): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+
+    return this.http.get(`${this.apiUrl}/stats`, {headers });
+  }
+
+  
+  /*---------------------------- Delete Job ----------------------------*/
+  deleteJob(jobId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.delete(`${this.apiUrl}/${jobId}`, { 
+      headers,
+      // This ensures the response body is returned
+      observe: 'response'
+    }).pipe(
+      // Transform the response to just return the body or a success message
+      tap((response) => {
+        console.log('Delete response:', response);
+        // You might want to update any cached data here
+      }),
+      catchError((error) => {
+        console.error('Delete job error:', error);
+        
+        // Log detailed error information
+        if (error.error) {
+          console.error('Error details:', error.error);
+        }
+        
+        // Re-throw the error so the component can handle it
+        return throwError(() => error);
+      })
+    );
+  }
+
+
+
+
+  //#endregion Employer Profile Methods
 }
