@@ -1,16 +1,14 @@
-
 <div class="container m-5">
+  <button (click)="sendNotification()">Send Notification</button>
+  <button (click)="getNotifications()">Get Notifications</button>
 
-    <button (click)="sendNotification()">
-        Send Notification
-    </button>
-
-    <button (click)="getNotifications()">
-        Get Notifications
-    </button>
-
-    <button (click)="markAsRead(2)">
-        Mark as Read
-    </button>
-
+  <h3>Notifications</h3>
+  <ul>
+    <li *ngFor="let notification of notifications">
+      {{ notification.message }}
+      <a *ngIf="notification.link" [href]="notification.link" target="_blank">View</a>
+      <span *ngIf="notification.isRead">(Read)</span>
+      <button *ngIf="!notification.isRead && notification.id" (click)="markAsRead(notification.id)">Mark as Read</button>
+    </li>
+  </ul>
 </div>
