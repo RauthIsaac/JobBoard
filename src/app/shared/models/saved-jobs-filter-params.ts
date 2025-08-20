@@ -1,4 +1,4 @@
-export interface SavedJobsFilterParams {
-    searchValue?: string;
-    SortingOption?: 'DateAsc' | 'DateDesc';
-}
+// export interface SavedJobsFilterParams {
+//     searchValue?: string;
+//     SortingOption?: 'DateAsc' | 'DateDesc';
+// }
