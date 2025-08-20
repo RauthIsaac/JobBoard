@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { AuthService } from '../../../auth/auth-service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-navbar-emp',

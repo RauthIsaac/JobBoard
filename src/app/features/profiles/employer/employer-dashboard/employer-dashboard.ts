@@ -14,14 +14,13 @@ import { RouterOutlet } from '@angular/router';
   styleUrls: ['./employer-dashboard.css']
 })
 export class EmployerDashboard implements OnInit {
-  empData = signal<any>({});
+  
   isSidebarOpen = signal<boolean>(true);
-  currentRoute = signal<string>('dashboard');
+
+empData = signal<any>({});
 
   constructor(
     private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -44,4 +43,5 @@ export class EmployerDashboard implements OnInit {
   toggleSidebar(): void {
     this.isSidebarOpen.update(isOpen => !isOpen);
   }
+
 }

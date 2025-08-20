@@ -148,15 +148,11 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/api/Auth/reset-password`, payload);
   }
 
-  /*---------------------------- Get Seeker Profile ----------------------------*/
-  getSeekerProfile(): Observable<any> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.getToken()}`
-    });
 
-    return this.http.get(`${this.baseUrl}/api/Seeker/GetMyProfile`, { headers });
-  }
 
+  /********************************************************************/
+  /*------------------- Employer Profile Methods -----------------------*/
+  //#region Employer Profile Methods
   /*---------------------------- Get Employer Profile ----------------------------*/
   getEmployerProfile(): Observable<any> {
     const headers = new HttpHeaders({
@@ -189,6 +185,22 @@ export class AuthService {
       responseType: 'text' as 'json'
     });
   }
+
+
+
+  /********************************************************************/
+  /*------------------- Seeker Profile Methods -----------------------*/
+  //#region Seeker Profile Methods
+
+  /*---------------------------- Get Seeker Profile ----------------------------*/
+  getSeekerProfile(): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.getToken()}`
+    });
+
+    return this.http.get(`${this.baseUrl}/api/Seeker/GetMyProfile`, { headers });
+  }
+
 
   /*---------------------------- Update Seeker Profile ----------------------------*/
   updateSeekerProfile(profileData: any): Observable<any> {
@@ -263,5 +275,7 @@ export class AuthService {
 
     return this.http.get(`${this.baseUrl}/api/Seeker/resume-url`, { headers });
   }
+
+  //#endregion Seeker Profile Methods
 
 }

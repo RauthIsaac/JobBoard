@@ -94,28 +94,27 @@
                         <h3>💼 Recent Job Postings</h3>
                         <a href="#" class="text-primary fw-semibold"  style="text-decoration: none;">Manage Jobs →</a>
                     </div>
-                    <div class="activity-item d-flex justify-content-between align-items-center">
-                        <div>
-                        <strong class="fs-5">Senior Frontend Developer</strong>
-                        <p class="small text-muted mb-0">2 days ago • 23 applications</p>
+
+                    <div *ngFor="let job of recentJobs()" class="activity-item d-flex justify-content-between align-items-center mb-2 p-3 border rounded shadow-sm">
+                    <div>
+                        <strong class="fs-5">{{ job.title }}</strong>
+                        <div class="d-flex">
+                            <div class="text-muted small">{{ job.postedAgo}}</div>
+                            <div class="mx-">|</div>
+                            <div class="text-muted small">Applications: {{ job.applicationsCount }}</div>
                         </div>
-                        <span class="job-status status-active">Active</span>
                     </div>
-                    <div class="activity-item d-flex justify-content-between align-items-center">
-                        <div>
-                        <strong class="fs-5">DevOps Engineer</strong>
-                        <p class="small text-muted mb-0">5 days ago • 18 applications</p>
-                        </div>
-                        <span class="job-status status-active">Active</span>
+                    <span class="job-status" [ngClass]="{
+                        'status-active': job.status === 'Active',
+                        'status-filled': job.status === 'Filled',
+                        }">
+                        {{ job.status }}
+                    </span>
+                </div>
+
+
                     </div>
-                    <div class="activity-item d-flex justify-content-between align-items-center">
-                        <div>
-                        <strong class="fs-5">Product Manager</strong>
-                        <p class="small text-muted mb-0">1 week ago • 45 applications</p>
-                        </div>
-                        <span class="job-status status-filled">Filled</span>
-                    </div>
-                    </div>
+
                 </div>
             </div>
 

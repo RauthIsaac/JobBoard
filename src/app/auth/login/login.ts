@@ -75,7 +75,7 @@ export class Login {
           
 
           if (userType === 'employer') {
-            this.router.navigate(['/empProfile']);
+            this.router.navigate(['/empDashboard']);
           } else if (userType === 'seeker'){
             this.router.navigate(['/home']);
           }
