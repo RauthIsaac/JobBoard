@@ -2,25 +2,30 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NotificationServices } from '../notification-services';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-notification',
   templateUrl: './notification.html',
   styleUrl: './notification.css',
-  imports: [CommonModule] // تأكدي من استيراد NotificationServices هنا
+  imports: [CommonModule]
 })
 export class Notification implements OnInit, OnDestroy {
-  notifications: any[] = []; // لتخزين الإشعارات
+  notifications: any[] = [];
   private subscription!: Subscription;
 
-  constructor(private notificationServices: NotificationServices) { }
+  constructor(private notificationServices: NotificationServices, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     // الاشتراك في الإشعارات من SignalR
     this.subscription = this.notificationServices.getNotificationsObservable()
       .subscribe(notification => {
-        console.log('New notification received:', notification);
-        this.notifications.push(notification); // إضافة الإشعار للقائمة
+        console.log('New notification received via SignalR:', notification);
+        // منع التكرار لو الإشعار موجود بالفعل
+        if (!this.notifications.some(n => n.id === notification.id && n.id !== null)) {
+          this.notifications.push(notification);
+        }
+        this.cdr.detectChanges(); // تحديث الـ UI
       });
 
     // جلب الإشعارات القديمة من الـ API
@@ -28,7 +33,6 @@ export class Notification implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // إلغاء الاشتراك عند تدمير الـ Component
     this.subscription.unsubscribe();
     this.notificationServices.stopConnection();
   }
@@ -36,9 +40,9 @@ export class Notification implements OnInit, OnDestroy {
   /*-------------------------Send Notification------------------------ */
   sendNotification() {
     const notificationData = {
-      userId: "6ebec717-a6cd-41c2-b091-f38ebbeb1368",
+      userId: "f810fb62-7284-4dd2-8027-807036a276d7",
       message: "Hello srsr",
-      link: null // إضافة link إذا كنتِ عايزة
+      link: null
     };
 
     this.notificationServices.postNotification(notificationData).subscribe({
@@ -57,6 +61,8 @@ export class Notification implements OnInit, OnDestroy {
       next: (response: any) => {
         console.log('Notifications retrieved successfully:', response);
         this.notifications = response; // تخزين الإشعارات القديمة
+        console.log('Updated notifications array:', this.notifications);
+        this.cdr.detectChanges(); // تحديث الـ UI
       },
       error: (error: any) => {
         console.error('Error retrieving notifications:', error);
@@ -69,10 +75,10 @@ export class Notification implements OnInit, OnDestroy {
     this.notificationServices.markAsRead(notificationId).subscribe({
       next: (response: any) => {
         console.log('Notification marked as read successfully:', response);
-        // تحديث حالة الإشعار في الواجهة
         const notification = this.notifications.find(n => n.id === notificationId);
         if (notification) {
           notification.isRead = true;
+          this.cdr.detectChanges();
         }
       },
       error: (error: any) => {

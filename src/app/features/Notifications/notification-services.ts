@@ -16,21 +16,33 @@ export class NotificationServices {
     // إعداد الاتصال بـ SignalR
     this.hubConnection = new HubConnectionBuilder()
       .withUrl('http://localhost:5007/notifications', {
-        accessTokenFactory: () => this.authService.getToken() ?? '' // إضافة الـ JWT token للتوثيق
+        accessTokenFactory: () => this.authService.getToken() ?? ''
       })
+      .withAutomaticReconnect() // أضفت reconnect logic
       .build();
 
     // بدء الاتصال بـ SignalR
     this.startConnection();
 
     // الاستماع للإشعارات من الـ Hub
-    this.hubConnection.on('ReceiveNotification', (message: string, link: string | null) => {
+    this.hubConnection.on('ReceiveNotification', (message: string, link: string | null, id?: number) => {
       const notification = {
+        id: id || null, // لو مافيش id، خليه null
         message,
         link,
-        isRead: false // افتراضي، لأن الإشعار الجديد بيكون غير مقروء
+        isRead: false
       };
+      console.log('Received SignalR notification:', notification); // log للتحقق
       this.notificationSubject.next(notification);
+    });
+
+    // التحقق من إعادة الاتصال
+    this.hubConnection.onreconnected(() => {
+      console.log('SignalR Reconnected!');
+    });
+
+    this.hubConnection.onclose((error) => {
+      console.error('SignalR Connection Closed:', error);
     });
   }
 
@@ -39,34 +51,41 @@ export class NotificationServices {
     this.hubConnection
       .start()
       .then(() => console.log('SignalR Connected!'))
-      .catch(err => console.error('Error connecting to SignalR:', err));
+      .catch(err => {
+        console.error('Error connecting to SignalR:', err);
+        // إعادة المحاولة بعد 5 ثوانٍ
+        setTimeout(() => this.startConnection(), 5000);
+      });
   }
 
   // إرجاع Observable للإشعارات
   public getNotificationsObservable(): Observable<any> {
     return this.notificationSubject.asObservable();
   }
-// `Bearer ${this.authService.getToken()}`
+
   // إرسال إشعار باستخدام HTTP
   postNotification(notificationData: any) {
-    const headers = { 'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImEzZWRmOWJiLWYyYzItNDRhNS04MzgxLWIyZDQ2NTUyNjIxOCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJlbXBsb3llcjEiLCJqdGkiOiJlNTUwNmU4Ni1iY2ZhLTRiMzQtOWEyYS1hOTNmYmE4YzNmNTAiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJFbXBsb3llciIsImV4cCI6MTc1NjI5NjA1NywiaXNzIjoiSm9iQm9hcmRBUEkiLCJhdWQiOiJKb2JCb2FyZFVzZXIifQ.u7EZWBR0iuE-uPwp9ZKQSjjkL6fUnln8Xi9UEu4_Pl8` };
+    const headers = { 'Authorization': `Bearer ${this.authService.getToken() ?? ''}` };
+    console.log('Sending notification with token:', this.authService.getToken()); // log للتحقق
     return this.http.post(`${this.baseURL}`, notificationData, { headers });
   }
 
   // جلب الإشعارات القديمة باستخدام HTTP
   userId: string = "f810fb62-7284-4dd2-8027-807036a276d7";
   getNotifications() {
-    const headers = { 'Authorization': `Bearer ${this.authService.getToken()}` };
+    const headers = { 'Authorization': `Bearer ${this.authService.getToken() ?? ''}` };
+    console.log('Fetching notifications for userId:', this.userId); // log للتحقق
     return this.http.get(`${this.baseURL}/user/${this.userId}`, { headers });
   }
 
   // تحديد الإشعار كـ مقروء
   markAsRead(id: number) {
-    const headers = { 'Authorization': `Bearer ${this.authService.getToken()}` };
-    return this.http.put(`${this.baseURL}/read/${id}`, {}, { headers });
+    const headers = { 'Authorization': `Bearer ${this.authService.getToken() ?? ''}` };
+    console.log('Marking notification as read, id:', id); // log للتحقق
+    return this.http.put(`${this.baseURL}/read/${id}`, null, { headers });
   }
 
-  // إيقاف الاتصال بـ SignalR (اختياري)
+  // إيقاف الاتصال بـ SignalR
   public stopConnection() {
     this.hubConnection.stop().then(() => console.log('SignalR Disconnected!'));
   }
