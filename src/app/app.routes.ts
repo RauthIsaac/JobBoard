@@ -23,9 +23,13 @@ import { EditEmpProfile } from './features/profiles/employer/edit-emp-profile/ed
 import { EmployerAnalyticsSection } from './features/profiles/employer/employer-analytics-section/employer-analytics-section';
 import { EmployerDashboard } from './features/profiles/employer/employer-dashboard/employer-dashboard';
 import { EmployerDashbordSection } from './features/profiles/employer/employer-dashbord-section/employer-dashbord-section';
-import { EmployerAnalyticsSection } from './features/profiles/employer/employer-analytics-section/employer-analytics-section';
 import { EmpPostedJobs } from './features/Jobs/emp-posted-jobs/emp-posted-jobs';
 import { ExternalLogin } from './auth/external-login/external-login';
+import { NotFound } from './Pages/not-found/not-found';
+import { EmployerProfileSection } from './features/profiles/employer/employer-profile-section/employer-profile-section';
+import { EditSeekerProfile } from './features/profiles/seeker/edit-seeker-profile/edit-seeker-profile';
+import { SeekerProfile } from './features/profiles/seeker/seeker-profile/seeker-profile';
+import { Navbar } from './shared/components/navbar/navbar';
 
 
 
