@@ -1,35 +1,33 @@
 import { Routes } from '@angular/router';
+import { ConfirmEmail } from './auth/confirm-email/confirm-email';
+import { ForgetPassword } from './auth/forget-password/forget-password';
+import { Login } from './auth/login/login';
+import { ResetPassword } from './auth/reset-password/reset-password';
+import { Signup } from './auth/signup/signup';
+import { ChatButton } from './features/AIChat/chat-button/chat-button';
+import { ApplicationForm } from './features/Application/application-form/application-form';
+import { Layout } from './features/Application/seeker-application/layout/layout';
+import { Documents } from './features/Application/seeker-application/steps/documents/documents';
+import { PersonalInfo } from './features/Application/seeker-application/steps/personal-info/personal-info';
+import { Questions } from './features/Application/seeker-application/steps/questions/questions';
+import { Review } from './features/Application/seeker-application/steps/review/review';
+import { Explore } from './features/Explore/explore';
 import { Home } from './features/Home/home/home';
-import { NotFound } from './Pages/not-found/not-found';
+import { AddJob } from './features/Jobs/add-job/add-job';
+import { EditJob } from './features/Jobs/edit-job/edit-job';
 import { JobDetails } from './features/Jobs/job-details/job-details';
 import { JobView } from './features/Jobs/job-view/job-view';
 import { SavedJobs } from './features/Jobs/saved-jobs/saved-jobs';
-import { EmployerProfileSection } from './features/profiles/employer/employer-profile-section/employer-profile-section';
-import { AddJob } from './features/Jobs/add-job/add-job';
-import { Navbar } from './shared/components/navbar/navbar';
-import { Login } from './auth/login/login';
-import { Signup } from './auth/signup/signup';
-import { ConfirmEmail } from './auth/confirm-email/confirm-email';
-import { ForgetPassword } from './auth/forget-password/forget-password';
-import { ResetPassword } from './auth/reset-password/reset-password';
-import { Explore } from './features/Explore/explore';
+import { NotificationComponent } from './features/Notifications/notification/notification';
 import { EditEmpProfile } from './features/profiles/employer/edit-emp-profile/edit-emp-profile';
-import { EditSeekerProfile} from './features/profiles/seeker/edit-seeker-profile/edit-seeker-profile';
-import { SeekerProfile } from './features/profiles/seeker/seeker-profile/seeker-profile';
-import { Layout } from './features/Application/seeker-application/layout/layout';
-import { PersonalInfo } from './features/Application/seeker-application/steps/personal-info/personal-info';
-import { Documents } from './features/Application/seeker-application/steps/documents/documents';
-import { Questions } from './features/Application/seeker-application/steps/questions/questions';
-import { Review } from './features/Application/seeker-application/steps/review/review';
-import { ChatButton } from './features/AIChat/chat-button/chat-button';
-import { ApplicationForm } from './features/Application/application-form/application-form';
-import { EditJob } from './features/Jobs/edit-job/edit-job';
-import { EmployerDashboard } from './features/profiles/employer/employer-dashboard/employer-dashboard';
-import { NavbarEmp } from './shared/components/navbar-emp/navbar-emp';
-import { EmployerDashbordSection } from './features/profiles/employer/employer-dashbord-section/employer-dashbord-section';
 import { EmployerAnalyticsSection } from './features/profiles/employer/employer-analytics-section/employer-analytics-section';
-
-
+import { EmployerDashboard } from './features/profiles/employer/employer-dashboard/employer-dashboard';
+import { EmployerDashbordSection } from './features/profiles/employer/employer-dashbord-section/employer-dashbord-section';
+import { EmployerProfileSection } from './features/profiles/employer/employer-profile-section/employer-profile-section';
+import { EditSeekerProfile } from './features/profiles/seeker/edit-seeker-profile/edit-seeker-profile';
+import { SeekerProfile } from './features/profiles/seeker/seeker-profile/seeker-profile';
+import { NotFound } from './Pages/not-found/not-found';
+import { Navbar } from './shared/components/navbar/navbar';
 
 export const routes: Routes = [
 
@@ -96,6 +94,7 @@ export const routes: Routes = [
 
     {path: 'chatBtn', component: ChatButton},
     {path: 'appForm', component: ApplicationForm},
+    {path: 'notification', component: NotificationComponent},
 
 
         

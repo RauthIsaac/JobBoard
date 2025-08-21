@@ -12,6 +12,7 @@ export class AuthService {
   private readonly USER_TYPE_KEY = 'user_type';
   private readonly USER_NAME_KEY = 'user_name';
   private readonly USER_EMAIL_KEY = 'user_email';
+  private readonly User_ID = 'user-id';
 
   // ================= Cached values =================
   private cachedUserName: string | null = null;
@@ -32,7 +33,7 @@ export class AuthService {
   }
 
   /*---------------------------- Save Token & UserName & Email ----------------------------*/
-  saveAuthData(token: string, userType: string, userName?: string, userEmail?: string): void {
+  saveAuthData(token: string, userType: string, userName?: string, userEmail?: string, userId?: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);
     localStorage.setItem(this.USER_TYPE_KEY, userType);
     if (userName) {
@@ -42,13 +43,17 @@ export class AuthService {
     if (userEmail) {
       localStorage.setItem(this.USER_EMAIL_KEY, userEmail);
     }
+    if(userId){
+      localStorage.setItem(this.User_ID, userId);
+    }
     this.cachedUserType = userType; // update cache
 
     console.log('Auth data saved:', {
       token,
       userType,
       userName,
-      userEmail
+      userEmail,
+      userId
     });
   }
 
@@ -56,6 +61,12 @@ export class AuthService {
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
   }
+
+    /*---------------------------- Get userId ----------------------------*/
+    getUserId(): string |null {
+      return localStorage.getItem(this.User_ID)
+    }
+
 
   /*---------------------------- Get User Name ----------------------------*/
   getUserName(): string {
