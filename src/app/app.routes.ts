@@ -29,6 +29,7 @@ import { NavbarEmp } from './shared/components/navbar-emp/navbar-emp';
 import { EmployerDashbordSection } from './features/profiles/employer/employer-dashbord-section/employer-dashbord-section';
 import { EmployerAnalyticsSection } from './features/profiles/employer/employer-analytics-section/employer-analytics-section';
 import { EmpPostedJobs } from './features/Jobs/emp-posted-jobs/emp-posted-jobs';
+import { ExternalLogin } from './auth/external-login/external-login';
 
 
 
@@ -113,6 +114,7 @@ export const routes: Routes = [
 
 
         
+    {path:'externalLogin', component:ExternalLogin},
 
     {path: '**', component: NotFound}
     
