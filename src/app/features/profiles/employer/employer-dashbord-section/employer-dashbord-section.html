@@ -5,35 +5,19 @@
         <div class="col-lg-4 col-md-8 col-sm-6">
 
             <div class="row g-4">
-            <!-- Stats -->
-            <div class="col-6 col-sm-6">
-                <div class="stat-card">
-                <h4 class="fw-bold">12</h4>
-                <p class="text-muted mb-1">Active Jobs</p>
-                <small class="text-success">+3 this week</small>
+                <!-- Stats -->
+                <div class="col-6 col-sm-6">
+                    <div class="stat-card">
+                    <h4 class="fw-bold">{{expiringSoonJobs().totalActiveJobs}}</h4>
+                    <p class="text-muted mb-1">Active Jobs</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-6 col-sm-6">
-                <div class="stat-card">
-                <h4 class="fw-bold">47</h4>
-                <p class="text-muted mb-1">New Applications</p>
-                <small class="text-success">+12 today</small>
+                <div class="col-6 col-sm-6">
+                    <div class="stat-card">
+                    <h4 class="fw-bold">{{expiringSoonJobs().applicationsThisMonth}}</h4>
+                    <p class="text-muted mb-1">Applications This Month</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-6 col-sm-6">
-                <div class="stat-card">
-                <h4 class="fw-bold">8</h4>
-                <p class="text-muted mb-1">Interviews Scheduled</p>
-                <small class="text-info">5 this week</small>
-                </div>
-            </div>
-            <div class="col-6 col-sm-6">
-                <div class="stat-card">
-                <h4 class="fw-bold">3</h4>
-                <p class="text-muted mb-1">Hired This Month</p>
-                <small class="text-primary">Goal: 5</small>
-                </div>
-            </div>
             </div>
 
 
@@ -57,7 +41,6 @@
                     <div class="card card-custom p-4">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h3 >📌 Recent Activity</h3>
-                        <a class="text-primary fw-semibold" style="text-decoration: none;">View All →</a>
                     </div>
                     <div class="activity-item">
                         <strong class="fs-5">New application received</strong>
@@ -94,30 +77,6 @@
                         <h3>💼 Recent Job Postings</h3>
                         <a href="#" class="text-primary fw-semibold"  style="text-decoration: none;">Manage Jobs →</a>
                     </div>
-<<<<<<< HEAD
-                    <div class="activity-item d-flex justify-content-between align-items-center">
-                        <div>
-                        <strong class="fs-5">Senior Frontend Developer</strong>
-                        <p class="small text-muted mb-0">2 days ago • 23 applications</p>
-                        </div>
-                        <span class="job-status status-active">Active</span>
-                    </div>
-                    <div class="activity-item d-flex justify-content-between align-items-center">
-                        <div>
-                        <strong class="fs-5">DevOps Engineer</strong>
-                        <p class="small text-muted mb-0">5 days ago • 18 applications</p>
-                        </div>
-                        <span class="job-status status-active">Active</span>
-                    </div>
-                    <div class="activity-item d-flex justify-content-between align-items-center">
-                        <div>
-                        <strong class="fs-5">Product Manager</strong>
-                        <p class="small text-muted mb-0">1 week ago • 45 applications</p>
-                        </div>
-                        <span class="job-status status-filled">Filled</span>
-                    </div>
-                    </div>
-=======
 
                     <div *ngFor="let job of recentJobs()" class="activity-item d-flex justify-content-between align-items-center mb-2 p-3 border rounded shadow-sm">
                     <div>
@@ -131,6 +90,7 @@
                     <span class="job-status" [ngClass]="{
                         'status-active': job.status === 'Active',
                         'status-filled': job.status === 'Filled',
+                        'status-expired': job.status === 'Expired',
                         }">
                         {{ job.status }}
                     </span>
@@ -139,7 +99,6 @@
 
                     </div>
 
->>>>>>> Rauth
                 </div>
             </div>
 

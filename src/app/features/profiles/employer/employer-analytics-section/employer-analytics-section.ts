@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-import { Component } from '@angular/core';
-=======
 import { Component, OnInit, signal } from '@angular/core';
 import { JobsService } from '../../../Jobs/jobs-service';
 
->>>>>>> Rauth
 
 @Component({
   selector: 'app-employer-analytics-section',
@@ -12,10 +8,6 @@ import { JobsService } from '../../../Jobs/jobs-service';
   templateUrl: './employer-analytics-section.html',
   styleUrl: './employer-analytics-section.css'
 })
-<<<<<<< HEAD
-export class EmployerAnalyticsSection {
-
-=======
 export class EmployerAnalyticsSection implements OnInit{
 
   topPerformingJobs = signal<any[]>([]);
@@ -40,5 +32,4 @@ export class EmployerAnalyticsSection implements OnInit{
 
   }
   
->>>>>>> Rauth
 }

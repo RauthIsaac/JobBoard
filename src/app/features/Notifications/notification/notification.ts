@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { Component, ElementRef, HostListener, OnDestroy, OnInit, signal } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NotificationDto, NotificationService } from '../notification-services';
@@ -6,7 +6,7 @@ import { NotificationDto, NotificationService } from '../notification-services';
 @Component({
   selector: 'app-notification',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,NgIf],
   templateUrl: './notification.html',
   styleUrls: ['./notification.css']
 })
@@ -192,7 +192,4 @@ getTimeDifference(createdAt: Date | string | null | undefined): string {
     await this.notificationService.loadUserNotifications();
   }
 
-  // async addTestNotification() {
-  //   await this.notificationService.createNotification('هذا إشعار تجريبي', 'https://example.com');
-  // }
 }

@@ -94,10 +94,10 @@ export const routes: Routes = [
     //     ]
     // },
 
-            {path: 'empPostedJobs', component: EmpPostedJobs},
-            {path: 'editEmp', component: EditEmpProfile},
-            {path: 'addJob', component: AddJob},
-            {path: 'editJob/:id', component: EditJob},
+    {path: 'empPostedJobs', component: EmpPostedJobs},
+    {path: 'editEmp', component: EditEmpProfile},
+    {path: 'addJob', component: AddJob},
+    {path: 'editJob/:id', component: EditJob},
     
 
 

@@ -69,6 +69,7 @@
 .sidebar .nav-link:hover {
     background-color: #f0f4ff;
     color: #1e40af;
+    transform: translateX(5px);
 }
 
 .content {
@@ -81,10 +82,6 @@
     margin-left: 0;
 }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> Rauth
 /* ------------------------- Profile Section ------------------------- */
 .profile-section {
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
@@ -149,10 +146,12 @@
     margin-right: 15px;
     color: #2563eb;
     font-weight: 500;
+    transition: all 0.2s ease;
 }
 
 .selected-route:hover {
     background-color: #f0f4ff;
+    transform: translateY(-3px) scale(1.01);
 }
 
 .active-route {

@@ -191,7 +191,80 @@ export class JobsService {
   /*-------------------- Update Job -------------------- */
   updateJob(jobId: number, jobData: any): Observable<any> {
     const headers = this.getAuthHeaders();
-    return this.http.put<IJob>(`${this.apiUrl}/${jobId}`, jobData, { headers });
+    
+    console.log('=== SERVICE DEBUG ===');
+    console.log('Input jobData:', jobData);
+    
+    // تنظيف وتحضير البيانات
+    const requestBody = {
+      title: jobData.title,
+      description: jobData.description,
+      salary: jobData.salary ? Number(jobData.salary) : 0,
+      workplaceType: jobData.workplaceType,
+      jobType: jobData.jobType,
+      expireDate: jobData.expireDate,
+      requirements: jobData.requirements || '',
+      responsabilities: jobData.responsabilities || '',
+      benefits: jobData.benefits || '',
+      experienceLevel: jobData.experienceLevel,
+      educationLevel: jobData.educationLevel,
+      minTeamSize: jobData.minTeamSize ? Number(jobData.minTeamSize) : 1,
+      maxTeamSize: jobData.maxTeamSize ? Number(jobData.maxTeamSize) : 10,
+      website: jobData.website || '',
+      isActive: jobData.isActive !== false,
+      // تأكد من الـ field names والـ data types
+      categoryIds: this.ensureIntegerArray(jobData.categoryIds),
+      skillIds: this.ensureIntegerArray(jobData.skillIds)
+    };
+
+    console.log('Cleaned request body:', requestBody);
+    console.log('CategoryIds type check:', typeof requestBody.categoryIds, requestBody.categoryIds);
+    console.log('SkillIds type check:', typeof requestBody.skillIds, requestBody.skillIds);
+    console.log('==================');
+
+    return this.http.put(`${this.apiUrl}/${jobId}`, requestBody, { 
+      headers,
+      observe: 'response' // للحصول على response كامل للـ debugging
+    }).pipe(
+      tap((response) => {
+        console.log('Update response:', response);
+      }),
+      catchError((error) => {
+        console.error('Update job error details:', error);
+        console.error('Error body:', error.error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  // helper method للتأكد من صحة الـ arrays
+  private ensureIntegerArray(value: any): number[] {
+    if (!value) {
+      console.log('Value is null/undefined:', value);
+      return [];
+    }
+    
+    if (!Array.isArray(value)) {
+      console.log('Value is not array:', value, typeof value);
+      return [];
+    }
+    
+    const result = value
+      .map(id => {
+        const num = Number(id);
+        console.log(`Converting ${id} (${typeof id}) to ${num} (${typeof num})`);
+        return num;
+      })
+      .filter(id => {
+        const isValid = !isNaN(id) && id > 0;
+        if (!isValid) {
+          console.log(`Filtering out invalid ID: ${id}`);
+        }
+        return isValid;
+      });
+    
+    console.log('Final integer array:', result);
+    return result;
   }
 
   GetAllJobsSkills(): Observable<ISkill[]> {

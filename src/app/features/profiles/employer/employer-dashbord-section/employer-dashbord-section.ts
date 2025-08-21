@@ -1,15 +1,3 @@
-<<<<<<< HEAD
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
-
-@Component({
-  selector: 'app-employer-dashbord-section',
-  imports: [RouterLink],
-  templateUrl: './employer-dashbord-section.html',
-  styleUrl: './employer-dashbord-section.css'
-})
-export class EmployerDashbordSection {
-=======
 import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule, NgClass } from '@angular/common';
@@ -25,11 +13,13 @@ import { JobsService } from '../../../Jobs/jobs-service';
 export class EmployerDashbordSection implements OnInit{
 
   recentJobs = signal<any[]>([]);
+  expiringSoonJobs = signal<any>(undefined);
 
   constructor(private JobService : JobsService) {}
 
   ngOnInit() {
     this.getRecentJobs();
+    this.loadExpiringSoonJobs();
   }
 
   getRecentJobs() {
@@ -44,6 +34,18 @@ export class EmployerDashbordSection implements OnInit{
       }
     });
   }
->>>>>>> Rauth
+
+  loadExpiringSoonJobs(){
+    this.JobService.getExpiringSoonJobs().subscribe({
+      next:(jobs)=>{
+        console.log('Expiring Soon Jobs From SQL:' ,jobs);
+        this.expiringSoonJobs.set(jobs);
+        console.log('Expiring Soon Jobs: ',this.expiringSoonJobs());
+      },
+      error:(err)=>{
+        console.error('Error fetching the expiring soon jobs', err);
+      }
+    })
+  }
 
 }

@@ -12,7 +12,7 @@ export interface NotificationDto {
   isRead: boolean;
 }
 
-@Injectable({
+@Injectable({  
   providedIn: 'root'
 })
 export class NotificationService {
