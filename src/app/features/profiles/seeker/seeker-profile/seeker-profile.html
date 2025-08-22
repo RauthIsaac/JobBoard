@@ -4,9 +4,11 @@
       <!-- Profile Image Section with Upload/Delete functionality -->
       <div class="profile-image-container col-lg-2 col-md-4 col-sm-12">
         <div class="image-wrapper">
-          <img [src]="seekerData().profileImageUrl || getDefaultProfileImage()" 
+          <!-- Updated image src to use the proper method -->
+          <img [src]="getProfileImageUrl()" 
                [alt]="seekerData().name" 
-               class="profile-pic mx-auto">
+               class="profile-pic mx-auto"
+               (error)="onImageError($event)">
           
           <!-- Image overlay for actions -->
           <div class="image-overlay" *ngIf="!isUploadingImage()">
@@ -24,13 +26,15 @@
                     (click)="openImageFileDialog()" 
                     [disabled]="isUploadingImage()">
               <mat-icon>cloud_upload</mat-icon>
-              <span *ngIf="!seekerData().profileImageUrl">Upload Image</span>
-              <span *ngIf="seekerData().profileImageUrl">Change Image</span>
+              <!-- Updated condition to use hasCustomProfileImage method -->
+              <span *ngIf="!hasCustomProfileImage()">Upload Image</span>
+              <span *ngIf="hasCustomProfileImage()">Change Image</span>
             </button>
             
+            <!-- Updated condition to show delete button only when user has custom image -->
             <button mat-menu-item 
                     (click)="deleteProfileImage()" 
-                    *ngIf="seekerData().profileImageUrl"
+                    *ngIf="hasCustomProfileImage()"
                     [disabled]="isUploadingImage()"
                     class="delete-action">
               <mat-icon>delete</mat-icon>
