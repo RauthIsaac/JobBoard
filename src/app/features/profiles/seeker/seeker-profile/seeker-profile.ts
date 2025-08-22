@@ -54,6 +54,8 @@ export class SeekerProfile implements OnInit {
     this.AuthService.getSeekerProfile().subscribe({
       next: (data) => {
         console.log('Raw data from API:', data);
+        console.log('Profile Image URL from API:', data.profileImageUrl);
+        console.log('Default Profile Image:', this.getDefaultProfileImage());
         
         this.seekerData.set({
           ...data,
@@ -65,6 +67,8 @@ export class SeekerProfile implements OnInit {
           seekerEducations: Array.isArray(data.seekerEducations) ? data.seekerEducations : []
         });
         
+        console.log('Final Profile Image URL:', this.getProfileImageUrl());
+        console.log('Has Custom Profile Image:', this.hasCustomProfileImage());
         console.log('Processed seeker data:', this.seekerData());
       },
       error: (err) => {
@@ -72,6 +76,68 @@ export class SeekerProfile implements OnInit {
         this.showSnackBar('Error loading profile data', 'error');
       }
     });
+  }
+
+  // ===== Image Helper Functions =====
+  
+  /**
+   * Returns the profile image URL - either custom or default
+   */
+  getProfileImageUrl(): string {
+    const profileImage = this.seekerData().profileImageUrl;
+    const defaultImage = this.getDefaultProfileImage();
+    
+    // If no profile image or if it matches the default, return default
+    if (!profileImage || this.isDefaultImage(profileImage)) {
+      return defaultImage;
+    }
+    
+    return profileImage;
+  }
+
+  /**
+   * Returns the default profile image URL from AuthService
+   */
+  getDefaultProfileImage(): string {
+    return this.AuthService.getDefaultProfileImage();
+  }
+
+  /**
+   * Checks if the given image URL is a default image
+   */
+  private isDefaultImage(imageUrl: string): boolean {
+    if (!imageUrl) return true;
+    
+    const defaultImage = this.getDefaultProfileImage();
+    
+    // Check if it's exactly the default image
+    if (imageUrl === defaultImage) return true;
+    
+    // Check if it ends with the default image filename (for different base URLs)
+    if (imageUrl.endsWith('/images/profilepic/user.jpg')) return true;
+    
+    // Check if it just contains the filename
+    if (imageUrl.includes('user.jpg')) return true;
+    
+    return false;
+  }
+
+  /**
+   * Checks if user has a custom profile image (not default)
+   */
+  hasCustomProfileImage(): boolean {
+    const currentImage = this.seekerData().profileImageUrl;
+    return currentImage && !this.isDefaultImage(currentImage);
+  }
+
+  /**
+   * Handles image load error by setting default image
+   */
+  onImageError(event: any): void {
+    console.log('Profile image failed to load, using default image');
+    console.log('Failed image src:', event.target.src);
+    console.log('Default image path:', this.getDefaultProfileImage());
+    event.target.src = this.getDefaultProfileImage();
   }
 
   // ===== Profile Image Functions =====
@@ -107,7 +173,7 @@ export class SeekerProfile implements OnInit {
       next: (response: any) => {
         this.isUploadingImage.set(false);
         this.showSnackBar('Profile image uploaded successfully!', 'success');
-        this.loadSeekerProfile();
+        this.loadSeekerProfile(); // Reload to get new image URL
         this.imageFileInput.nativeElement.value = '';
       },
       error: (err: any) => {
@@ -120,38 +186,38 @@ export class SeekerProfile implements OnInit {
   }
 
   deleteProfileImage(): void {
-  if (!this.seekerData().profileImageUrl) {
-    this.showSnackBar('No profile image to delete', 'error');
-    return;
-  }
+    // Check if there is a custom profile image to delete
+    if (!this.hasCustomProfileImage()) {
+      console.log('No custom profile image to delete.');
+      this.showSnackBar('No custom profile image to delete.', 'error');
+      return;
+    }
 
-  if (confirm('Are you sure you want to delete your profile image?')) {
-    this.isUploadingImage.set(true);
-    
-    this.AuthService.deleteProfileImage().subscribe({
-      next: () => {
-        this.isUploadingImage.set(false);
-        this.showSnackBar('Profile image deleted successfully!', 'success');
-        this.loadSeekerProfile();
-      },
-      error: (err: any) => {
-        console.error('Error deleting profile image:', err);
-        
-        this.loadSeekerProfile();
+    // Ask for user confirmation
+    if (confirm('Are you sure you want to delete your profile image?')) {
+      this.isUploadingImage.set(true);
 
-        setTimeout(() => {
-          if (!this.seekerData().profileImageUrl) {
-            this.showSnackBar('Profile image deleted successfully!', 'success');
-          } else {
-            this.showSnackBar('Error deleting profile image. Please try again.', 'error');
-          }
+      this.AuthService.deleteProfileImage().subscribe({
+        next: (response) => {
           this.isUploadingImage.set(false);
-        }, 1000);
-      }
-    });
-  }
-}
+          
+          // Update profile to show default image
+          this.seekerData.update(current => ({
+            ...current,
+            profileImageUrl: this.getDefaultProfileImage() // Set to default instead of null
+          }));
 
+          this.showSnackBar('Profile image deleted successfully!', 'success');
+          console.log('Profile image deleted successfully.');
+        },
+        error: (err) => {
+          this.isUploadingImage.set(false);
+          console.error('Error deleting profile image:', err);
+          this.showSnackBar('Error deleting profile image. Please try again.', 'error');
+        }
+      });
+    }
+  }
 
   // ===== Resume Functions =====
   openResumeFileDialog(): void {
@@ -198,7 +264,6 @@ export class SeekerProfile implements OnInit {
     });
   }
 
-
   deleteResume(): void {
     if (!this.seekerData().cV_Url) {
       this.showSnackBar('No resume to delete', 'error');
@@ -232,7 +297,6 @@ export class SeekerProfile implements OnInit {
     }
   }
 
-
   // ===== Helper Functions =====
   private showSnackBar(message: string, type: 'success' | 'error'): void {
     this.snackBar.open(message, 'Close', {
@@ -258,9 +322,5 @@ export class SeekerProfile implements OnInit {
 
   trackByIndex(index: number, item: any): any {
     return index;
-  }
-
-  getDefaultProfileImage(): string {
-    return 'assets/images/default-avatar.png'; // Add a default avatar image
   }
 }

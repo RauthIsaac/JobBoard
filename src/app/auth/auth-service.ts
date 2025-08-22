@@ -14,6 +14,9 @@ export class AuthService {
   private readonly USER_EMAIL_KEY = 'user_email';
   private readonly User_ID = 'user-id';
 
+  // ================= Default Profile Image =================
+  private readonly DEFAULT_PROFILE_IMAGE = '/user.jpg';
+
   // ================= Cached values =================
   private cachedUserName: string | null = null;
   private cachedUserType: string | null = null;
@@ -38,7 +41,7 @@ export class AuthService {
     localStorage.setItem(this.USER_TYPE_KEY, userType);
     if (userName) {
       localStorage.setItem(this.USER_NAME_KEY, userName);
-      this.cachedUserName = userName; // update cache
+      this.cachedUserName = userName;
     }
     if (userEmail) {
       localStorage.setItem(this.USER_EMAIL_KEY, userEmail);
@@ -46,7 +49,7 @@ export class AuthService {
     if(userId){
       localStorage.setItem(this.User_ID, userId);
     }
-    this.cachedUserType = userType; // update cache
+    this.cachedUserType = userType;
 
     console.log('Auth data saved:', {
       token,
@@ -62,11 +65,10 @@ export class AuthService {
     return localStorage.getItem(this.TOKEN_KEY);
   }
 
-    /*---------------------------- Get userId ----------------------------*/
-    getUserId(): string |null {
-      return localStorage.getItem(this.User_ID)
-    }
-
+  /*---------------------------- Get userId ----------------------------*/
+  getUserId(): string |null {
+    return localStorage.getItem(this.User_ID)
+  }
 
   /*---------------------------- Get User Name ----------------------------*/
   getUserName(): string {
@@ -159,11 +161,8 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/api/Auth/reset-password`, payload);
   }
 
-
-
   /********************************************************************/
   /*------------------- Employer Profile Methods -----------------------*/
-  //#region Employer Profile Methods
   /*---------------------------- Get Employer Profile ----------------------------*/
   getEmployerProfile(): Observable<any> {
     const headers = new HttpHeaders({
@@ -177,7 +176,6 @@ export class AuthService {
   updateEmployerProfile(profileData: any, imageFile?: File): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.getToken()}`
-      // Don't set Content-Type for FormData, let browser set it with boundary
     });
 
     const formData = new FormData();
@@ -197,12 +195,8 @@ export class AuthService {
     });
   }
 
-
-
   /********************************************************************/
   /*------------------- Seeker Profile Methods -----------------------*/
-  //#region Seeker Profile Methods
-
   /*---------------------------- Get Seeker Profile ----------------------------*/
   getSeekerProfile(): Observable<any> {
     const headers = new HttpHeaders({
@@ -211,7 +205,6 @@ export class AuthService {
 
     return this.http.get(`${this.baseUrl}/api/Seeker/GetMyProfile`, { headers });
   }
-
 
   /*---------------------------- Update Seeker Profile ----------------------------*/
   updateSeekerProfile(profileData: any): Observable<any> {
@@ -227,6 +220,7 @@ export class AuthService {
   uploadProfileImage(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('ProfileImageUrl', file);
+    formData.append('RemoveProfileImage', 'false');
 
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.getToken()}`
@@ -245,9 +239,13 @@ export class AuthService {
     });
 
     return this.http.post(`${this.baseUrl}/api/Seeker/upload-files`, formData, { 
-      headers,
-      responseType: 'text' as 'json'
+      headers
     });
+  }
+
+  /*---------------------------- Get Default Profile Image ----------------------------*/
+  getDefaultProfileImage(): string {
+    return this.DEFAULT_PROFILE_IMAGE;
   }
 
   /*---------------------------- Upload Resume ----------------------------*/
@@ -261,7 +259,6 @@ export class AuthService {
 
     return this.http.post(`${this.baseUrl}/api/Seeker/upload-files`, formData, { headers });
   }
-
 
   /*---------------------------- Delete Resume ----------------------------*/
   deleteResume(): Observable<any> {
@@ -286,7 +283,4 @@ export class AuthService {
 
     return this.http.get(`${this.baseUrl}/api/Seeker/resume-url`, { headers });
   }
-
-  //#endregion Seeker Profile Methods
-
 }
