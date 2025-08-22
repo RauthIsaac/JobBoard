@@ -32,6 +32,10 @@ import { SeekerProfile } from './features/profiles/seeker/seeker-profile/seeker-
 import { Navbar } from './shared/components/navbar/navbar';
 
 
+import { UserProfile } from './user-profile/user-profile';
+import { SeekerApplication } from './seeker-application/seeker-application';
+import { AdminDashboardAnalytics } from './admin-dashboard-analytics/admin-dashboard-analytics';
+// import { VerifyEmailComponent } from './verify-email/verify-email';
 
 
 export const routes: Routes = [
@@ -67,6 +71,10 @@ export const routes: Routes = [
             { path: 'questions', component: Questions },
             { path: 'review', component: Review },
             { path: '', redirectTo: 'personal-info', pathMatch: 'full' }
+            {path: 'profile', component: SeekerProfile},
+            {path: 'userProfile', component: UserProfile},
+            {path: 'userApplication', component: SeekerApplication},
+            {path: 'admin', component: AdminDashboardAnalytics}
         ]
     },
 

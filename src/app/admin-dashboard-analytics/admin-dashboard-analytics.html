@@ -1,0 +1,280 @@
+<!-- Job Board Analytics Dashboard with Angular Material -->
+<mat-card class="analytics-dashboard-card">
+  <mat-card-header>
+    <mat-card-title>Job Board Analytics</mat-card-title>
+    <mat-card-subtitle>An administrative dashboard to monitor key metrics</mat-card-subtitle>
+    <div class="header-actions">
+      <button mat-flat-button class="button-primary">
+        <mat-icon>add</mat-icon>
+        <span class="button-label">Post a New Job</span>
+      </button>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content>
+    <!-- Performance Section (Job-related stats) -->
+    <div class="performance-section">
+      <div class="variant-tabs">
+        <button mat-button class="active">Jobs Performance</button>
+        <button mat-button>User Performance</button>
+      </div>
+      <div class="performance-cards-container">
+        <!-- Total Jobs Card -->
+        <mat-card class="performance-card">
+          <mat-card-content>
+            <div class="performance-icon-wrapper">
+              <mat-icon class="card-icon">work</mat-icon>
+            </div>
+            <h4>Total Jobs</h4>
+            <p class="value">1.7K</p>
+            <p class="growth-rate"><mat-icon>trending_up</mat-icon> 20% increase</p>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Pending Jobs Card -->
+        <mat-card class="performance-card">
+          <mat-card-content>
+            <div class="performance-icon-wrapper">
+              <mat-icon class="card-icon">pending_actions</mat-icon>
+            </div>
+            <h4>Pending Jobs</h4>
+            <p class="value">120</p>
+            <p class="growth-rate"><mat-icon>trending_up</mat-icon> 15% new pending</p>
+          </mat-card-content>
+        </mat-card>
+        
+        <!-- Approved Jobs Card -->
+        <mat-card class="performance-card">
+          <mat-card-content>
+            <div class="performance-icon-wrapper">
+              <mat-icon class="card-icon">check_circle</mat-icon>
+            </div>
+            <h4>Approved Jobs</h4>
+            <p class="value">1.58K</p>
+            <p class="growth-rate"><mat-icon>trending_up</mat-icon> 73.9% increase</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Users Management Section -->
+    <div class="table-section">
+      <h3 class="section-title">Users Management</h3>
+      <mat-tab-group>
+        <mat-tab label="Job Seekers">
+          <table mat-table [dataSource]="seekersDataSource" class="full-width-table mat-elevation-z2">
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Name</th>
+              <td mat-cell *matCellDef="let seeker"> {{ seeker.name }} </td>
+            </ng-container>
+            <!-- Email Column -->
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef>Email</th>
+              <td mat-cell *matCellDef="let seeker"> {{ seeker.email }} </td>
+            </ng-container>
+            <!-- Phone Number Column -->
+            <ng-container matColumnDef="phoneNumber">
+              <th mat-header-cell *matHeaderCellDef>Phone</th>
+              <td mat-cell *matCellDef="let seeker"> {{ seeker.phoneNumber }} </td>
+            </ng-container>
+            <!-- Address Column -->
+            <ng-container matColumnDef="address">
+              <th mat-header-cell *matHeaderCellDef>Address</th>
+              <td mat-cell *matCellDef="let seeker"> {{ seeker.address }} </td>
+            </ng-container>
+            <!-- Skills Column -->
+            <ng-container matColumnDef="skills">
+              <th mat-header-cell *matHeaderCellDef>Skills</th>
+              <td mat-cell *matCellDef="let seeker">
+                {{ seeker.skillName?.join(', ') || 'N/A' }}
+              </td>
+            </ng-container>
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let seeker">
+                <button mat-icon-button color="primary" (click)="showDetails(seeker)">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteUser(seeker.userId)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="seekerDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: seekerDisplayedColumns;"></tr>
+          </table>
+        </mat-tab>
+
+        <mat-tab label="Employers">
+          <table mat-table [dataSource]="employersDataSource" class="full-width-table mat-elevation-z2">
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Company Name</th>
+              <td mat-cell *matCellDef="let employer"> {{ employer.name }} </td>
+            </ng-container>
+            <!-- Email Column -->
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef>Email</th>
+              <td mat-cell *matCellDef="let employer"> {{ employer.email }} </td>
+            </ng-container>
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let employer">
+                <button mat-icon-button color="warn" (click)="deleteUser(employer.id)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="employerDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: employerDisplayedColumns;"></tr>
+          </table>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Job Applications & Pending Jobs Section -->
+    <div class="table-section">
+      <h3 class="section-title">Pending Job Listings</h3>
+      <table mat-table [dataSource]="pendingJobsDataSource" class="full-width-table mat-elevation-z2">
+        <!-- Job Title Column -->
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef>Job Title</th>
+          <td mat-cell *matCellDef="let job"> {{ job.title }} </td>
+        </ng-container>
+        <!-- Company Column -->
+        <ng-container matColumnDef="company">
+          <th mat-header-cell *matHeaderCellDef>Company</th>
+          <td mat-cell *matCellDef="let job"> {{ job.company }} </td>
+        </ng-container>
+        <!-- Posted Date Column -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>Posted Date</th>
+          <td mat-cell *matCellDef="let job"> {{ job.date | date }} </td>
+        </ng-container>
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let job">
+            <button mat-icon-button color="primary" (click)="approveJob(job.id)">
+              <mat-icon>check_circle</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="rejectJob(job.id)">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="jobDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: jobDisplayedColumns;"></tr>
+      </table>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Analytics Charts Section -->
+    <div class="secondary-sections">
+      <!-- Users Chart -->
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>User Registration Over Time</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="chart-container">
+            <canvas #userChart></canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Jobs Chart -->
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>Jobs Status Distribution</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="chart-container">
+            <canvas #jobStatusChart></canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<!-- Details Card Overlay (Conditional) -->
+<div class="details-card-overlay" *ngIf="showDetailsCard">
+  <mat-card class="details-card">
+    <mat-card-header>
+      <mat-card-title>Job Seeker Details</mat-card-title>
+      <button mat-icon-button class="close-button" (click)="closeDetails()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-header>
+    <mat-card-content *ngIf="selectedSeeker">
+      <div class="profile-header">
+        <img [src]="selectedSeeker.profileImageUrl || 'https://via.placeholder.com/150'" alt="Profile Image" class="profile-image">
+        <div>
+          <h3>{{ selectedSeeker.name }}</h3>
+          <p class="profile-title">{{ selectedSeeker.title || 'N/A' }}</p>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="details-grid">
+        <div class="details-row">
+          <span class="details-label">User ID:</span>
+          <span class="details-value">{{ selectedSeeker.userId }}</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">Email:</span>
+          <span class="details-value">{{ selectedSeeker.email }}</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">Phone:</span>
+          <span class="details-value">{{ selectedSeeker.phoneNumber || 'N/A' }}</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">Address:</span>
+          <span class="details-value">{{ selectedSeeker.address || 'N/A' }}</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">Gender:</span>
+          <span class="details-value">{{ selectedSeeker.gender || 'N/A' }}</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">Date of Birth:</span>
+          <span class="details-value">{{ selectedSeeker.dateOfBirth || 'N/A' }}</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">Summary:</span>
+          <span class="details-value">{{ selectedSeeker.summary || 'N/A' }}</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">CV URL:</span>
+          <a [href]="selectedSeeker.cV_Url" target="_blank" class="details-value" *ngIf="selectedSeeker.cV_Url">View CV</a>
+          <span class="details-value" *ngIf="!selectedSeeker.cV_Url">N/A</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">Skills:</span>
+          <span class="details-value">{{ selectedSeeker.skillName?.join(', ') || 'N/A' }}</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">Certificates:</span>
+          <span class="details-value">{{ selectedSeeker.certificateName?.join(', ') || 'N/A' }}</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">Training:</span>
+          <span class="details-value">{{ selectedSeeker.trainingName?.join(', ') || 'N/A' }}</span>
+        </div>
+        <div class="details-row">
+          <span class="details-label">Interests:</span>
+          <span class="details-value">{{ selectedSeeker.interestName?.join(', ') || 'N/A' }}</span>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
