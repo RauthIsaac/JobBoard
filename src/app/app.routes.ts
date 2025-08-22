@@ -30,6 +30,8 @@ import { EmployerProfileSection } from './features/profiles/employer/employer-pr
 import { EditSeekerProfile } from './features/profiles/seeker/edit-seeker-profile/edit-seeker-profile';
 import { SeekerProfile } from './features/profiles/seeker/seeker-profile/seeker-profile';
 import { Navbar } from './shared/components/navbar/navbar';
+import { AppView } from './features/Application/app-view/app-view';
+import { AppViewEmp } from './features/Application/app-view-emp/app-view-emp';
 
 
 
@@ -99,7 +101,8 @@ export const routes: Routes = [
     {path: 'addJob', component: AddJob},
     {path: 'editJob/:id', component: EditJob},
     
-
+    {path: 'appView', component: AppView},
+    {path: 'appViewEmp', component: AppViewEmp},
 
 
 
