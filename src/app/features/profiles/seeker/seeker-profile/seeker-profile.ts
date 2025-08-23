@@ -127,7 +127,7 @@ export class SeekerProfile implements OnInit {
    */
   hasCustomProfileImage(): boolean {
     const currentImage = this.seekerData().profileImageUrl;
-    return currentImage && !this.isDefaultImage(currentImage);
+    return currentImage && this.isDefaultImage(currentImage);
   }
 
   /**
