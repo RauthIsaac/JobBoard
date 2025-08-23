@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ChatDialog } from '../chat-dialog/chat-dialog';
+import { MaterialModule } from "../../../shared/material.module";
 
 @Component({
   selector: 'app-chat-button',
   templateUrl: './chat-button.html',
-  styleUrls: ['./chat-button.css']
+  styleUrls: ['./chat-button.css'],
+  imports: [MaterialModule]
 })
 export class ChatButton {
   isOpen = false;

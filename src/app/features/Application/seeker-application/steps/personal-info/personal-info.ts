@@ -41,7 +41,7 @@ export class PersonalInfo implements OnInit {
   saveAndNext(form: NgForm) {
     if (form.valid) {
       this.appService.setData(this.formData);
-      this.router.navigate([`/seekerApp/${this.formData.jobId || 1}/documents`]);
+      this.router.navigate([`/seekerApp/${this.appService.getData().jobId}/documents`]);
     } else {
       // Mark all fields as touched to show validation errors
       Object.keys(form.controls).forEach(key => {

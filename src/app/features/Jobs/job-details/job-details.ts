@@ -18,26 +18,26 @@ export class JobDetails implements OnInit {
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
 
-  // Computed signals للقوائم
+
   requirementsList = computed(() => {
     const details = this.jobDetails();
     if (!details?.requirements) return [];
-    return details.requirements.split('\n').filter((req: string) => req.trim());
+    return details.requirements.split('. ').filter((req: string) => req.trim());
   });
 
   responsibilitiesList = computed(() => {
     const details = this.jobDetails();
     if (!details?.responsibilities) return [];
-    return details.responsibilities.split('\n').filter((resp: string) => resp.trim());
+    return details.responsibilities.split('. ').filter((resp: string) => resp.trim());
   });
 
   offersList = computed(() => {
     const details = this.jobDetails();
     if (!details?.offers) return [];
-    return details.offers.split('\n').filter((offer: string) => offer.trim());
+    return details.offers.split('. ').filter((offer: string) => offer.trim());
   });
 
-  // حالة الـ saved job
+
   isSavedFlag = signal<boolean>(false);
 
   constructor(
@@ -87,7 +87,6 @@ export class JobDetails implements OnInit {
       .subscribe((response: any) => {
         if (response) {
           this.jobDetails.set(response);
-          // تحديث حالة الـ saved بعد تحميل البيانات
           this.isSavedFlag.set(this.jobService.isJobSaved(currentJobId));
           console.log("Job Details loaded:", response);
         }
@@ -101,28 +100,26 @@ export class JobDetails implements OnInit {
     const currentSavedState = this.isSavedFlag();
 
     if (currentSavedState) {
-      // إزالة من المحفوظات باستخدام الـ endpoint الجديدة
+
       this.jobService.removeFromSavedJobsByJobId(currentJobId).subscribe({
         next: () => {
-          // الـ effect سيحدث التحديث تلقائياً
+
           console.log(`Job ${currentJobId} removed from saved jobs`);
         },
         error: (err) => {
           console.error('Error removing job from saved:', err);
-          // إعادة الحالة السابقة في حالة الخطأ
+
           this.isSavedFlag.set(true);
         }
       });
     } else {
-      // إضافة إلى المحفوظات
+
       this.jobService.addToSavedJobs(currentJobId).subscribe({
         next: () => {
-          // الـ effect سيحدث التحديث تلقائياً
           console.log(`Job ${currentJobId} added to saved jobs`);
         },
         error: (err) => {
           console.error('Error adding job to saved:', err);
-          // إعادة الحالة السابقة في حالة الخطأ
           this.isSavedFlag.set(false);
         }
       });

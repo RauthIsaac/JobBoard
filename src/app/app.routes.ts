@@ -31,6 +31,8 @@ import { EditSeekerProfile } from './features/profiles/seeker/edit-seeker-profil
 import { SeekerProfile } from './features/profiles/seeker/seeker-profile/seeker-profile';
 import { NotFound } from './Pages/not-found/not-found';
 import { Navbar } from './shared/components/navbar/navbar';
+import { AppView } from './features/Application/app-view/app-view';
+import { AppViewEmp } from './features/Application/app-view-emp/app-view-emp';
 
 // import { VerifyEmailComponent } from './verify-email/verify-email';
 
@@ -101,7 +103,8 @@ export const routes: Routes = [
     {path: 'addJob', component: AddJob},
     {path: 'editJob/:id', component: EditJob},
     
-
+    {path: 'appView/:id', component: AppView},
+    {path: 'appViewEmp', component: AppViewEmp},
 
 
 

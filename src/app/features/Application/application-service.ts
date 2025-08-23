@@ -1,4 +1,3 @@
-// application-service.ts
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -18,7 +17,7 @@ export class ApplicationService {
     portfolioUrl: '',
     linkedInUrl: '',
     gitHubUrl: '',
-    jobId: 1 // يمكن تمريره من الـ route أو تحديده حسب الحاجة
+    jobId: null
   };
 
   setData(part: Partial<typeof this.applicationData>) {
@@ -42,7 +41,7 @@ export class ApplicationService {
       portfolioUrl: '',
       linkedInUrl: '',
       gitHubUrl: '',
-      jobId: 1
+      jobId: null
     };
   }
 

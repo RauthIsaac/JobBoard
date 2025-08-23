@@ -48,14 +48,15 @@ export class Layout implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private http: HttpClient,
-    private appService: ApplicationService   // ✅ Inject service
+    private appService: ApplicationService   
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       if (params['jobId']) {
         this.jobId.set(parseInt(params['jobId']));
-        this.appService.setJobId(this.jobId()); // ✅ خزن jobId في الـ service
+        this.appService.setJobId(this.jobId()); 
+        console.log(this.jobId());
         this.loadJobData();
       }
     });
