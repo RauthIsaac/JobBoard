@@ -8,24 +8,39 @@
         [(ngModel)]="formData.fullName"
         class="form-control" 
         required 
-        #fullName="ngModel">
-      <div *ngIf="fullName.invalid && fullName.touched" class="text-danger">
-        <small>Full name is required</small>
+        maxlength="100"
+        (blur)="onFieldBlur('fullName')"
+        #fullName="ngModel"
+        [class.is-invalid]="(fullName.invalid && fullName.touched) || validationErrors.fullName"
+        [class.is-valid]="fullName.valid && fullName.touched && !validationErrors.fullName">
+      <div class="invalid-feedback" *ngIf="(fullName.invalid && fullName.touched) || validationErrors.fullName">
+        <small>{{ validationErrors.fullName || 'Full name is required' }}</small>
+      </div>
+      <div class="valid-feedback" *ngIf="fullName.valid && fullName.touched && !validationErrors.fullName">
+        <small>✓ Looks good!</small>
       </div>
     </div>
     
     <div class="mb-3">
-      <label class="form-label">Email *</label>
+      <label class="form-label">Email Address *</label>
       <input 
         name="email" 
         [(ngModel)]="formData.email"
         type="email" 
         class="form-control" 
         required 
-        #email="ngModel">
-      <div *ngIf="email.invalid && email.touched" class="text-danger">
-        <small *ngIf="email.errors?.['required']">Email is required</small>
-        <small *ngIf="email.errors?.['email']">Please enter a valid email</small>
+        maxlength="254"
+        (blur)="onFieldBlur('email')"
+        #email="ngModel"
+        [class.is-invalid]="(email.invalid && email.touched) || validationErrors.email"
+        [class.is-valid]="email.valid && email.touched && !validationErrors.email">
+      <div class="invalid-feedback" *ngIf="(email.invalid && email.touched) || validationErrors.email">
+        <small *ngIf="validationErrors.email">{{ validationErrors.email }}</small>
+        <small *ngIf="!validationErrors.email && email.errors?.['required']">Email is required</small>
+        <small *ngIf="!validationErrors.email && email.errors?.['email']">Please enter a valid email</small>
+      </div>
+      <div class="valid-feedback" *ngIf="email.valid && email.touched && !validationErrors.email">
+        <small>✓ Email format is valid</small>
       </div>
     </div>
     
@@ -37,9 +52,21 @@
         type="tel" 
         class="form-control" 
         required 
-        #phoneNumber="ngModel">
-      <div *ngIf="phoneNumber.invalid && phoneNumber.touched" class="text-danger">
-        <small>Phone number is required</small>
+        maxlength="20"
+        placeholder="(123) 456-7890"
+        (input)="onPhoneInput($event)"
+        (blur)="onFieldBlur('phoneNumber')"
+        #phoneNumber="ngModel"
+        [class.is-invalid]="(phoneNumber.invalid && phoneNumber.touched) || validationErrors.phoneNumber"
+        [class.is-valid]="phoneNumber.valid && phoneNumber.touched && !validationErrors.phoneNumber">
+      <div class="form-text">
+        <small class="text-muted">Enter your phone number with area code</small>
+      </div>
+      <div class="invalid-feedback" *ngIf="(phoneNumber.invalid && phoneNumber.touched) || validationErrors.phoneNumber">
+        <small>{{ validationErrors.phoneNumber || 'Phone number is required' }}</small>
+      </div>
+      <div class="valid-feedback" *ngIf="phoneNumber.valid && phoneNumber.touched && !validationErrors.phoneNumber">
+        <small>✓ Phone number format is valid</small>
       </div>
     </div>
     
@@ -50,9 +77,20 @@
         [(ngModel)]="formData.currentLocation"
         class="form-control" 
         required 
-        #currentLocation="ngModel">
-      <div *ngIf="currentLocation.invalid && currentLocation.touched" class="text-danger">
-        <small>Current location is required</small>
+        maxlength="100"
+        placeholder="City, State/Country"
+        (blur)="onFieldBlur('currentLocation')"
+        #currentLocation="ngModel"
+        [class.is-invalid]="(currentLocation.invalid && currentLocation.touched) || validationErrors.currentLocation"
+        [class.is-valid]="currentLocation.valid && currentLocation.touched && !validationErrors.currentLocation">
+      <div class="form-text">
+        <small class="text-muted">Where are you currently located?</small>
+      </div>
+      <div class="invalid-feedback" *ngIf="(currentLocation.invalid && currentLocation.touched) || validationErrors.currentLocation">
+        <small>{{ validationErrors.currentLocation || 'Current location is required' }}</small>
+      </div>
+      <div class="valid-feedback" *ngIf="currentLocation.valid && currentLocation.touched && !validationErrors.currentLocation">
+        <small>✓ Location provided</small>
       </div>
     </div>
     
@@ -63,9 +101,17 @@
         [(ngModel)]="formData.currentJobTitle"
         class="form-control" 
         required 
-        #currentJobTitle="ngModel">
-      <div *ngIf="currentJobTitle.invalid && currentJobTitle.touched" class="text-danger">
-        <small>Current job title is required</small>
+        maxlength="100"
+        placeholder="e.g., Software Engineer, Marketing Manager"
+        (blur)="onFieldBlur('currentJobTitle')"
+        #currentJobTitle="ngModel"
+        [class.is-invalid]="(currentJobTitle.invalid && currentJobTitle.touched) || validationErrors.currentJobTitle"
+        [class.is-valid]="currentJobTitle.valid && currentJobTitle.touched && !validationErrors.currentJobTitle">
+      <div class="invalid-feedback" *ngIf="(currentJobTitle.invalid && currentJobTitle.touched) || validationErrors.currentJobTitle">
+        <small>{{ validationErrors.currentJobTitle || 'Current job title is required' }}</small>
+      </div>
+      <div class="valid-feedback" *ngIf="currentJobTitle.valid && currentJobTitle.touched && !validationErrors.currentJobTitle">
+        <small>✓ Job title provided</small>
       </div>
     </div>
     
@@ -76,17 +122,38 @@
         [(ngModel)]="formData.yearsOfExperience"
         type="number" 
         min="0"
+        max="50"
+        step="0.5"
         class="form-control" 
         required 
-        #yearsOfExperience="ngModel">
-      <div *ngIf="yearsOfExperience.invalid && yearsOfExperience.touched" class="text-danger">
-        <small>Years of experience is required</small>
+        placeholder="e.g., 2.5"
+        (blur)="onFieldBlur('yearsOfExperience')"
+        #yearsOfExperience="ngModel"
+        [class.is-invalid]="(yearsOfExperience.invalid && yearsOfExperience.touched) || validationErrors.yearsOfExperience"
+        [class.is-valid]="yearsOfExperience.valid && yearsOfExperience.touched && !validationErrors.yearsOfExperience">
+      <div class="form-text">
+        <small class="text-muted">Include decimal for partial years (e.g., 2.5 for 2 years 6 months)</small>
+      </div>
+      <div class="invalid-feedback" *ngIf="(yearsOfExperience.invalid && yearsOfExperience.touched) || validationErrors.yearsOfExperience">
+        <small>{{ validationErrors.yearsOfExperience || 'Years of experience is required' }}</small>
+      </div>
+      <div class="valid-feedback" *ngIf="yearsOfExperience.valid && yearsOfExperience.touched && !validationErrors.yearsOfExperience">
+        <small>✓ Experience years provided</small>
       </div>
     </div>
 
+    <div class="alert alert-info mt-4">
+      <i class="fas fa-info-circle me-2"></i>
+      <small>All fields marked with * are required. Please ensure all information is accurate as it will be used to process your application.</small>
+    </div>
+
     <div class="d-flex justify-content-end mt-4">
-      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
-        Next
+      <button 
+        type="submit" 
+        class="btn btn-primary" 
+        [disabled]="form.invalid || hasValidationErrors()">
+        <i class="fas fa-arrow-right me-2"></i>
+        Next: Upload Documents
       </button>
     </div>
   </form>

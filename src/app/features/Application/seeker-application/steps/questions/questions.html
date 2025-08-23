@@ -1,60 +1,233 @@
 <div class="container mt-4">
   <h3>Additional Questions</h3>
+  <p class="text-muted mb-4">Please provide your professional links. These help us understand your work and experience better.</p>
+  
   <form #form="ngForm" (ngSubmit)="saveAndNext(form)" ngForm>
-    <div class="mb-3">
+    
+    <!-- Portfolio URL -->
+    <div class="mb-4">
       <label class="form-label">Portfolio URL *</label>
-      <input 
-        name="portfolioUrl" 
-        [(ngModel)]="formData.portfolioUrl"
-        type="url"
-        class="form-control" 
-        required
-        placeholder="https://your-portfolio.com"
-        #portfolioUrl="ngModel">
-      <div *ngIf="portfolioUrl.invalid && portfolioUrl.touched" class="text-danger">
-        <small *ngIf="portfolioUrl.errors?.['required']">Portfolio URL is required</small>
-        <small *ngIf="portfolioUrl.errors?.['url']">Please enter a valid URL</small>
+      <div class="input-group">
+        <span class="input-group-text">
+          <i class="fas fa-globe text-primary"></i>
+        </span>
+        <input 
+          name="portfolioUrl" 
+          [(ngModel)]="formData.portfolioUrl"
+          type="url"
+          class="form-control" 
+          required
+          maxlength="500"
+          placeholder="https://your-portfolio.com"
+          (input)="onUrlInput('portfolioUrl', $event)"
+          (blur)="onFieldBlur('portfolioUrl')"
+          #portfolioUrl="ngModel"
+          [class.is-invalid]="(portfolioUrl.invalid && portfolioUrl.touched) || validationErrors.portfolioUrl"
+          [class.is-valid]="portfolioUrl.valid && portfolioUrl.touched && !validationErrors.portfolioUrl">
+        <button 
+          type="button" 
+          class="btn btn-outline-secondary"
+          (click)="checkUrlAccessibility(formData.portfolioUrl)"
+          *ngIf="formData.portfolioUrl && !validationErrors.portfolioUrl"
+          title="Test URL">
+          <i class="fas fa-external-link-alt"></i>
+        </button>
+      </div>
+      
+      <!-- URL Preview -->
+      <div *ngIf="formData.portfolioUrl && !validationErrors.portfolioUrl" class="mt-1">
+        <small class="text-muted">
+          <i class="fas fa-link me-1"></i>
+          Domain: {{ getUrlDomain(formData.portfolioUrl) }}
+        </small>
+      </div>
+      
+      <!-- Portfolio URL Validation Messages -->
+      <div class="invalid-feedback" *ngIf="(portfolioUrl.invalid && portfolioUrl.touched) || validationErrors.portfolioUrl">
+        <small *ngIf="validationErrors.portfolioUrl">{{ validationErrors.portfolioUrl }}</small>
+        <small *ngIf="!validationErrors.portfolioUrl && portfolioUrl.errors?.['required']">Portfolio URL is required</small>
+        <small *ngIf="!validationErrors.portfolioUrl && portfolioUrl.errors?.['url']">Please enter a valid URL</small>
+      </div>
+      
+      <!-- Portfolio URL Warning -->
+      <div *ngIf="validationErrors.portfolioUrlWarning" class="alert alert-warning mt-2 py-2">
+        <small>
+          <i class="fas fa-exclamation-triangle me-1"></i>
+          {{ validationErrors.portfolioUrlWarning }}
+        </small>
+      </div>
+      
+      <!-- Success feedback -->
+      <div class="valid-feedback" *ngIf="portfolioUrl.valid && portfolioUrl.touched && !validationErrors.portfolioUrl">
+        <small>✓ Portfolio URL looks good!</small>
+      </div>
+      
+      <!-- Help text -->
+      <div class="form-text">
+        <small>
+          <i class="fas fa-info-circle me-1"></i>
+          Link to your online portfolio, personal website, or professional showcase
+        </small>
       </div>
     </div>
     
-    <div class="mb-3">
+    <!-- LinkedIn URL -->
+    <div class="mb-4">
       <label class="form-label">LinkedIn URL *</label>
-      <input 
-        name="linkedInUrl" 
-        [(ngModel)]="formData.linkedInUrl"
-        type="url"
-        class="form-control" 
-        required
-        placeholder="https://linkedin.com/in/your-profile"
-        #linkedInUrl="ngModel">
-      <div *ngIf="linkedInUrl.invalid && linkedInUrl.touched" class="text-danger">
-        <small *ngIf="linkedInUrl.errors?.['required']">LinkedIn URL is required</small>
-        <small *ngIf="linkedInUrl.errors?.['url']">Please enter a valid URL</small>
+      <div class="input-group">
+        <span class="input-group-text">
+          <i class="fab fa-linkedin text-primary"></i>
+        </span>
+        <input 
+          name="linkedInUrl" 
+          [(ngModel)]="formData.linkedInUrl"
+          type="url"
+          class="form-control" 
+          required
+          maxlength="500"
+          placeholder="https://linkedin.com/in/your-profile"
+          (input)="onUrlInput('linkedInUrl', $event)"
+          (blur)="onFieldBlur('linkedInUrl')"
+          #linkedInUrl="ngModel"
+          [class.is-invalid]="(linkedInUrl.invalid && linkedInUrl.touched) || validationErrors.linkedInUrl"
+          [class.is-valid]="linkedInUrl.valid && linkedInUrl.touched && !validationErrors.linkedInUrl">
+        <button 
+          type="button" 
+          class="btn btn-outline-secondary"
+          (click)="suggestLinkedInUrl()"
+          title="Use template"
+          *ngIf="!formData.linkedInUrl">
+          <i class="fas fa-magic"></i>
+        </button>
+      </div>
+      
+      <!-- LinkedIn URL Validation Messages -->
+      <div class="invalid-feedback" *ngIf="(linkedInUrl.invalid && linkedInUrl.touched) || validationErrors.linkedInUrl">
+        <small *ngIf="validationErrors.linkedInUrl">{{ validationErrors.linkedInUrl }}</small>
+        <small *ngIf="!validationErrors.linkedInUrl && linkedInUrl.errors?.['required']">LinkedIn URL is required</small>
+        <small *ngIf="!validationErrors.linkedInUrl && linkedInUrl.errors?.['url']">Please enter a valid URL</small>
+      </div>
+      
+      <!-- Success feedback -->
+      <div class="valid-feedback" *ngIf="linkedInUrl.valid && linkedInUrl.touched && !validationErrors.linkedInUrl">
+        <small>✓ LinkedIn URL format is correct!</small>
+      </div>
+      
+      <!-- Help text -->
+      <div class="form-text">
+        <small>
+          <i class="fas fa-info-circle me-1"></i>
+          Your LinkedIn profile URL (e.g., linkedin.com/in/john-doe)
+        </small>
       </div>
     </div>
     
-    <div class="mb-3">
+    <!-- GitHub URL -->
+    <div class="mb-4">
       <label class="form-label">GitHub URL *</label>
-      <input 
-        name="gitHubUrl" 
-        [(ngModel)]="formData.gitHubUrl"
-        type="url"
-        class="form-control" 
-        required
-        placeholder="https://github.com/your-username"
-        #gitHubUrl="ngModel">
-      <div *ngIf="gitHubUrl.invalid && gitHubUrl.touched" class="text-danger">
-        <small *ngIf="gitHubUrl.errors?.['required']">GitHub URL is required</small>
-        <small *ngIf="gitHubUrl.errors?.['url']">Please enter a valid URL</small>
+      <div class="input-group">
+        <span class="input-group-text">
+          <i class="fab fa-github text-dark"></i>
+        </span>
+        <input 
+          name="gitHubUrl" 
+          [(ngModel)]="formData.gitHubUrl"
+          type="url"
+          class="form-control" 
+          required
+          maxlength="500"
+          placeholder="https://github.com/your-username"
+          (input)="onUrlInput('gitHubUrl', $event)"
+          (blur)="onFieldBlur('gitHubUrl')"
+          #gitHubUrl="ngModel"
+          [class.is-invalid]="(gitHubUrl.invalid && gitHubUrl.touched) || validationErrors.gitHubUrl"
+          [class.is-valid]="gitHubUrl.valid && gitHubUrl.touched && !validationErrors.gitHubUrl">
+        <button 
+          type="button" 
+          class="btn btn-outline-secondary"
+          (click)="suggestGitHubUrl()"
+          title="Use template"
+          *ngIf="!formData.gitHubUrl">
+          <i class="fas fa-magic"></i>
+        </button>
+      </div>
+      
+      <!-- GitHub URL Validation Messages -->
+      <div class="invalid-feedback" *ngIf="(gitHubUrl.invalid && gitHubUrl.touched) || validationErrors.gitHubUrl">
+        <small *ngIf="validationErrors.gitHubUrl">{{ validationErrors.gitHubUrl }}</small>
+        <small *ngIf="!validationErrors.gitHubUrl && gitHubUrl.errors?.['required']">GitHub URL is required</small>
+        <small *ngIf="!validationErrors.gitHubUrl && gitHubUrl.errors?.['url']">Please enter a valid URL</small>
+      </div>
+      
+      <!-- Success feedback -->
+      <div class="valid-feedback" *ngIf="gitHubUrl.valid && gitHubUrl.touched && !validationErrors.gitHubUrl">
+        <small>✓ GitHub URL format is correct!</small>
+      </div>
+      
+      <!-- Help text -->
+      <div class="form-text">
+        <small>
+          <i class="fas fa-info-circle me-1"></i>
+          Your GitHub profile URL to showcase your code repositories
+        </small>
       </div>
     </div>
 
+    <!-- URL Guidelines -->
+    <div class="alert alert-info">
+      <h6><i class="fas fa-lightbulb me-2"></i>Tips for Professional URLs:</h6>
+      <ul class="mb-0 small">
+        <li><strong>Portfolio:</strong> Should showcase your best work and projects</li>
+        <li><strong>LinkedIn:</strong> Keep your profile updated with recent experience</li>
+        <li><strong>GitHub:</strong> Pin your best repositories and include good README files</li>
+        <li>Make sure all links are working and lead to professional content</li>
+      </ul>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="alert alert-light border">
+      <div class="d-flex align-items-center">
+        <div class="me-3">
+          <i class="fas fa-link text-primary"></i>
+        </div>
+        <div class="flex-grow-1">
+          <strong>URL Validation Status:</strong>
+          <div class="mt-1">
+            <span class="badge me-2" 
+              [class]="formData.portfolioUrl && !validationErrors.portfolioUrl ? 'bg-success' : 'bg-secondary'">
+              <i class="fas" [class]="formData.portfolioUrl && !validationErrors.portfolioUrl ? 'fa-check' : 'fa-times'"></i>
+              Portfolio
+            </span>
+            <span class="badge me-2" 
+              [class]="formData.linkedInUrl && !validationErrors.linkedInUrl ? 'bg-success' : 'bg-secondary'">
+              <i class="fas" [class]="formData.linkedInUrl && !validationErrors.linkedInUrl ? 'fa-check' : 'fa-times'"></i>
+              LinkedIn
+            </span>
+            <span class="badge" 
+              [class]="formData.gitHubUrl && !validationErrors.gitHubUrl ? 'bg-success' : 'bg-secondary'">
+              <i class="fas" [class]="formData.gitHubUrl && !validationErrors.gitHubUrl ? 'fa-check' : 'fa-times'"></i>
+              GitHub
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Buttons -->
     <div class="d-flex justify-content-between mt-4">
-      <button type="button" (click)="goToPrevious()" class="btn btn-secondary">
-        Previous
+      <button type="button" (click)="goToPrevious()" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>
+        Previous: Documents
       </button>
-      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+      <button 
+        type="submit" 
+        class="btn btn-primary" 
+        [disabled]="form.invalid || hasValidationErrors()">
+        <i class="fas fa-eye me-2"></i>
         Review Application
+        <span *ngIf="form.invalid || hasValidationErrors()" class="ms-2">
+          <i class="fas fa-exclamation-triangle text-warning"></i>
+        </span>
       </button>
     </div>
   </form>
