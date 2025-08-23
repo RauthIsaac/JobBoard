@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Seeker } from './admin-dashboard-analytics/admin-dashboard-analytics';
+import { Seeker } from './features/app-admin-dashboard/admin-service';
 
 @Injectable({
   providedIn: 'root'
