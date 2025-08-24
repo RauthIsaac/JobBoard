@@ -12,7 +12,7 @@ import { JobsService } from '../jobs-service';
 export class JobExploreView implements OnInit, OnChanges {
 
   @Input({ required: true }) job!: any;
-  @Output() jobRemoved = new EventEmitter<number>(); // Event للإشارة إلى أن الوظيفة تم حذفها
+  @Output() jobRemoved = new EventEmitter<number>(); 
 
   isSavedFlag = signal<boolean>(false);
 
@@ -30,7 +30,6 @@ export class JobExploreView implements OnInit, OnChanges {
   ngOnInit(): void {
     this.updateSavedState();
     
-    // إضافة تأخير صغير للتأكد من تحميل الـ savedJobsState
     setTimeout(() => {
       this.updateSavedState();
     }, 50);
@@ -55,30 +54,23 @@ export class JobExploreView implements OnInit, OnChanges {
     const currentSavedState = this.isSavedFlag();
 
     if (currentSavedState) {
-      // إزالة من المحفوظات باستخدام الـ endpoint الجديدة
       this.jobService.removeFromSavedJobsByJobId(jobId).subscribe({
         next: () => {
-          // الـ effect سيحدث التحديث تلقائياً
           console.log(`Job ${jobId} removed from saved jobs`);
-          // إرسال event للمكون الأب إذا كان في صفحة saved jobs
           this.jobRemoved.emit(jobId);
         },
         error: (err) => {
           console.error('Error removing job from saved:', err);
-          // في حالة الخطأ، أعد الحالة كما كانت
           this.isSavedFlag.set(true);
         }
       });
     } else {
-      // إضافة إلى المحفوظات
       this.jobService.addToSavedJobs(jobId).subscribe({
         next: () => {
-          // الـ effect سيحدث التحديث تلقائياً
           console.log(`Job ${jobId} added to saved jobs`);
         },
         error: (err) => {
           console.error('Error adding job to saved:', err);
-          // في حالة الخطأ، أعد الحالة كما كانت
           this.isSavedFlag.set(false);
         }
       });
@@ -96,4 +88,6 @@ export class JobExploreView implements OnInit, OnChanges {
     
     return this.job.description.substring(0, limit).trim() + '...';
   }
+
+  
 }

@@ -1,4 +1,14 @@
 
+.nav{
+    background: var(--basic-color);
+    color: white;
+    padding: 20px 50px;
+
+    a{
+        color: white;
+    }
+}
+
 /*--------------------------- Job Details Section ------------------------------*/
 .job-details{
     padding: 20px;

@@ -1,233 +1,249 @@
-<div style="margin: 0px 100px;">
-    <!-- Loading indicator -->
-    @if (loading()) {
-        <div class="text-center p-5">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+<div>
+    <div>
+        <!-- Loading indicator -->
+        @if (loading()) {
+            <div class="text-center p-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Loading job details...</p>
             </div>
-            <p class="mt-2">Loading job details...</p>
-        </div>
-    }
-    
-    <!-- Error message -->
-    @if (error()) {
-        <div class="alert alert-danger" role="alert">
-            {{ error() }}
-        </div>
-    }
-    
-    <!-- Job details content -->
-    @if (!loading() && !error() && jobDetails()) {
-    <!-- --------------------------- Job Details Section ------------------------------ -->
-    <section class="job-details-section p-2">
-        <div class="job-details row shadow rounded">
-            <div class="col-lg-9">
-                <div class="d-flex">
-                    <i class="bi bi-buildings me-2"></i>
-                    <span>{{jobDetails().companyName}}</span>
-                </div>
-                <h1 class="my-3">{{jobDetails().title}}</h1>
-                <div class="d-flex ">
-                    <div class="d-flex me-4">
-                        <i class="bi bi-geo-alt me-2"></i>
-                        <span>{{jobDetails().companyLocation}}</span>
-                    </div>
-                    <div class="d-flex me-4">
-                        <i class="bi bi-clock me-2"></i>
-                        <span>Posted At : {{jobDetails().postedDate | date:'MMM dd, yyyy'}}</span>
-                    </div>
-                    <div class="d-flex me-4">
-                        <i class="bi bi-calendar2 me-2"></i>
-                        <span>Apply By: {{jobDetails().expireDate | date:'MMM dd, yyyy'}}</span>
-                    </div>
-                </div>
-                <div class="d-flex mt-3">
-                    <div class="job-time me-3">
-                        <span>{{jobDetails().jobType}}</span>
-                    </div>
-                    <div style="margin-top: 5px; color:green">
-                        <span>{{ jobDetails().salary | currency:'USD':'symbol' }}</span>
-                    </div>
-                </div>
+        }
+        
+        <!-- Error message -->
+        @if (error()) {
+            <div class="alert alert-danger" role="alert">
+                {{ error() }}
+            </div>
+        }
+        
+        <!-- Job details content -->
+        @if (!loading() && !error() && jobDetails()) {
 
-            </div>
-            <div class="col-lg-3">
-                <button class="apply-now-btn form-control" [routerLink]="['/seekerApp', jobId()]">
-                    Apply Now
-                </button>
-                <button class="save-job-btn form-control" (click)="toggleSaved()" [class.saved]="isSavedFlag()">
-                    <i class="bi" [class.bi-bookmark-check]="isSavedFlag()" [class.bi-bookmark]="!isSavedFlag()"></i> {{ isSavedFlag() ? 'Saved' : ' Save' }}
-                </button>  
+            <!-- Navigation based on user type -->
+            <div *ngIf="isSeeker()">
+                <div class="nav">
+                    <a routerLink="/home"><i class="bi bi-arrow-left me-3 fs-3"></i></a>
+                    <h5 class="mt-2">Back to Home</h5>
+                </div>
             </div>
 
-        </div>  
-    </section>
-    
-    <!-- --------------------------- Main Section ------------------------------ -->
-    <section class="main-section">
-        <div class="row mt-5">
-            <div class="col-lg-8 col-md-12 col-sm-12 ">
+            <div *ngIf="isEmployer()">
+                <div class="nav">
+                    <a routerLink="/empDashboard"><i class="bi bi-arrow-left me-3 fs-3"></i></a>
+                    <h5 class="mt-2">Back to Dashboard</h5>
+                </div>
+            </div>
+
+            <div *ngIf="isAdmin()">
+                <div class="nav">
+                    <a routerLink="/admin"><i class="bi bi-arrow-left me-3 fs-3"></i></a>
+                    <h5 class="mt-2">Back to Dashboard</h5>
+                </div>
+            </div>
+
+            <div style="margin:50px 100px;">
+                <!-- --------------------------- Job Details Section ------------------------------ -->
+                <section class="job-details-section p-2">
+                    <div class="job-details row shadow rounded">
+                        <div class="col-lg-9">
+                            <div class="d-flex">
+                                <i class="bi bi-buildings me-2"></i>
+                                <span>{{jobDetails().companyName}}</span>
+                            </div>
+                            <h1 class="my-3">{{jobDetails().title}}</h1>
+                            <div class="d-flex ">
+                                <div class="d-flex me-4">
+                                    <i class="bi bi-geo-alt me-2"></i>
+                                    <span>{{jobDetails().companyLocation}}</span>
+                                </div>
+                                <div class="d-flex me-4">
+                                    <i class="bi bi-clock me-2"></i>
+                                    <span>Posted At : {{jobDetails().postedDate | date:'MMM dd, yyyy'}}</span>
+                                </div>
+                                <div class="d-flex me-4">
+                                    <i class="bi bi-calendar2 me-2"></i>
+                                    <span>Apply By: {{jobDetails().expireDate | date:'MMM dd, yyyy'}}</span>
+                                </div>
+                            </div>
+                            <div class="d-flex mt-3">
+                                <div class="job-time me-3">
+                                    <span>{{jobDetails().jobType}}</span>
+                                </div>
+                                <div style="margin-top: 5px; color:green">
+                                    <span>{{ jobDetails().salary | currency:'USD':'symbol' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Apply and Save buttons - only for seekers -->
+                        <div class="col-lg-3" *ngIf="isSeeker()">
+                            <button class="apply-now-btn form-control" [routerLink]="['/seekerApp', jobId()]">
+                                Apply Now
+                            </button>
+                            <button class="save-job-btn form-control" (click)="toggleSaved()" [class.saved]="isSavedFlag()">
+                                <i class="bi" [class.bi-bookmark-check]="isSavedFlag()" [class.bi-bookmark]="!isSavedFlag()"></i> 
+                                {{ isSavedFlag() ? 'Saved' : ' Save' }}
+                            </button>  
+                        </div>
+                    </div>  
+                </section>
                 
-                <div class="job-overview shadow rounded p-5 mb-4 ">
-                        <h2 class="mb-4">Job Overview</h2>
+                <!-- --------------------------- Main Section ------------------------------ -->
+                <section class="main-section">
+                    <div class="row mt-5">
+                        <div class="col-lg-8 col-md-12 col-sm-12 ">
+                            
+                            <div class="job-overview shadow rounded p-5 mb-4 ">
+                                <h2 class="mb-4">Job Overview</h2>
 
-                        <div class="row">
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-5 col-sm-10 mb-md-2 mb-sm-2">
+                                        <div class="d-flex pe-md-3" style="background-color: rgb(244, 244, 244); border-radius: 15px; width: fit-content;">
+                                            <i class="bi bi-mortarboard m-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
+                                            <div class="d-flex flex-column">
+                                                <span style="color: rgb(117, 117, 117);">Experience</span>
+                                                <span style="font-weight: 500;">{{jobDetails().experienceLevel}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                            <div class="col-lg-3 col-md-5 col-sm-10 mb-md-2 mb-sm-2">
-                                <div class="d-flex pe-md-3" style="background-color: rgb(244, 244, 244); border-radius: 15px; width: fit-content;">
-                                    <i class="bi bi-mortarboard m-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
-                                    <div class="d-flex flex-column">
-                                        <span style="color: rgb(117, 117, 117);">Experience</span>
-                                        <span style="font-weight: 500;">{{jobDetails().experienceLevel}}</span>
+                                    <div class="col-lg-3 col-md-5 col-sm-10 mb-md-2 mb-sm-2" >
+                                        <div class="d-flex pe-md-3" style="background-color: rgb(244, 244, 244); border-radius: 15px; width: fit-content;">
+                                            <i class="bi bi-clock m-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
+                                            <div class="d-flex flex-column">
+                                                <span style="color: rgb(162, 162, 162);">Type</span>
+                                                <span style="font-weight: 500;">{{jobDetails().jobType}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-5 col-sm-10 mb-md-2 mb-sm-2">
+                                        <div class="d-flex pe-md-3" style="background-color: rgb(244, 244, 244); border-radius: 15px; width: fit-content;">
+                                            <i class="bi bi-people m-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
+                                            <div class="d-flex flex-column">
+                                                <span style="color: rgb(162, 162, 162);">Team Size</span>
+                                                <span style="font-weight: 500;">{{jobDetails().minTeamSize}}-{{jobDetails().maxTeamSize}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-5 col-sm-10 mb-md-2 mb-sm-2">
+                                        <div class="d-flex pe-md-3" style="background-color:rgb(244, 244, 244); border-radius: 15px; width: fit-content;">
+                                            <i class="bi bi-geo-alt m-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
+                                            <div class="d-flex flex-column">
+                                                <span style="color: rgb(162, 162, 162);">Location</span>
+                                                <span style="font-weight: 500;">{{jobDetails().workplaceType}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Job Description -->
+                                <div class="mt-4">
+                                    <h5>Job Description</h5>
+                                    <span class="mt-1">{{jobDetails().description}}</span>
+                                </div>
+
+                                <!-- Key Requirements -->
+                                <div>
+                                    <h5 class="mt-4">Key Requirements</h5>
+                                    <ul style="list-style-type: none; padding-left: 0px;">
+                                        @for(req of requirementsList(); track $index) {
+                                            <div class="d-flex mb-3">
+                                                <i class="bi bi-star me-2" style="color:rgb(27, 193, 27)"></i>
+                                                <li>{{req}}</li>
+                                            </div>
+                                        }
+                                    </ul>
+                                </div>
+                                
+                                <!-- Job Responsibilities -->
+                                <div>
+                                    <h5 class="mt-lg-5">Job Responsibilities</h5>
+                                    <ul style="list-style-type: none; padding-left: 0;">
+                                        @for(responsibility of responsibilitiesList(); track $index) {
+                                            <div class="d-flex mb-3">
+                                                <span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span>
+                                                <li>{{responsibility}}</li>
+                                            </div>
+                                        }
+                                    </ul>
+                                </div>
+
+                                <!-- What We Offer / Benefits -->
+                                <div>
+                                    <h5 class="mt-5">What We Offer</h5>
+                                    <ul style="list-style-type: none; padding-left: 0;">
+                                        @for(benefit of benefitsList(); track $index) {
+                                            <div class="d-flex mb-3">
+                                                <span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span>
+                                                <li>{{benefit}}</li>
+                                            </div>
+                                        }
+                                    </ul>
+                                </div>
+
+                                <!-- Ready To Apply - only for seekers -->
+                                <div class="mt-5 p-5" style="background-color: rgb(244, 244, 244); border-radius: 15px;" *ngIf="isSeeker()">
+                                    <div class="row">
+                                        <div class="col-lg-8 col-md-7 col-sm-12">
+                                            <h5>Ready to Apply?</h5>
+                                            <p>Apply now and take the next step in your career.</p>
+                                        </div>
+                                        <div class="col-lg-4 col-md-5 col-sm-12">
+                                            <button class="apply-now-btn form-control" [routerLink]="['/seekerApp', jobId()]">
+                                                Apply Now <i class="bi bi-arrow-right px-2"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="col-lg-3 col-md-5 col-sm-10 mb-md-2 mb-sm-2" >
-                                <div class="d-flex pe-md-3" style="background-color: rgb(244, 244, 244); border-radius: 15px; width: fit-content;">
-                                    <i class="bi bi-clock m-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
-                                    <div class="d-flex flex-column">
-                                        <span style="color: rgb(162, 162, 162);">Type</span>
-                                        <span style="font-weight: 500;">{{jobDetails().jobType}}</span>
-                                    </div>
+                        <!-- Side Bar -->
+                        <div class="main-side-bar col-lg-4 col-md-12 col-sm-12 ps-3">
+                            <div class="shadow rounded p-4 mb-4">
+                                <!-- Company Logo(Image) -->
+                                <div class="text-center">
+                                    <img src="{{jobDetails().companyImage}}" alt="Company Logo" class="img-fluid">
                                 </div>
-                            </div>
-
-                            <div class="col-lg-3 col-md-5 col-sm-10 mb-md-2 mb-sm-2">
-                                <div class="d-flex pe-md-3" style="background-color: rgb(244, 244, 244); border-radius: 15px; width: fit-content;">
-                                    <i class="bi bi-people m-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
-                                    <div class="d-flex flex-column">
-                                        <span style="color: rgb(162, 162, 162);">Team Size</span>
-                                        <span style="font-weight: 500;">{{jobDetails().minTeamSize}}-{{jobDetails().maxTeamSize}}</span>
-                                    </div>
+                                <h3 class="d-flex my-3">
+                                    <i class="bi bi-buildings me-2"></i>
+                                    <span>{{jobDetails().companyName}}</span>
+                                </h3>
+                                
+                                <p>{{jobDetails().companyDescription}}</p>
+                            
+                                <div class="d-flex mt-lg-2">
+                                    <i class="bi bi-people me-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
+                                    <span style="color: rgb(162, 162, 162); margin-right: 8px;">Company Size: </span>
+                                    <span style="font-weight: 500;">{{jobDetails().employeeRange}} Employees</span>
                                 </div>
-                            </div>
-
-                            <div class="col-lg-3 col-md-5 col-sm-10 mb-md-2 mb-sm-2">
-                                <div class="d-flex pe-md-3" style="background-color:rgb(244, 244, 244); border-radius: 15px; width: fit-content;">
-                                    <i class="bi bi-geo-alt m-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
-                                    <div class="d-flex flex-column">
-                                        <span style="color: rgb(162, 162, 162);">Location</span>
-                                        <span style="font-weight: 500;">{{jobDetails().workplaceType}}</span>
-                                    </div>
+                                <div class="d-flex mt-2">
+                                    <i class="bi bi-buildings me-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
+                                    <span style="color: rgb(162, 162, 162); margin-right: 8px;">Industry: </span>
+                                    <span style="font-weight: 500;">{{jobDetails().industry}}</span>
                                 </div>
-                            </div>
-
-                        </div>
-
-                        <!-- Job Description -->
-                        <div class="mt-4">
-                            <h5>Job Description</h5>
-                            <span class="mt-1">{{jobDetails().description}}</span>
-
-                        </div>
-                        <!-- Key Requirements -->
-                        <div>
-                            <h5 class="mt-4">Key Requirements</h5>
-                            <ul style="list-style-type: none; padding-left: 0px;">
-                                @for(req of requirementsList(); track $index)
-                                {
-                                    <div class="d-flex mb-3"><i class="bi bi-star me-2" style="color:rgb(27, 193, 27)"></i>
-                                        <li>{{req}}</li>
-                                    </div>
-                                }
-                            </ul>
-                        </div>
-                        
-                    
-                        <!-- Job Responsibilities -->
-                        <div>
-                            <h5 class="mt-lg-5">Job Responsibilities</h5>
-                            <ul style="list-style-type: none; padding-left: 0;">
-                                @for(responsibility of responsibilitiesList(); track $index)
-                                {
-                                    <div class="d-flex mb-3">
-                                        <span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>{{responsibility}}</li>
-                                    </div>
-                                }
-                            </ul>
-                        </div>
-
-                        <!-- What We Offer -->
-                        <div>
-                            <h5 class="mt-5">What We Offer</h5>
-                            <ul style="list-style-type: none; padding-left: 0;">
-                                @for(offer of offersList(); track $index)
-                                {
-                                    <div class="d-flex mb-3">
-                                        <span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span><li>{{offer}}</li>
-                                    </div>
-                                }
-                            </ul>
-                        </div>
-
-
-                        <!-- Ready To Apply -->
-                        <div class="mt-5 p-5" style="background-color: rgb(244, 244, 244); border-radius: 15px;">
-                            <div class="row">
-                                <div class="col-lg-8 col-md-7 col-sm-12">
-                                    <h5>Ready to Apply?</h5>
-                                    <p>Apply now and take the next step in your career.</p>
+                                <div class="d-flex mt-2">
+                                    <i class="bi bi-geo-alt me-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
+                                    <span style="color: rgb(162, 162, 162); margin-right: 8px;">Location: </span>
+                                    <span style="font-weight:500;">{{jobDetails().companyLocation}}</span>
                                 </div>
-                                <div class="col-lg-4 col-md-5 col-sm-12">
-                                    <button class="apply-now-btn form-control" [routerLink]="['/seekerApp', jobId()]">
-                                        Apply Now <i class="bi bi-arrow-right px-2"></i>
-                                    </button>
+                                <div class="d-flex mt-2">
+                                    <i class="bi bi-link-45deg me-3" style="color:rgb(58, 111, 245); font-size:larger;"></i>
+                                    <span style="color: rgb(162, 162, 162); margin-right: 8px;">Website: </span>
+                                    <span>
+                                        <a [href]="jobDetails().website" target="_blank" style="text-decoration: none; font-weight:500;">
+                                            Visit Site
+                                        </a>
+                                    </span>
                                 </div>
-                            </div>
+                            </div> 
                         </div>
-                </div>
-
-
-
+                    </div>
+                </section>
             </div>
-
-            <!-- Side Bar -->
-            <div class="main-side-bar col-lg-4 col-md-12 col-sm-12 ps-3" >
-                    
-                    <div class="shadow rounded p-4 mb-4">
-                        <!-- Company Logo(Image) -->
-                        <div class="text-center">
-                            <img src="{{jobDetails().companyImage}}" alt="Company Logo" class="img-fluid">
-                        </div>
-                        <h3 class="d-flex my-3" >
-                            <i class="bi bi-buildings me-2"></i>
-                            <span>{{jobDetails().companyName}}</span>
-                        </h3>
-                        
-                        <p>{{jobDetails().companyDescription}}</p>
-                    
-                        <div class="d-flex mt-lg-2">
-                            <i class="bi bi-people me-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
-                            <span style="color: rgb(162, 162, 162); margin-right: 8px;">Company Size: </span>
-                            <span style="font-weight: 500;">{{jobDetails().employeeRange}} Employees</span>
-                        </div>
-                        <div class="d-flex mt-2">
-                            <i class="bi bi-buildings me-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
-                            <span style="color: rgb(162, 162, 162); margin-right: 8px;">Industry: </span>
-                            <span style="font-weight: 500;">{{jobDetails().industry}}</span>
-                        </div>
-                        <div class="d-flex mt-2">
-                            <i class="bi bi-geo-alt me-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
-                            <span style="color: rgb(162, 162, 162); margin-right: 8px;">Location: </span>
-                            <span style="font-weight:500;">{{jobDetails().companyLocation}}</span>
-                        </div>
-                        <div class="d-flex mt-2">
-                            <i class="bi bi-link-45deg me-3" style="color:rgb(58, 111, 245); font-size:larger;"></i>
-                            <span style="color: rgb(162, 162, 162); margin-right: 8px;">Website: </span>
-                            <span><a target="_blank" style="text-decoration: none; font-weight:500;">Visit Site</a></span>
-                        </div>
-
-
-                    </div> 
-                    
-            </div>
-
-
-
-
-        </div>
-    </section>
-    } 
-
+        }
+    </div>
 </div>
