@@ -40,8 +40,8 @@
       </div>
       
       <!-- Notifications List -->
-      <div *ngFor="let notification of notifications(); let i = index" 
-           class="notification-item"
+       <ng-container *ngFor="let notification of notifications(); let i = index">  
+      <div class="notification-item"
            [class.unread]="!notification.isRead"
            [class.read]="notification.isRead">
         
@@ -77,6 +77,8 @@
           </button>
         </div>
       </div>
+           </ng-container>
+
     </div>
 
     <!-- Reconnect Section -->

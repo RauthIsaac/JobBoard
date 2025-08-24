@@ -89,8 +89,8 @@ export class AuthService {
   }
 
   // Method to get current userId (synchronous)
-  getUserId(): string {
-    return this.currentUserId.value;
+  getUserId(): string | null {
+    return localStorage.getItem(this.User_ID);
   }
 
   // Method to get userId as Observable (reactive)
