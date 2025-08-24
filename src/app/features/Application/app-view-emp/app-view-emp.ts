@@ -1,64 +1,53 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApplicationService } from '../application-service';
 import { IemployerApplications } from '../../../shared/models/iemployer-applications';
-import { ApplicationStatus } from '../../../shared/models/application-filter-params';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { RouterLink } from '@angular/router';
+
+export enum ApplicationStatus {
+  Pending = 0,
+  UnderReview = 1,
+  Interviewed = 2,
+  Accepted = 3,
+  Rejected = 4
+}
 
 @Component({
   selector: 'app-app-view-emp',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './app-view-emp.html',
   styleUrls: ['./app-view-emp.css']
 })
 export class AppViewEmp implements OnInit {
-  originalApplicationsList = signal<IemployerApplications[]>([]);
-  filteredApplicationsList = signal<IemployerApplications[]>([]);
+  applicationsList = signal<IemployerApplications[]>([]);
   isLoading = signal(false);
   
   searchTerm = signal('');
-  selectedJobTitle = signal<string | undefined>(undefined);
-  selectedStatus = signal<ApplicationStatus | 'all'>('all');
-  pageIndex = signal(1);
-  pageSize = signal(10000); // Load all for client-side filtering
+  selectedStatus = signal<string>('');
   
-  availableJobs = signal<string[]>([]);
-  
-  statistics = computed(() => {
-    const apps = this.filteredApplicationsList();
-    return {
-      total: apps.length,
-      new: apps.filter(app => app.status === ApplicationStatus.Pending).length,
-      thisMonth: apps.filter(app => {
-        const appliedDate = new Date(app.appliedDate);
-        const now = new Date();
-        return appliedDate.getMonth() === now.getMonth() && 
-               appliedDate.getFullYear() === now.getFullYear();
-      }).length,
-      interviews: apps.filter(app => app.status === ApplicationStatus.Interviewed).length
-    };
-  });
-
   ApplicationStatus = ApplicationStatus;
   
   private searchSubject = new Subject<string>();
-  private filterChangeSubject = new Subject<void>();
+  private filterSubject = new Subject<void>();
 
   constructor(private appService: ApplicationService) {
+    // Debounce search input
     this.searchSubject.pipe(
-      debounceTime(300),
+      debounceTime(500),
       distinctUntilChanged()
     ).subscribe(searchTerm => {
       this.searchTerm.set(searchTerm);
-      this.applyClientSideFilters();
+      this.loadEmployerApplications();
     });
 
-    this.filterChangeSubject.pipe(
+    // Debounce filter changes
+    this.filterSubject.pipe(
       debounceTime(300)
     ).subscribe(() => {
-      this.applyClientSideFilters();
+      this.loadEmployerApplications();
     });
   }
 
@@ -68,12 +57,22 @@ export class AppViewEmp implements OnInit {
 
   private loadEmployerApplications(): void {
     this.isLoading.set(true);
-    const params: any = { pageIndex: this.pageIndex(), pageSize: this.pageSize() };
+    
+    const params: any = {};
+
+    // Add search parameter
+    if (this.searchTerm().trim()) {
+      params.searchValue = this.searchTerm().trim();
+    }
+
+    // Add status filter
+    if (this.selectedStatus()) {
+      params.status = this.selectedStatus();
+    }
+
     this.appService.getEmployerApplications(params).subscribe({
       next: (apps: IemployerApplications[]) => {
-        this.originalApplicationsList.set(apps);
-        this.extractUniqueJobs(apps);
-        this.applyClientSideFilters();
+        this.applicationsList.set(apps);
         this.isLoading.set(false);
       },
       error: (err) => {
@@ -83,55 +82,21 @@ export class AppViewEmp implements OnInit {
     });
   }
 
-  private applyClientSideFilters(): void {
-    let filtered = [...this.originalApplicationsList()];
-
-    const searchTerm = this.searchTerm().toLowerCase().trim();
-    if (searchTerm) {
-      filtered = filtered.filter(app => 
-        app.applicantName.toLowerCase().includes(searchTerm) ||
-        app.jobTitle.toLowerCase().includes(searchTerm) ||
-        app.currentPosition.toLowerCase().includes(searchTerm)
-      );
-    }
-
-    const jobTitle = this.selectedJobTitle();
-    if (jobTitle) {
-      filtered = filtered.filter(app => app.jobTitle === jobTitle);
-    }
-
-    const status = this.selectedStatus();
-    if (status !== 'all') {
-      filtered = filtered.filter(app => app.status === status);
-    }
-
-    this.filteredApplicationsList.set(filtered);
-  }
-
-  private extractUniqueJobs(apps: IemployerApplications[]): void {
-    const uniqueJobs = Array.from(new Set(apps.map(app => app.jobTitle)));
-    this.availableJobs.set(uniqueJobs);
-  }
-
   onSearchInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.searchSubject.next(input.value);
   }
 
-  onJobFilterChange(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    this.selectedJobTitle.set(select.value || undefined);
-    this.filterChangeSubject.next();
-  }
-
-  onStatusFilterClick(status: ApplicationStatus | 'all'): void {
+  onStatusFilterClick(status: string): void {
     this.selectedStatus.set(status);
-    this.filterChangeSubject.next();
+    this.filterSubject.next();
   }
 
   updateApplicationStatus(applicationId: number, status: ApplicationStatus): void {
     this.appService.updateApplicationStatus(applicationId, status).subscribe({
-      next: () => this.loadEmployerApplications(),
+      next: () => {
+        this.loadEmployerApplications(); 
+      },
       error: (err) => console.error('Error updating status:', err)
     });
   }
@@ -169,25 +134,14 @@ export class AppViewEmp implements OnInit {
     }
   }
 
-  getCardClass(status: string): string {
-    const statusLower = status.toLowerCase();
-    switch (statusLower) {
-      case 'pending':
-      case 'new':
-        return 'new';
-      case 'underreview':
-      case 'under review':
-        return 'under-review';
-      case 'interviewed':
-      case 'interview':
-        return 'interview';
-      case 'accepted':
-      case 'hired':
-        return 'hired';
-      case 'rejected':
-        return 'rejected';
-      default:
-        return 'new';
+  getCardClass(status: ApplicationStatus): string {
+    switch (status) {
+      case ApplicationStatus.Pending: return 'new';
+      case ApplicationStatus.UnderReview: return 'under-review';
+      case ApplicationStatus.Interviewed: return 'interview';
+      case ApplicationStatus.Accepted: return 'hired';
+      case ApplicationStatus.Rejected: return 'rejected';
+      default: return 'new';
     }
   }
 
@@ -199,10 +153,6 @@ export class AppViewEmp implements OnInit {
     const classes = ['initials-sc', 'initials-ar', 'initials-ew', 'initials-mb', 'initials-lp'];
     const hash = name.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0);
     return classes[Math.abs(hash) % classes.length];
-  }
-
-  viewProfile(applicationId: number): void {
-    console.log('View profile for application:', applicationId);
   }
 
   scheduleInterview(applicationId: number): void {
@@ -217,19 +167,32 @@ export class AppViewEmp implements OnInit {
     }
   }
 
+  acceptApplication(applicationId: number): void {
+    if (confirm('Accept this application?')) {
+      this.updateApplicationStatus(applicationId, ApplicationStatus.Accepted);
+    }
+  }
+
+  setUnderReview(applicationId: number): void {
+    this.updateApplicationStatus(applicationId, ApplicationStatus.UnderReview);
+  }
+
   refreshApplications(): void {
     this.loadEmployerApplications();
   }
 
-  isStatusActive(status: ApplicationStatus | 'all'): boolean {
+  isStatusActive(status: string): boolean {
     return this.selectedStatus() === status;
   }
 
   clearFilters(): void {
     this.searchTerm.set('');
-    this.selectedJobTitle.set(undefined);
-    this.selectedStatus.set('all');
-    this.applyClientSideFilters();
+    this.selectedStatus.set('');
+    this.loadEmployerApplications();
+  }
+
+  hasActiveFilters(): boolean {
+    return this.searchTerm() !== '' || this.selectedStatus() !== '';
   }
 
   trackByApplicationId(index: number, app: IemployerApplications): number {

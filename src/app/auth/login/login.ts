@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { Component, NgZone, OnDestroy, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -35,6 +35,7 @@ interface LoginResponse {
   standalone: true,
   imports: [
     CommonModule,
+    NgIf,
     ReactiveFormsModule,
     RouterModule,
     MatCardModule,
