@@ -1,14 +1,8 @@
 <!-- Job Board Admin Dashboard -->
 <mat-card class="analytics-dashboard-card">
   <mat-card-header>
-    <mat-card-title style="color:aliceblue">Admin Dashboard</mat-card-title>
+    <mat-card-title style="color: aliceblue;" >Admin Dashboard</mat-card-title>
     <mat-card-subtitle>Manage users and jobs across the platform</mat-card-subtitle>
-    <!-- <div class="header-actions">
-      <button mat-flat-button class="button-primary" (click)="refreshData()" [disabled]="isLoading">
-        <mat-icon>refresh</mat-icon>
-        <span class="button-label">Refresh Data</span>
-      </button>
-    </div> -->
   </mat-card-header>
 
   <mat-card-content>
@@ -78,61 +72,63 @@
       <div class="table-section">
         <h3 class="section-title">Users Management</h3>
         <mat-tab-group>
-          <mat-tab label="Job Seekers ({{ stats.totalSeekers }})">
+          <mat-tab class="usertype" label="Job Seekers ({{ stats.totalSeekers }})">
             <div *ngIf="isLoadingSeekers" class="loading-table">
               <mat-spinner diameter="30"></mat-spinner>
               <p>Loading job seekers...</p>
             </div>
             
-            <table *ngIf="!isLoadingSeekers" mat-table [dataSource]="seekers" class="full-width-table mat-elevation-z2">
-              <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef>Name</th>
-                <td mat-cell *matCellDef="let seeker">{{ seeker.name }}</td>
-              </ng-container>
-              
-              <ng-container matColumnDef="email">
-                <th mat-header-cell *matHeaderCellDef>Email</th>
-                <td mat-cell *matCellDef="let seeker">{{ seeker.email }}</td>
-              </ng-container>
-              
-              <ng-container matColumnDef="phoneNumber">
-                <th mat-header-cell *matHeaderCellDef>Phone</th>
-                <td mat-cell *matCellDef="let seeker">{{ seeker.phoneNumber || 'N/A' }}</td>
-              </ng-container>
-              
-              <ng-container matColumnDef="address">
-                <th mat-header-cell *matHeaderCellDef>Address</th>
-                <td mat-cell *matCellDef="let seeker">{{ seeker.address || 'N/A' }}</td>
-              </ng-container>
-              
-              <ng-container matColumnDef="skills">
-                <th mat-header-cell *matHeaderCellDef>Skills</th>
-                <td mat-cell *matCellDef="let seeker">
-                  <span *ngIf="seeker.skillName?.length; else noSkills">
-                    {{ seeker.skillName.slice(0, 2).join(', ') }}
-                    <span *ngIf="seeker.skillName.length > 2">+{{ seeker.skillName.length - 2 }} more</span>
-                  </span>
-                  <ng-template #noSkills>N/A</ng-template>
-                </td>
-              </ng-container>
-              
-              <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef>Actions</th>
-                <td mat-cell *matCellDef="let seeker">
-                  <button mat-icon-button color="primary" (click)="showSeekerDetails(seeker)" 
-                          matTooltip="View Details">
-                    <mat-icon>visibility</mat-icon>
-                  </button>
-                  <button mat-icon-button color="warn" (click)="deleteUser(seeker.userId)" 
-                          matTooltip="Delete User">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </td>
-              </ng-container>
-              
-              <tr mat-header-row *matHeaderRowDef="seekerColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: seekerColumns;"></tr>
-            </table>
+            <div *ngIf="!isLoadingSeekers" class="table-container">
+              <table mat-table [dataSource]="seekers" class="full-width-table mat-elevation-z2">
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef>Name</th>
+                  <td mat-cell *matCellDef="let seeker">{{ seeker.name }}</td>
+                </ng-container>
+                
+                <ng-container matColumnDef="email">
+                  <th mat-header-cell *matHeaderCellDef>Email</th>
+                  <td mat-cell *matCellDef="let seeker">{{ seeker.email }}</td>
+                </ng-container>
+                
+                <ng-container matColumnDef="phoneNumber">
+                  <th mat-header-cell *matHeaderCellDef>Phone</th>
+                  <td mat-cell *matCellDef="let seeker">{{ seeker.phoneNumber || 'N/A' }}</td>
+                </ng-container>
+                
+                <ng-container matColumnDef="address">
+                  <th mat-header-cell *matHeaderCellDef>Address</th>
+                  <td mat-cell *matCellDef="let seeker">{{ seeker.address || 'N/A' }}</td>
+                </ng-container>
+                
+                <ng-container matColumnDef="skills">
+                  <th mat-header-cell *matHeaderCellDef>Skills</th>
+                  <td mat-cell *matCellDef="let seeker">
+                    <span *ngIf="seeker.skillName?.length; else noSkills">
+                      {{ seeker.skillName.slice(0, 2).join(', ') }}
+                      <span *ngIf="seeker.skillName.length > 2">+{{ seeker.skillName.length - 2 }} more</span>
+                    </span>
+                    <ng-template #noSkills>N/A</ng-template>
+                  </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef>Actions</th>
+                  <td mat-cell *matCellDef="let seeker">
+                    <button mat-icon-button color="primary" (click)="showSeekerDetails(seeker)" 
+                            matTooltip="View Details">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="deleteUser(seeker.userId)" 
+                            matTooltip="Delete User">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                
+                <tr mat-header-row *matHeaderRowDef="seekerColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: seekerColumns;"></tr>
+              </table>
+            </div>
           </mat-tab>
 
           <mat-tab label="Employers ({{ stats.totalEmployers }})">
@@ -141,39 +137,38 @@
               <p>Loading employers...</p>
             </div>
             
-            <table *ngIf="!isLoadingEmployers" mat-table [dataSource]="employers" class="full-width-table mat-elevation-z2">
-              <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef>Name</th>
-                <td mat-cell *matCellDef="let employer">{{ employer.name }}</td>
-              </ng-container>
-              
-              <ng-container matColumnDef="email">
-                <th mat-header-cell *matHeaderCellDef>Email</th>
-                <td mat-cell *matCellDef="let employer">{{ employer.email }}</td>
-              </ng-container>
-              
-              <ng-container matColumnDef="companyName">
-                <th mat-header-cell *matHeaderCellDef>Company</th>
-                <td mat-cell *matCellDef="let employer">{{ employer.companyName || 'N/A' }}</td>
-              </ng-container>
-              
-              <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef>Actions</th>
-                <td mat-cell *matCellDef="let employer">
-                  <button mat-icon-button color="primary" (click)="showEmployerDetails(employer)" 
-                          matTooltip="View Details">
-                    <mat-icon>visibility</mat-icon>
-                  </button>
-                  <button mat-icon-button color="warn" (click)="deleteUser(employer.userId)" 
-                          matTooltip="Delete User">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </td>
-              </ng-container>
-              
-              <tr mat-header-row *matHeaderRowDef="employerColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: employerColumns;"></tr>
-            </table>
+            <div *ngIf="!isLoadingEmployers" class="table-container">
+              <table mat-table [dataSource]="employers" class="full-width-table mat-elevation-z2">
+                
+                
+                <ng-container matColumnDef="email">
+                  <th mat-header-cell *matHeaderCellDef>Email</th>
+                  <td mat-cell *matCellDef="let employer">{{ employer.email }}</td>
+                </ng-container>
+                
+                <ng-container matColumnDef="companyName">
+                  <th mat-header-cell *matHeaderCellDef>Company</th>
+                  <td mat-cell *matCellDef="let employer">{{ employer.companyName || 'N/A' }}</td>
+                </ng-container>
+                
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef>Actions</th>
+                  <td mat-cell *matCellDef="let employer">
+                    <button mat-icon-button color="primary" (click)="showEmployerDetails(employer)" 
+                            matTooltip="View Details">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="deleteUser(employer.userId)" 
+                            matTooltip="Delete User">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                
+                <tr mat-header-row *matHeaderRowDef="employerColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: employerColumns;"></tr>
+              </table>
+            </div>
           </mat-tab>
         </mat-tab-group>
       </div>
@@ -194,54 +189,45 @@
           <p>No pending jobs to approve!</p>
         </div>
         
-        <table *ngIf="!isLoadingJobs && pendingJobs.length > 0" 
-               mat-table [dataSource]="pendingJobs" class="full-width-table mat-elevation-z2">
-          <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef>Job Title</th>
-            <td mat-cell *matCellDef="let job">{{ job.title }}</td>
-          </ng-container>
-          
-          <ng-container matColumnDef="company">
-            <th mat-header-cell *matHeaderCellDef>Company</th>
-            <td mat-cell *matCellDef="let job">{{ job.employer?.companyName || 'N/A' }}</td>
-          </ng-container>
-          
-          <ng-container matColumnDef="location">
-            <th mat-header-cell *matHeaderCellDef>Location</th>
-            <td mat-cell *matCellDef="let job">{{ job.location }}</td>
-          </ng-container>
-          
-          <ng-container matColumnDef="salary">
-            <th mat-header-cell *matHeaderCellDef>Salary</th>
-            <td mat-cell *matCellDef="let job">{{ job.salary | currency:'EGP':'symbol':'1.0-0' }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="employmentType">
-            <th mat-header-cell *matHeaderCellDef>Type</th>
-            <td mat-cell *matCellDef="let job">{{ job.employmentType }}</td>
-          </ng-container>
-          
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
-            <td mat-cell *matCellDef="let job">
-              <button mat-icon-button color="accent" (click)="showJobDetails(job)" 
-                      matTooltip="View Details">
-                <mat-icon>visibility</mat-icon>
-              </button>
-              <button mat-icon-button color="primary" (click)="approveJob(job.id)" 
-                      matTooltip="Approve Job">
-                <mat-icon>check_circle</mat-icon>
-              </button>
-              <button mat-icon-button color="warn" (click)="rejectJob(job.id)" 
-                      matTooltip="Reject Job">
-                <mat-icon>cancel</mat-icon>
-              </button>
-            </td>
-          </ng-container>
-          
-          <tr mat-header-row *matHeaderRowDef="jobColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: jobColumns;"></tr>
-        </table>
+        <div *ngIf="!isLoadingJobs && pendingJobs.length > 0" class="table-container">
+          <table mat-table [dataSource]="pendingJobs" class="full-width-table mat-elevation-z2">
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef>Job Title</th>
+              <td mat-cell *matCellDef="let job">{{ job.title }}</td>
+            </ng-container>
+            
+            <ng-container matColumnDef="company">
+              <th mat-header-cell *matHeaderCellDef>Company</th>
+              <td mat-cell *matCellDef="let job">{{ job.companyName || 'N/A' }}</td>
+            </ng-container>
+                      
+            <ng-container matColumnDef="salary">
+              <th mat-header-cell *matHeaderCellDef>Salary</th>
+              <td mat-cell *matCellDef="let job">{{ job.salary | currency:'EGP':'symbol':'1.0-0' }}</td>
+            </ng-container>  
+            
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let job">
+                <button mat-icon-button color="accent" (click)="showJobDetails(job)" 
+                        matTooltip="View Details">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button mat-icon-button color="primary" (click)="approveJob(job.id)" 
+                        matTooltip="Approve Job">
+                  <mat-icon>check_circle</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="rejectJob(job.id)" 
+                        matTooltip="Reject Job">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+            
+            <tr mat-header-row *matHeaderRowDef="jobColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: jobColumns;"></tr>
+          </table>
+        </div>
       </div>
 
       <!-- Charts Section -->
@@ -268,14 +254,20 @@
       <div *ngIf="showDetailsCard" class="details-card-overlay" (click)="closeDetails()">
         <mat-card class="details-card" (click)="$event.stopPropagation()">
           <mat-card-header>
-            <mat-card-title>{{ detailsType === 'seeker' ? selectedSeeker?.name : detailsType === 'employer' ? selectedEmployer?.name : selectedJob?.title }}</mat-card-title>
+            <mat-card-title ></mat-card-title>
             <button mat-icon-button class="close-button" (click)="closeDetails()">
               <mat-icon>close</mat-icon>
             </button>
           </mat-card-header>
           <mat-card-content>
+            <!-- Loading Details -->
+            <div *ngIf="isLoadingDetails" class="loading-container">
+              <mat-spinner diameter="40"></mat-spinner>
+              <p>Loading detailed information...</p>
+            </div>
+
             <!-- Seeker Details -->
-            <div *ngIf="detailsType === 'seeker' && selectedSeeker">
+            <div *ngIf="detailsType === 'seeker' && selectedSeeker && !isLoadingDetails">
               <div class="profile-header">
                 <img [src]="selectedSeeker.profileImageUrl || 'https://via.placeholder.com/150'" 
                      alt="Profile Image" class="profile-image">
@@ -286,10 +278,6 @@
               </div>
               <mat-divider></mat-divider>
               <div class="details-grid">
-                <div class="details-row">
-                  <span class="details-label">User ID:</span>
-                  <span class="details-value">{{ selectedSeeker.userId }}</span>
-                </div>
                 <div class="details-row">
                   <span class="details-label">Email:</span>
                   <span class="details-value">{{ selectedSeeker.email }}</span>
@@ -325,8 +313,8 @@
                 <div class="details-row">
                   <span class="details-label">Skills:</span>
                   <div class="details-value">
-                    <mat-chip-set *ngIf="selectedSeeker.skillName?.length">
-                      <mat-chip *ngFor="let skill of selectedSeeker.skillName">{{ skill }}</mat-chip>
+                    <mat-chip-set  *ngIf="selectedSeeker.skillName?.length">
+                      <mat-chip class="bla" *ngFor="let skill of selectedSeeker.skillName">{{ skill }} </mat-chip>
                     </mat-chip-set>
                     <span *ngIf="!selectedSeeker.skillName?.length">N/A</span>
                   </div>
@@ -335,7 +323,7 @@
                   <span class="details-label">Certificates:</span>
                   <div class="details-value">
                     <mat-chip-set *ngIf="selectedSeeker.certificateName?.length">
-                      <mat-chip *ngFor="let cert of selectedSeeker.certificateName">{{ cert }}</mat-chip>
+                      <mat-chip class="bla" *ngFor="let cert of selectedSeeker.certificateName">{{ cert }}</mat-chip>
                     </mat-chip-set>
                     <span *ngIf="!selectedSeeker.certificateName?.length">N/A</span>
                   </div>
@@ -344,7 +332,7 @@
                   <span class="details-label">Training:</span>
                   <div class="details-value">
                     <mat-chip-set *ngIf="selectedSeeker.trainingName?.length">
-                      <mat-chip *ngFor="let training of selectedSeeker.trainingName">{{ training }}</mat-chip>
+                      <mat-chip class="bla" *ngFor="let training of selectedSeeker.trainingName">{{ training }}</mat-chip>
                     </mat-chip-set>
                     <span *ngIf="!selectedSeeker.trainingName?.length">N/A</span>
                   </div>
@@ -353,7 +341,7 @@
                   <span class="details-label">Interests:</span>
                   <div class="details-value">
                     <mat-chip-set *ngIf="selectedSeeker.interestName?.length">
-                      <mat-chip *ngFor="let interest of selectedSeeker.interestName">{{ interest }}</mat-chip>
+                      <mat-chip class="bla" *ngFor="let interest of selectedSeeker.interestName">{{ interest }}</mat-chip>
                     </mat-chip-set>
                     <span *ngIf="!selectedSeeker.interestName?.length">N/A</span>
                   </div>
@@ -362,28 +350,24 @@
             </div>
 
             <!-- Employer Details -->
-            <div *ngIf="detailsType === 'employer' && selectedEmployer">
+            <div *ngIf="detailsType === 'employer' && selectedEmployer && !isLoadingDetails">
               <div class="profile-header">
-                <img [src]="selectedEmployer.logoUrl || 'https://via.placeholder.com/150'" 
+                <img [src]="selectedEmployer.companyImage || 'https://via.placeholder.com/150'" 
                      alt="Company Logo" class="profile-image">
                 <div>
-                  <h3>{{ selectedEmployer.name }}</h3>
+                  <h3>{{ selectedEmployer.companyName }}</h3>
                   <p class="profile-title">{{ selectedEmployer.companyName || 'Employer' }}</p>
                 </div>
               </div>
               <mat-divider></mat-divider>
               <div class="details-grid">
                 <div class="details-row">
-                  <span class="details-label">User ID:</span>
-                  <span class="details-value">{{ selectedEmployer.userId }}</span>
-                </div>
-                <div class="details-row">
                   <span class="details-label">Email:</span>
-                  <span class="details-value">{{ selectedEmployer.email }}</span>
+                  <span class="details-value">{{ selectedEmployer.email || 'N/A'}}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Phone:</span>
-                  <span class="details-value">{{ selectedEmployer.phoneNumber || 'N/A' }}</span>
+                  <span class="details-value">{{ selectedEmployer.phone || 'N/A'}}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Company Name:</span>
@@ -399,7 +383,7 @@
                 </div>
                 <div class="details-row">
                   <span class="details-label">Location:</span>
-                  <span class="details-value">{{ selectedEmployer.location || 'N/A' }}</span>
+                  <span class="details-value">{{ selectedEmployer.companyLocation || 'N/A' }}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Industry:</span>
@@ -407,31 +391,27 @@
                 </div>
                 <div class="details-row">
                   <span class="details-label">Company Size:</span>
-                  <span class="details-value">{{ selectedEmployer.companySize || 'N/A' }}</span>
+                  <span class="details-value">{{ selectedEmployer.employeeRange || 'N/A' }}</span>
                 </div>
                 <div class="details-row full-width">
                   <span class="details-label">Description:</span>
-                  <span class="details-value">{{ selectedEmployer.description || 'N/A' }}</span>
+                  <span class="details-value">{{ selectedEmployer.companyDescription || 'N/A' }}</span>
                 </div>
               </div>
             </div>
 
             <!-- Job Details -->
-            <div *ngIf="detailsType === 'job' && selectedJob">
+            <div *ngIf="detailsType === 'job' && selectedJob && !isLoadingDetails">
               <div class="profile-header">
-                <img [src]="selectedJob.employer?.logoUrl || 'https://via.placeholder.com/150'" 
+                <img [src]="selectedJob.companyImage" 
                      alt="Company Logo" class="profile-image">
                 <div>
                   <h3>{{ selectedJob.title }}</h3>
-                  <p class="profile-title">{{ selectedJob.employer?.companyName }}</p>
+                  <p class="profile-title">{{ selectedJob.companyName }}</p>
                 </div>
               </div>
               <mat-divider></mat-divider>
               <div class="details-grid">
-                <div class="details-row">
-                  <span class="details-label">Job ID:</span>
-                  <span class="details-value">{{ selectedJob.id }}</span>
-                </div>
                 <div class="details-row">
                   <span class="details-label">Title:</span>
                   <span class="details-value">{{ selectedJob.title }}</span>
@@ -446,7 +426,7 @@
                 </div>
                 <div class="details-row">
                   <span class="details-label">Employment Type:</span>
-                  <span class="details-value">{{ selectedJob.employmentType }}</span>
+                  <span class="details-value">{{ selectedJob.jobType }}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Posted Date:</span>
@@ -455,26 +435,26 @@
                 <div class="details-row">
                   <span class="details-label">Status:</span>
                   <span class="details-value">
-                    <mat-chip [style.background-color]="selectedJob.isApproved ? '#4caf50' : '#ff9800'">
+                    <mat-chip class="bla" [style.background-color]="selectedJob.isApproved ? '#a5b3f1' : '#bfabd3'">
                       {{ selectedJob.isApproved ? 'Approved' : 'Pending' }}
                     </mat-chip>
                   </span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Employer Email:</span>
-                  <span class="details-value">{{ selectedJob.employer?.email || 'N/A' }}</span>
+                  <span class="details-value">{{ selectedJob.email || 'N/A' }}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Employer Phone:</span>
-                  <span class="details-value">{{ selectedJob.employer?.phoneNumber || 'N/A' }}</span>
+                  <span class="details-value">{{ selectedJob.phone || 'N/A' }}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Company Website:</span>
-                  <a *ngIf="selectedJob.employer?.website" [href]="selectedJob.employer.website" 
+                  <a *ngIf="selectedJob?.website" [href]="selectedJob.website" 
                      target="_blank" class="details-value website-link">
                     <mat-icon>language</mat-icon> Visit Website
                   </a>
-                  <span *ngIf="!selectedJob.employer?.website" class="details-value">N/A</span>
+                  <span *ngIf="!selectedJob?.website" class="details-value">N/A</span>
                 </div>
                 <div class="details-row full-width">
                   <span class="details-label">Description:</span>

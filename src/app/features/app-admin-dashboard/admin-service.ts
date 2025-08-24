@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 export interface Seeker {
   id: number;
@@ -27,14 +27,14 @@ export interface Employer {
   userId: string;
   name: string;
   email: string;
-  phoneNumber?: string;
+  phone?: string;
   companyName?: string;
   website?: string;
-  description?: string;
-  location?: string;
+  companyDescription?: string;
+  companyLocation?: string;
   industry?: string;
-  companySize?: string;
-  logoUrl?: string;
+  employeeRange?: string;
+  companyImage?: string;
 }
 
 export interface Job {
@@ -47,15 +47,12 @@ export interface Job {
   employmentType: string;
   postedDate: Date;
   isApproved: boolean;
-  employer: {
-    id: number;
-    name: string;
-    companyName: string;
-    email: string;
-    phoneNumber?: string;
-    website?: string;
-    logoUrl?: string;
-  };
+  companyName?: string;
+  companyImage?: string;
+  email: string;
+  phone?: string;
+  website?: string;
+  jobType?: string;
 }
 
 export interface AdminStats {
@@ -85,8 +82,6 @@ export class AdminService {
   }
 
   private handleError = (error: any) => {
-    console.error('API Error:', error);
-    
     const errorMessages = {
       0: 'Cannot connect to server. Please check if the server is running.',
       401: 'Authentication failed. Please login again.',
@@ -120,46 +115,35 @@ export class AdminService {
     }
   }
 
-  logout(): void {
-    localStorage.removeItem('authToken');
-  }
-
   // API calls
   getStats(): Observable<AdminStats> {
     return this.http.get<AdminStats>(`${this.baseUrl}/stats`, { headers: this.getHeaders() })
-      .pipe(
-        tap(stats => console.log('Stats loaded:', stats)),
-        catchError(this.handleError)
-      );
+      .pipe(catchError(this.handleError));
   }
 
   getAllSeekers(): Observable<Seeker[]> {
     return this.http.get<Seeker[]>(`${this.baseUrl}/seekers`, { headers: this.getHeaders() })
-      .pipe(
-        tap(seekers => console.log('Seekers loaded:', seekers)),
-        catchError(this.handleError)
-      );
+      .pipe(catchError(this.handleError));
+  }
+
+  getSeekerById(seekerId: string): Observable<Seeker> {
+    return this.http.get<Seeker>(`${this.baseUrl}/seeker/${seekerId}`, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
   }
 
   getAllEmployers(): Observable<Employer[]> {
     return this.http.get<Employer[]>(`${this.baseUrl}/employers`, { headers: this.getHeaders() })
-      .pipe(
-        tap(employers => console.log('Employers loaded:', employers)),
-        catchError(this.handleError)
-      );
+      .pipe(catchError(this.handleError));
   }
 
-  getAllJobs(): Observable<Job[]> {
-    return this.http.get<Job[]>(`${this.baseUrl}/jobs`, { headers: this.getHeaders() })
+  getEmployerById(employerId: string): Observable<Employer> {
+    return this.http.get<Employer>(`${this.baseUrl}/employer/${employerId}`, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
   getPendingJobs(): Observable<Job[]> {
     return this.http.get<Job[]>(`${this.baseUrl}/jobs/pending`, { headers: this.getHeaders() })
-      .pipe(
-        tap(jobs => console.log('Pending jobs loaded:', jobs.length)),
-        catchError(this.handleError)
-      );
+      .pipe(catchError(this.handleError));
   }
 
   approveJob(jobId: number): Observable<string> {

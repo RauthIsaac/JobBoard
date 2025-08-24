@@ -43,6 +43,7 @@ export class AdminDashboardAnalytics implements OnInit, AfterViewInit, OnDestroy
   isLoadingSeekers = true;
   isLoadingEmployers = true;
   isLoadingJobs = true;
+  isLoadingDetails = false;
 
   // Data
   stats: AdminStats = { totalSeekers: 0, totalEmployers: 0, totalJobs: 0, pendingJobs: 0 };
@@ -52,8 +53,8 @@ export class AdminDashboardAnalytics implements OnInit, AfterViewInit, OnDestroy
 
   // Table configurations
   seekerColumns = ['name', 'email', 'phoneNumber', 'address', 'skills', 'actions'];
-  employerColumns = ['name', 'email', 'companyName', 'actions'];
-  jobColumns = ['title', 'company', 'location', 'salary', 'employmentType', 'actions'];
+  employerColumns = ['email', 'companyName', 'actions'];
+  jobColumns = ['title', 'company', 'salary', 'actions'];
 
   // Details modal
   showDetailsCard = false;
@@ -68,12 +69,9 @@ export class AdminDashboardAnalytics implements OnInit, AfterViewInit, OnDestroy
 
   ngOnInit(): void {
     this.loadDashboardData();
-    this.createCharts();
-    
   }
 
   ngAfterViewInit(): void {
-    // Ensure charts are created after view is initialized
     this.cdr.detectChanges();
   }
 
@@ -106,14 +104,17 @@ export class AdminDashboardAnalytics implements OnInit, AfterViewInit, OnDestroy
           this.seekers = response.seekers;
           this.employers = response.employers;
           this.pendingJobs = response.pendingJobs;
-          
-          // Ensure UI is updated before creating charts
+
+          this.isLoadingSeekers = false;
+          this.isLoadingEmployers = false;
+          this.isLoadingJobs = false;
+          this.isLoading = false;
+
           this.cdr.detectChanges();
-          this.createCharts(); // Create charts with initial data
-          console.log('Dashboard data loaded successfully');
+          this.destroyCharts();
+          this.createCharts();
         },
         error: (error) => {
-          console.error('Error loading dashboard data:', error);
           this.showMessage(`Error: ${error.message}`);
         },
         complete: () => {
@@ -121,7 +122,7 @@ export class AdminDashboardAnalytics implements OnInit, AfterViewInit, OnDestroy
           this.isLoadingSeekers = false;
           this.isLoadingEmployers = false;
           this.isLoadingJobs = false;
-          this.cdr.detectChanges(); // Force UI update
+          this.cdr.detectChanges();
         }
       });
   }
@@ -172,17 +173,49 @@ export class AdminDashboardAnalytics implements OnInit, AfterViewInit, OnDestroy
 
   // Details modal methods
   showSeekerDetails(seeker: Seeker): void {
-    this.selectedSeeker = seeker;
+    this.isLoadingDetails = true;
     this.detailsType = 'seeker';
     this.showDetailsCard = true;
     this.resetOtherSelections();
+
+    this.adminService.getSeekerById(seeker.userId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (detailedSeeker) => {
+          this.selectedSeeker = detailedSeeker;
+          this.isLoadingDetails = false;
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          this.showMessage(`Error loading details: ${error.message}`);
+          this.selectedSeeker = seeker;
+          this.isLoadingDetails = false;
+          this.cdr.detectChanges();
+        }
+      });
   }
 
   showEmployerDetails(employer: Employer): void {
-    this.selectedEmployer = employer;
+    this.isLoadingDetails = true;
     this.detailsType = 'employer';
     this.showDetailsCard = true;
     this.resetOtherSelections();
+
+    this.adminService.getEmployerById(employer.userId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (detailedEmployer) => {
+          this.selectedEmployer = detailedEmployer;
+          this.isLoadingDetails = false;
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          this.showMessage(`Error loading details: ${error.message}`);
+          this.selectedEmployer = employer;
+          this.isLoadingDetails = false;
+          this.cdr.detectChanges();
+        }
+      });
   }
 
   showJobDetails(job: Job): void {
@@ -203,65 +236,60 @@ export class AdminDashboardAnalytics implements OnInit, AfterViewInit, OnDestroy
     this.selectedSeeker = null;
     this.selectedEmployer = null;
     this.selectedJob = null;
+    this.isLoadingDetails = false;
   }
 
-  refreshData(): void {
-    this.loadDashboardData();
-    this.showMessage('Refreshing data...');
+private createCharts(): void {
+  if (this.userChart) this.userChart.destroy();
+  if (this.jobStatusChart) this.jobStatusChart.destroy();
+
+  const ctxUser = this.userChartRef?.nativeElement?.getContext('2d');
+  const ctxJob = this.jobStatusChartRef?.nativeElement?.getContext('2d');
+
+  if (ctxUser && this.stats.totalSeekers > 0 && this.stats.totalEmployers > 0) {
+    this.userChart = new Chart(ctxUser, {
+      type: 'bar',
+      data: {
+        labels: ['Job Seekers', 'Employers'],
+        datasets: [{
+          label: 'Total Users',
+          data: [this.stats.totalSeekers, this.stats.totalEmployers],
+          backgroundColor: ['rgba(108, 117, 125, 0.3)', 'rgba(40, 167, 69, 0.3)'],
+          borderColor: ['#6c757d', '#28a745'],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+      }
+    });
   }
 
-  private createCharts(): void {
-    if (this.userChart) this.userChart.destroy();
-    if (this.jobStatusChart) this.jobStatusChart.destroy();
-
-    const ctxUser = this.userChartRef?.nativeElement?.getContext('2d');
-    const ctxJob = this.jobStatusChartRef?.nativeElement?.getContext('2d');
-
-    if (ctxUser && this.stats.totalSeekers > 0 && this.stats.totalEmployers > 0) {
-      this.userChart = new Chart(ctxUser, {
-        type: 'bar',
-        data: {
-          labels: ['Job Seekers', 'Employers'],
-          datasets: [{
-            label: 'Total Users',
-            data: [this.stats.totalSeekers, this.stats.totalEmployers],
-            backgroundColor: ['rgba(54, 162, 235, 0.8)', 'rgba(255, 99, 132, 0.8)'],
-            borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
-            borderWidth: 2
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { y: { beginAtZero: true } }
-        }
-      });
-    }
-
-    if (ctxJob && this.stats.totalJobs > 0 && this.stats.pendingJobs >= 0) {
-      const approvedJobs = this.stats.totalJobs - this.stats.pendingJobs;
-      this.jobStatusChart = new Chart(ctxJob, {
-        type: 'doughnut',
-        data: {
-          labels: ['Approved Jobs', 'Pending Jobs'],
-          datasets: [{
-            data: [approvedJobs, this.stats.pendingJobs],
-            backgroundColor: ['rgba(40, 167, 69, 0.8)', 'rgba(255, 193, 7, 0.8)'],
-            borderColor: ['rgba(40, 167, 69, 1)', 'rgba(255, 193, 7, 1)'],
-            borderWidth: 2,
-            hoverOffset: 4
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { position: 'bottom' } }
-        }
-      });
-    }
+  if (ctxJob && this.stats.totalJobs > 0 && this.stats.pendingJobs >= 0) {
+    const approvedJobs = this.stats.totalJobs - this.stats.pendingJobs;
+    this.jobStatusChart = new Chart(ctxJob, {
+      type: 'doughnut',
+      data: {
+        labels: ['Approved Jobs', 'Pending Jobs'],
+        datasets: [{
+          data: [approvedJobs, this.stats.pendingJobs],
+          backgroundColor: ['#466bd1ff', '#6c757d'],
+          borderColor: ['#596b9cff', '#9ca2a7ff'],
+          borderWidth: 2,
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom' } }
+      }
+    });
   }
-
+}
   private destroyCharts(): void {
     this.userChart?.destroy();
     this.jobStatusChart?.destroy();
