@@ -12,7 +12,7 @@ export interface NotificationDto {
   isRead: boolean;
 }
 
-@Injectable({  
+@Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
@@ -40,7 +40,7 @@ export class NotificationService {
         this.connectionStatus.next('No Token');
         return;
       }
-
+      console.log('User ID from authService:', this.authService.getUserId()); // Add this line
       this.hubConnection = new signalR.HubConnectionBuilder()
         .withUrl(this.hubUrl, { accessTokenFactory: () => token })
         .withAutomaticReconnect([0, 2000, 10000, 30000])
