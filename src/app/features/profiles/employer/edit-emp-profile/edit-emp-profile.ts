@@ -180,7 +180,8 @@ export class EditEmpProfile implements OnInit {
   
   // Image handling properties
   selectedImageFile: File | null = null;
-  companyImagePreview: string | null = null;
+  imagePreview: string | null = null;
+  shouldRemoveImage = false;
 
   constructor(
     private authService: AuthService,
@@ -220,12 +221,11 @@ export class EditEmpProfile implements OnInit {
         this.empData.set(data);
         this.profileForm.patchValue(data);
         
-        // Set existing company image if available
-        if (data.companyImage) {
-          this.companyImagePreview = data.companyImage;
-        }
+        // Set image preview to current company image or default
+        this.imagePreview = data.companyImage || '/default.jpg';
         
-        console.log('Employer profile loaded:', this.empData());
+        console.log('Employer profile loaded:', data);
+        console.log('Image preview set to:', this.imagePreview);
       },
       error: (err: any) => {
         console.error('Error loading employer profile:', err);
@@ -236,6 +236,12 @@ export class EditEmpProfile implements OnInit {
         });
       }
     });
+  }
+
+  // Check if user has custom image (not default)
+  hasCustomImage(): boolean {
+    const currentImage = this.empData().companyImage;
+    return currentImage && !currentImage.includes('/default.jpg');
   }
 
   // Trigger file input click
@@ -269,21 +275,35 @@ export class EditEmpProfile implements OnInit {
       }
 
       this.selectedImageFile = file;
+      this.shouldRemoveImage = false;
       
       // Create preview
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.companyImagePreview = e.target.result;
+        this.imagePreview = e.target.result;
       };
       reader.readAsDataURL(file);
     }
   }
 
-  // Remove image
+  // Remove image (set to default)
   removeImage(): void {
     this.selectedImageFile = null;
-    this.companyImagePreview = null;
+    this.imagePreview = '/default.jpg';
+    this.shouldRemoveImage = true;
     this.fileInput.nativeElement.value = '';
+    
+    this.snackBar.open('Company logo will be set to default', 'Close', {
+      duration: 2000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top'
+    });
+  }
+
+  // Handle image error (fallback to default)
+  onImageError(event: any): void {
+    console.log('Image load error, using default');
+    event.target.src = '/default.jpg';
   }
 
   saveProfile(): void {
@@ -298,48 +318,51 @@ export class EditEmpProfile implements OnInit {
         formData.establishedYear = parseInt(formData.establishedYear, 10);
       }
       
-      console.log('Saving profile data:', formData);
-      console.log('Selected image file:', this.selectedImageFile);
+      // Add remove flag if needed
+      if (this.shouldRemoveImage) {
+        formData.removeCompanyImage = true;
+      }
+      
+      console.log('Saving profile:', formData);
+      console.log('Selected file:', this.selectedImageFile);
+      console.log('Should remove:', this.shouldRemoveImage);
 
       this.authService.updateEmployerProfile(formData, this.selectedImageFile || undefined).subscribe({
         next: (response) => {
-          console.log('Profile updated successfully:', response);
+          console.log('Profile updated successfully');
           
-          setTimeout(() => {
-            this.isLoading = false;
-            
-            this.snackBar.open('Profile updated successfully!', 'Close', {
-              duration: 3000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top'
-            });
-
-            this.selectedImageFile = null;
-              
-           this.router.navigate(['/empProfile']);
-
+          this.isLoading = false;
+          
+          this.snackBar.open('Profile updated successfully!', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
           });
+
+          // Reset flags
+          this.selectedImageFile = null;
+          this.shouldRemoveImage = false;
+            
+          this.router.navigate(['/empProfile']);
         },
         error: (err) => {
           console.error('Error updating profile:', err);
           
-          setTimeout(() => {
-            this.isLoading = false;
-            
-            let errorMessage = 'Failed to update profile';
-            if (err.error?.message) {
-              errorMessage = err.error.message;
-            } else if (err.status === 401) {
-              errorMessage = 'Unauthorized. Please login again.';
-            } else if (err.status === 400) {
-              errorMessage = 'Invalid data provided';
-            }
+          this.isLoading = false;
+          
+          let errorMessage = 'Failed to update profile';
+          if (err.error?.message) {
+            errorMessage = err.error.message;
+          } else if (err.status === 401) {
+            errorMessage = 'Unauthorized. Please login again.';
+          } else if (err.status === 400) {
+            errorMessage = 'Invalid data provided';
+          }
 
-            this.snackBar.open(errorMessage, 'Close', {
-              duration: 5000,
-              horizontalPosition: 'center',
-              verticalPosition: 'top'
-            });
+          this.snackBar.open(errorMessage, 'Close', {
+            duration: 5000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
           });
         }
       });
