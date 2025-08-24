@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ApplicationService } from '../application-service';
 import { IemployerApplications } from '../../../shared/models/iemployer-applications';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
-import { RouterLink } from '@angular/router';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 
 export enum ApplicationStatus {
   Pending = 0,
@@ -29,11 +29,12 @@ export class AppViewEmp implements OnInit {
   selectedStatus = signal<string>('');
   
   ApplicationStatus = ApplicationStatus;
+  appId = signal<number>(0);
   
   private searchSubject = new Subject<string>();
   private filterSubject = new Subject<void>();
 
-  constructor(private appService: ApplicationService) {
+  constructor(private appService: ApplicationService, private route: ActivatedRoute) {
     // Debounce search input
     this.searchSubject.pipe(
       debounceTime(500),
@@ -52,6 +53,12 @@ export class AppViewEmp implements OnInit {
   }
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      const id = +params['id'];
+      if (id && id > 0) {
+        this.appId.set(id);
+      }
+    });
     this.loadEmployerApplications();
   }
 
@@ -92,14 +99,7 @@ export class AppViewEmp implements OnInit {
     this.filterSubject.next();
   }
 
-  updateApplicationStatus(applicationId: number, status: ApplicationStatus): void {
-    this.appService.updateApplicationStatus(applicationId, status).subscribe({
-      next: () => {
-        this.loadEmployerApplications(); 
-      },
-      error: (err) => console.error('Error updating status:', err)
-    });
-  }
+  
 
   getStatusDisplay(status: ApplicationStatus): string {
     switch (status) {
@@ -155,31 +155,6 @@ export class AppViewEmp implements OnInit {
     return classes[Math.abs(hash) % classes.length];
   }
 
-  scheduleInterview(applicationId: number): void {
-    if (confirm('Schedule interview for this application?')) {
-      this.updateApplicationStatus(applicationId, ApplicationStatus.Interviewed);
-    }
-  }
-
-  rejectApplication(applicationId: number): void {
-    if (confirm('Are you sure you want to reject this application?')) {
-      this.updateApplicationStatus(applicationId, ApplicationStatus.Rejected);
-    }
-  }
-
-  acceptApplication(applicationId: number): void {
-    if (confirm('Accept this application?')) {
-      this.updateApplicationStatus(applicationId, ApplicationStatus.Accepted);
-    }
-  }
-
-  setUnderReview(applicationId: number): void {
-    this.updateApplicationStatus(applicationId, ApplicationStatus.UnderReview);
-  }
-
-  refreshApplications(): void {
-    this.loadEmployerApplications();
-  }
 
   isStatusActive(status: string): boolean {
     return this.selectedStatus() === status;

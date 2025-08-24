@@ -91,7 +91,7 @@ export class ApplicationService {
   }
 
   /*------------------------ Update Application Status ------------------------*/
-  updateApplicationStatus(applicationId: number, status: number): Observable<any> {
+  updateApplicationStatus(applicationId: number, status: string): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.authService.getToken()}`,
       'Content-Type': 'application/json'
@@ -100,11 +100,13 @@ export class ApplicationService {
     const statusDto = { status: status };
     
     return this.http.put(
-      `${this.baseUrl}/${applicationId}/status`,
+      `${this.baseUrl}/status/${applicationId}`,
       statusDto,
       { headers }
     );
   }
+
+
 
   /*------------------------ Submit New Application ------------------------*/
   submitApplication(formData: FormData): Observable<any> {
@@ -115,5 +117,21 @@ export class ApplicationService {
     return this.http.post(`${this.baseUrl}`, formData, { headers });
   }
 
+
+  /*------------------------ Get Job Applications ------------------------*/
+  getJobApplicationsByJobId(jobId: number): Observable<any>{
+    return this.http.get<any>(`${this.baseUrl}/job-applications/${jobId}`);
+  }
+  
+
+  /*------------------------ Get Job Applications ------------------------*/
+  getAppDetailsByAppbId(appId: number): Observable<any>{
+    return this.http.get<any>(`${this.baseUrl}/${appId}`);
+  }
+
   //#endregion
+
+
+
+
 }
