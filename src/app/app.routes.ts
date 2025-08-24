@@ -1,10 +1,12 @@
 import { Routes } from '@angular/router';
 import { ConfirmEmail } from './auth/confirm-email/confirm-email';
+import { ExternalLogin } from './auth/external-login/external-login';
 import { ForgetPassword } from './auth/forget-password/forget-password';
 import { Login } from './auth/login/login';
 import { ResetPassword } from './auth/reset-password/reset-password';
 import { Signup } from './auth/signup/signup';
 import { ChatButton } from './features/AIChat/chat-button/chat-button';
+import { AdminDashboardAnalytics } from './features/app-admin-dashboard/admin-dashboard-analytics/admin-dashboard-analytics';
 import { ApplicationForm } from './features/Application/application-form/application-form';
 import { Layout } from './features/Application/seeker-application/layout/layout';
 import { Documents } from './features/Application/seeker-application/steps/documents/documents';
@@ -15,6 +17,7 @@ import { Explore } from './features/Explore/explore';
 import { Home } from './features/Home/home/home';
 import { AddJob } from './features/Jobs/add-job/add-job';
 import { EditJob } from './features/Jobs/edit-job/edit-job';
+import { EmpPostedJobs } from './features/Jobs/emp-posted-jobs/emp-posted-jobs';
 import { JobDetails } from './features/Jobs/job-details/job-details';
 import { JobView } from './features/Jobs/job-view/job-view';
 import { SavedJobs } from './features/Jobs/saved-jobs/saved-jobs';
@@ -23,15 +26,16 @@ import { EditEmpProfile } from './features/profiles/employer/edit-emp-profile/ed
 import { EmployerAnalyticsSection } from './features/profiles/employer/employer-analytics-section/employer-analytics-section';
 import { EmployerDashboard } from './features/profiles/employer/employer-dashboard/employer-dashboard';
 import { EmployerDashbordSection } from './features/profiles/employer/employer-dashbord-section/employer-dashbord-section';
-import { EmpPostedJobs } from './features/Jobs/emp-posted-jobs/emp-posted-jobs';
-import { ExternalLogin } from './auth/external-login/external-login';
-import { NotFound } from './Pages/not-found/not-found';
 import { EmployerProfileSection } from './features/profiles/employer/employer-profile-section/employer-profile-section';
 import { EditSeekerProfile } from './features/profiles/seeker/edit-seeker-profile/edit-seeker-profile';
 import { SeekerProfile } from './features/profiles/seeker/seeker-profile/seeker-profile';
+import { NotFound } from './Pages/not-found/not-found';
 import { Navbar } from './shared/components/navbar/navbar';
+import { AppView } from './features/Application/app-view/app-view';
+import { AppViewEmp } from './features/Application/app-view-emp/app-view-emp';
+import { AppViewJob } from './features/Application/app-view-job/app-view-job';
 
-
+// import { VerifyEmailComponent } from './verify-email/verify-email';
 
 
 export const routes: Routes = [
@@ -66,7 +70,8 @@ export const routes: Routes = [
             { path: 'documents', component: Documents },
             { path: 'questions', component: Questions },
             { path: 'review', component: Review },
-            { path: '', redirectTo: 'personal-info', pathMatch: 'full' }
+            { path: '', redirectTo: 'personal-info', pathMatch: 'full' },
+            {path: 'profile', component: SeekerProfile},
         ]
     },
 
@@ -83,23 +88,15 @@ export const routes: Routes = [
         ]
     },
 
-    // {
-    //     path:'',
-    //     component: NavbarEmp,
-    //     children:[
-    //         {path: 'empPostedJobs', component: EmpPostedJobs},
-    //         {path: 'editEmp', component: EditEmpProfile},
-    //         {path: 'addJob', component: AddJob},
-    //         {path: 'editJob/:id', component: EditJob},
-    //     ]
-    // },
 
     {path: 'empPostedJobs', component: EmpPostedJobs},
     {path: 'editEmp', component: EditEmpProfile},
     {path: 'addJob', component: AddJob},
     {path: 'editJob/:id', component: EditJob},
     
-
+    {path: 'appView/:id', component: AppView},
+    {path: 'appViewEmp', component: AppViewEmp},
+    {path: 'appViewJob/:id', component: AppViewJob},
 
 
 
@@ -117,6 +114,8 @@ export const routes: Routes = [
 
         
     {path:'externalLogin', component:ExternalLogin},
+    {path: 'admin', component: AdminDashboardAnalytics},
+
 
     {path: '**', component: NotFound}
     

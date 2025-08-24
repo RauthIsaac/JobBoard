@@ -4,6 +4,16 @@ body {
     height: 100vh;
 }
 
+.nav{
+    background: var(--basic-color);
+    color: white;
+    padding: 25px 50px;
+
+    a,i{
+        color: white;
+    }
+}
+
 .person-icon{
     font-size: 2rem;
     color: #2563eb;
@@ -77,4 +87,28 @@ body {
 
 .bi{
     color: #2563eb;
+}
+
+button{
+    border: none;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.accept-btn{
+    background-color: rgb(39, 39, 218) ;
+    color: white;
+}
+.accept-btn:hover{
+    background-color: rgb(14, 9, 105) ;
+}
+
+.under-review-btn:hover{
+    background: var(--basic-gray-hover);
+    color: black;
+}
+
+.interview-btn:hover{
+    background: var(--basic-gray-hover);
+    color:black;
 }

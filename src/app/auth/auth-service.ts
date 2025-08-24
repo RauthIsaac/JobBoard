@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,9 @@ export class AuthService {
   private empData = signal<any>({});
   private isEmployerProfileLoaded = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.initializeUserId();
+  }
 
   /*---------------------------- Register ----------------------------*/
   register(payload: any): Observable<any> {
@@ -66,8 +68,62 @@ export class AuthService {
   }
 
   /*---------------------------- Get userId ----------------------------*/
-  getUserId(): string |null {
-    return localStorage.getItem(this.User_ID)
+  private currentUserId = new BehaviorSubject<string>('');
+
+  private initializeUserId(): void {
+    // Try to get userId from localStorage
+    const storedUserId = localStorage.getItem('userId');
+    
+    if (storedUserId) {
+      this.currentUserId.next(storedUserId);
+    } else {
+      // Or extract from JWT token if you're using tokens
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        const userId = this.extractUserIdFromToken(token);
+        if (userId) {
+          this.currentUserId.next(userId);
+        }
+      }
+    }
+  }
+
+  // Method to get current userId (synchronous)
+  getUserId(): string | null {
+    return localStorage.getItem(this.User_ID);
+  }
+
+  // Method to get userId as Observable (reactive)
+  getUserId$(): Observable<string> {
+    return this.currentUserId.asObservable();
+  }
+
+  // Method to set userId (called after successful login)
+  setUserId(userId: string): void {
+    this.currentUserId.next(userId);
+    localStorage.setItem('userId', userId); // Persist to storage
+  }
+
+  // Helper method to extract userId from JWT token
+  private extractUserIdFromToken(token: string): string | null {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.sub || payload.userId || payload.id || null;
+    } catch (error) {
+      console.error('Error parsing token:', error);
+      return null;
+    }
+  }
+
+  // Method to clear userId (called on logout)
+  clearUserId(): void {
+    this.currentUserId.next('');
+    localStorage.removeItem('userId');
+  }
+
+  // Check if user is authenticated
+  isAuthenticated(): boolean {
+    return this.getUserId() !== '';
   }
 
   /*---------------------------- Get User Name ----------------------------*/

@@ -1,79 +1,163 @@
-<div class="container">
-  <div class="form-container">
-    <div class="my-4 text-center">
-      <span class="fs-2 fw-medium">Create your account</span>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account</title>
+</head>
+<body>
+  <div class="container">
+    <div class="form-container">
+      <div class="my-4 text-center">
+        <span class="fs-2 fw-medium">Create your account</span>
+      </div>
+
+      <!-- Google Sign-up Section -->
+      <div class="google-signin-section" [formGroup]="signupForm">
+        <!-- Loading Overlay for Google -->
+        <div *ngIf="isGoogleLoading" class="google-loading-overlay">
+          <div class="spinner"></div>
+          <p>Creating your account...</p>
+        </div>
+
+        <!-- Google Success Message -->
+        <div *ngIf="googleSuccessMessage" class="google-alert google-alert-success">
+          {{ googleSuccessMessage }}
+          <button type="button" class="alert-close" (click)="googleSuccessMessage = ''">×</button>
+        </div>
+
+        <!-- Google Error Message -->
+        <div *ngIf="googleErrorMessage" class="google-alert google-alert-danger">
+          {{ googleErrorMessage }}
+          <button type="button" class="alert-close" (click)="googleErrorMessage = ''">×</button>
+        </div>
+
+        <div class="signin-header">
+          <h6>Quick Sign-up with Google</h6>
+          <p>Get started in seconds with your Google account</p>
+        </div>
+
+        <!-- User Type Selection -->
+        <div class="form-group">
+          <label class="form-label">I want to sign up as:</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" formControlName="user_type" value="Seeker" id="google-seeker">
+              <label for="google-seeker">Job Seeker</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" formControlName="user_type" value="Employer" id="google-employer">
+              <label for="google-employer">Employer</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Employer Fields -->
+        <div *ngIf="isEmployer" class="employer-section">
+          <div class="section-header">
+            <h5>Company Information</h5>
+            <small>Please provide your company details</small>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Company Name <span class="text-danger">*</span></label>
+            <input formControlName="companyName" class="form-control" [class.is-invalid]="companyNameError" type="text" placeholder="Enter your company name">
+            <div *ngIf="companyNameError" class="invalid-feedback">{{ companyNameError }}</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Company Location <span class="text-danger">*</span></label>
+            <input formControlName="companyLocation" class="form-control" [class.is-invalid]="companyLocationError" type="text" placeholder="Enter your company location">
+            <div *ngIf="companyLocationError" class="invalid-feedback">{{ companyLocationError }}</div>
+          </div>
+        </div>
+
+        <!-- Google Sign-up Button -->
+        <div class="google-button-container">
+          <div class="g_id_signin"></div>
+        </div>
+
+        <div class="signin-footer">
+          <small>
+            By signing up, you agree to our 
+            <a href="/terms" target="_blank">Terms of Service</a> and 
+            <a href="/privacy" target="_blank">Privacy Policy</a>
+          </small>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="signin-divider">
+        <span>or sign up with email</span>
+      </div>
+
+      <!-- Traditional Sign-up Form -->
+      <form class="w-100" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+        <!-- Username -->
+        <div class="full-width my-3">
+          <label class="fs-5">Username</label>
+          <input type="text" formControlName="userName" class="form-control" placeholder="ex: userName" />
+          <div *ngIf="signupForm.get('userName')?.invalid && signupForm.get('userName')?.touched" class="valid-form">
+            <div *ngIf="signupForm.get('userName')?.errors?.['required']">Username is required</div>
+            <div *ngIf="signupForm.get('userName')?.errors?.['notUnique']">Username already exists</div>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="full-width my-3">
+          <label class="fs-5">Email</label>
+          <input type="email" formControlName="email" class="form-control" placeholder="ex: user@gmail.com" />
+          <div *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched" class="valid-form">
+            <div *ngIf="signupForm.get('email')?.errors?.['required']">Email is required</div>
+            <div *ngIf="signupForm.get('email')?.errors?.['email']">Invalid email format</div>
+            <div *ngIf="signupForm.get('email')?.errors?.['notUnique']">Email already exists</div>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="full-width my-3">
+          <label class="fs-5">Password</label>
+          <input [type]="hidePassword ? 'password' : 'text'" formControlName="password" class="form-control" placeholder="********" />
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="full-width my-3">
+          <label class="fs-5">Confirm Password</label>
+          <input [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword" class="form-control" placeholder="********" />
+        </div>
+
+        <div *ngIf="signupForm.errors?.['passwordMismatch']" class="valid-form">Passwords do not match</div>
+
+        <!-- User Type -->
+        <div class="my-3">
+          <label class="fs-5 d-block">User Type</label>
+          <mat-radio-group formControlName="user_type">
+            <mat-radio-button value="Seeker">Job Seeker</mat-radio-button>
+            <mat-radio-button value="Employer">Employer</mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <!-- Employer Only -->
+        <div *ngIf="signupForm.get('user_type')?.value === 'Employer'">
+          <div class="full-width my-3">
+            <label class="fs-5">Company Name</label>
+            <input type="text" formControlName="companyName" class="form-control" placeholder="ex: Google LLC" />
+          </div>
+          <div class="full-width my-3">
+            <label class="fs-5">Company Location</label>
+            <input type="text" formControlName="companyLocation" class="form-control" placeholder="ex: New York, USA" />
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button class="reset-btn fs-4 my-4" type="submit">Register</button>
+
+        <p class="text-center fs-5 mt-3">
+          Already have an account?
+          <a routerLink="/login" class="text-primary" style="cursor: pointer; text-decoration: underline">Login</a>
+        </p>
+      </form>
     </div>
-
-    <form class="w-100" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
-
-      <!-- Username -->
-      <div class="full-width my-3">
-        <label class="fs-5">Username</label>
-        <input type="text" formControlName="userName" class="form-control" placeholder="ex: userName" />
-        <div *ngIf="signupForm.get('userName')?.invalid && signupForm.get('userName')?.touched" class="valid-form">
-          <div *ngIf="signupForm.get('userName')?.errors?.['required']">Username is required</div>
-          <div *ngIf="signupForm.get('userName')?.errors?.['notUnique']">Username already exists</div>
-        </div>
-      </div>
-
-      <!-- Email -->
-      <div class="full-width my-3">
-        <label class="fs-5">Email</label>
-        <input type="email" formControlName="email" class="form-control" placeholder="ex: user@gmail.com" />
-        <div *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched" class="valid-form">
-          <div *ngIf="signupForm.get('email')?.errors?.['required']">Email is required</div>
-          <div *ngIf="signupForm.get('email')?.errors?.['email']">Invalid email format</div>
-          <div *ngIf="signupForm.get('email')?.errors?.['notUnique']">Email already exists</div>
-        </div>
-      </div>
-
-      <!-- Password -->
-      <div class="full-width my-3">
-        <label class="fs-5">Password</label>
-        <input [type]="hidePassword ? 'password' : 'text'" formControlName="password" class="form-control" placeholder="********" />
-      </div>
-
-      <!-- Confirm Password -->
-      <div class="full-width my-3">
-        <label class="fs-5">Confirm Password</label>
-        <input [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword" class="form-control" placeholder="********" />
-      </div>
-
-      <!-- Error for mismatch -->
-      <div *ngIf="signupForm.errors?.['passwordMismatch']" class="valid-form">Passwords do not match</div>
-
-      <!-- User Type -->
-      <div class="my-3">
-        <label class="fs-5 d-block">User Type</label>
-        <mat-radio-group formControlName="user_type">
-          <mat-radio-button value="Employer">Employer</mat-radio-button>
-          <mat-radio-button value="Seeker">Seeker</mat-radio-button>
-        </mat-radio-group>
-      </div>
-
-      <!-- Employer Only -->
-      <div *ngIf="signupForm.get('user_type')?.value === 'Employer'">
-        <div class="full-width my-3">
-          <label class="fs-5">Company Name</label>
-          <input type="text" formControlName="companyName" class="form-control" placeholder="ex: Google LLC" />
-        </div>
-
-        <div class="full-width my-3">
-          <label class="fs-5">Company Location</label>
-          <input type="text" formControlName="companyLocation" class="form-control" placeholder="ex: New York, USA" />
-        </div>
-      </div>
-
-      <!-- Submit -->
-      <button class="reset-btn fs-4 my-4" type="submit">
-        Register
-      </button>
-
-      <!-- Redirect -->
-      <p class="text-center fs-5 mt-3">
-        Already have an account?
-        <a routerLink="/login" class="text-primary" style="cursor: pointer; text-decoration: underline">Login</a>
-      </p>
-    </form>
   </div>
-</div>
+</body>
+</html>

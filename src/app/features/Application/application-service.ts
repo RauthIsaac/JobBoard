@@ -1,11 +1,24 @@
-// application-service.ts
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { AuthService } from '../../auth/auth-service';
+import { ApplicationFilterParams } from '../../shared/models/application-filter-params';
+import { IemployerApplications } from '../../shared/models/iemployer-applications';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApplicationService {
-  
+ 
+  private readonly baseUrl = 'http://localhost:5007/api/Application';
+
+  constructor(
+    private http: HttpClient, 
+    private authService: AuthService
+  ) {}
+
+  /*------------------------ For Post Application ------------------------*/
+  //#region Post Application
   private applicationData: any = {
     fullName: '',
     email: '',
@@ -18,7 +31,7 @@ export class ApplicationService {
     portfolioUrl: '',
     linkedInUrl: '',
     gitHubUrl: '',
-    jobId: 1 // يمكن تمريره من الـ route أو تحديده حسب الحاجة
+    jobId: null
   };
 
   setData(part: Partial<typeof this.applicationData>) {
@@ -42,11 +55,83 @@ export class ApplicationService {
       portfolioUrl: '',
       linkedInUrl: '',
       gitHubUrl: '',
-      jobId: 1
+      jobId: null
     };
   }
 
   setJobId(jobId: number) {
     this.applicationData.jobId = jobId;
   }
+  //#endregion
+
+  /*------------------------ Get Employer Applications with Filters ------------------------*/
+  //#region Get Employer Application with Search & Filter
+
+  getEmployerApplications(filterParams?: any): Observable<IemployerApplications[]> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    
+    let params = new HttpParams();
+    
+    if (filterParams) {
+      if (filterParams.searchValue) {
+        params = params.set('searchValue', filterParams.searchValue);
+      }
+      
+      if (filterParams.status) {
+        params = params.set('status', filterParams.status);
+      }
+    }
+    
+    return this.http.get<IemployerApplications[]>(
+      `${this.baseUrl}/employer-applications`, 
+      { headers, params }
+    );
+  }
+
+  /*------------------------ Update Application Status ------------------------*/
+  updateApplicationStatus(applicationId: number, status: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`,
+      'Content-Type': 'application/json'
+    });
+    
+    const statusDto = { status: status };
+    
+    return this.http.put(
+      `${this.baseUrl}/status/${applicationId}`,
+      statusDto,
+      { headers }
+    );
+  }
+
+
+
+  /*------------------------ Submit New Application ------------------------*/
+  submitApplication(formData: FormData): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    
+    return this.http.post(`${this.baseUrl}`, formData, { headers });
+  }
+
+
+  /*------------------------ Get Job Applications ------------------------*/
+  getJobApplicationsByJobId(jobId: number): Observable<any>{
+    return this.http.get<any>(`${this.baseUrl}/job-applications/${jobId}`);
+  }
+  
+
+  /*------------------------ Get Job Applications ------------------------*/
+  getAppDetailsByAppbId(appId: number): Observable<any>{
+    return this.http.get<any>(`${this.baseUrl}/${appId}`);
+  }
+
+  //#endregion
+
+
+
+
 }
