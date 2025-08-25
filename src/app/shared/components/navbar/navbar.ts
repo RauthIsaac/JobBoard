@@ -248,8 +248,6 @@ export class Navbar implements OnInit, OnDestroy {
     if (this.isSeeker()) {
       return userName || 'User';
     }
-       
-    
     return 'User';
   }
 }

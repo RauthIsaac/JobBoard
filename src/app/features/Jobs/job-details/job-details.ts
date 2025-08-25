@@ -4,10 +4,14 @@ import { RouterLink, ActivatedRoute } from '@angular/router';
 import { JobsService } from '../jobs-service';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { AuthService } from '../../../auth/auth-service';
+import { AdminService } from '../../app-admin-dashboard/admin-service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-job-details',
-  imports: [CurrencyPipe, RouterLink, CommonModule],
+  imports: [CurrencyPipe, RouterLink, CommonModule, NgIf],
   templateUrl: './job-details.html',
   styleUrl: './job-details.css'
 })
@@ -18,31 +22,50 @@ export class JobDetails implements OnInit {
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
 
+  userType = signal<string | null>(null);
 
   requirementsList = computed(() => {
     const details = this.jobDetails();
     if (!details?.requirements) return [];
-    return details.requirements.split('. ').filter((req: string) => req.trim());
+
+    return details.requirements
+      .split(/\.\s+/)
+      .map((req: string) => req.trim())
+      .filter((req: string) => req.length > 0)
+      .map((req: string) => req.endsWith('.') ? req : req + '.');
   });
+
 
   responsibilitiesList = computed(() => {
     const details = this.jobDetails();
-    if (!details?.responsibilities) return [];
-    return details.responsibilities.split('. ').filter((resp: string) => resp.trim());
+    if (!details?.responsabilities) return [];
+    
+    return details.responsabilities
+      .split(/\.\s+/)
+      .map((resp: string) => resp.trim())
+      .filter((resp: string) => resp.length > 0)
+      .map((resp: string) => resp.endsWith('.') ? resp : resp + '.');
   });
 
-  offersList = computed(() => {
+  benefitsList = computed(() => {
     const details = this.jobDetails();
-    if (!details?.offers) return [];
-    return details.offers.split('. ').filter((offer: string) => offer.trim());
+    if (!details?.benefits) return [];
+    
+    return details.benefits
+      .split(/\.\s+/)
+      .map((benefit: string) => benefit.trim())
+      .filter((benefit: string) => benefit.length > 0)
+      .map((benefit: string) => benefit.endsWith('.') ? benefit : benefit + '.');
   });
-
 
   isSavedFlag = signal<boolean>(false);
 
   constructor(
     private jobService: JobsService, 
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private adminService : AdminService, 
+    private snackBar : MatSnackBar
   ) {
     // Listen to changes in savedJobsState
     effect(() => {
@@ -64,6 +87,10 @@ export class JobDetails implements OnInit {
         this.loadJobDetails();
       }
     });
+
+    /* Get the user type */
+    this.userType.set(this.getUserType());
+    console.log('User Type : ',this.userType());
   }
 
   private loadJobDetails(): void {
@@ -125,4 +152,73 @@ export class JobDetails implements OnInit {
       });
     }
   }
+
+
+  getUserType(): string | null{
+    if(this.authService.getUserType() != null){
+      return this.authService.getUserType();
+    }
+    else{
+      return 'User'
+    }
+  }
+
+  isEmployer(): boolean {
+    return this.userType() === 'Employer';
+  }
+
+  isSeeker(): boolean {
+    return this.userType() === 'Seeker';
+  }
+
+  isAdmin(): boolean{
+    return this.userType() === 'Admin';
+  }
+ 
+
+
+
+  ApproveJob(jobId:number){
+    this.adminService.approveJob(jobId).subscribe({
+      next:(res) => {
+        console.log(res);
+        this.snackBar.open('Job is approved successfully!', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
+      },
+      error: (err) =>{
+        console.error(err);
+        this.snackBar.open('Error occurs while approving the job', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+        });
+      }
+    })
+  }
+
+  RejectJob(jobId:number){
+    this.adminService.rejectJob(jobId).subscribe({
+      next:(res) => {
+        console.log(res);
+        this.snackBar.open('Job is rejected successfully!', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
+      },
+      error: (err) =>{
+        console.error(err);
+        this.snackBar.open('Error occurs while rejecting the job', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+        });
+      }
+    })
+  }
+
+
 }

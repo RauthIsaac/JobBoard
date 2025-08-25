@@ -4,6 +4,15 @@ body {
     font-family: 'Segoe UI', sans-serif;
 }
 
+.nav{
+    color: black;
+    padding: 25px 50px;
+
+    a{
+        color: black;
+    }
+}
+
 .page-header {
     margin-bottom: 2rem;
 }

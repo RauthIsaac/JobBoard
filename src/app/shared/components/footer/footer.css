@@ -2,29 +2,6 @@
     background-color: var(--basic-gray);
 }
 
-#EnterEmail{
-    border: none;
-    border-radius: 10px;
-    padding: 5px 20px;
-}
-
-
-.SubBtn{
-    background: var(--basic-color);
-    border: none;
-    border-radius: 10px;
-    color:white;
-    font-weight: 500;  
-}
-
-.SubBtn:hover{
-    background: var(--basic-color-hover);
-    color:white;
-    cursor: pointer;
-}
-
-
-
 .logo-icon{
     font-size: 20px;
     color: white;

@@ -1,10 +1,8 @@
 /* General Layout */
 .analytics-dashboard-card {
   max-width: 1400px;
-  margin: 2rem auto;
   padding: 1.5rem;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-  border-radius: 16px;
   background: linear-gradient(135deg, #1e408a 0%, #3b82f6 100%);
   color: #ffffff;
 }
@@ -34,6 +32,15 @@ mat-card-title {
 mat-card-subtitle {
   color: #e9ecef;
   font-size: 1.1rem;
+}
+
+.logout-btn{
+  border: none;
+  background:white;
+  border-radius: 10px;
+  padding: 10px 30px;
+  color: black;
+  font-size: medium;
 }
 
 .header-actions {

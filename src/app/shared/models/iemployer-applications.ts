@@ -11,6 +11,14 @@ export interface IemployerApplications {
     resumeUrl: string;
 }
 
+export enum ApplicationStatus {
+  Pending = 0,
+  UnderReview = 1,
+  Interviewed = 2,
+  Accepted = 3,
+  Rejected = 4
+}
+
 // Additional interfaces for better type safety
 export interface UpdateApplicationStatusDto {
     status: number;

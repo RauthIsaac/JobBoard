@@ -1,4 +1,3 @@
-// application-service.ts (minor changes: remove unused params like appliedDateFrom/To since not supported, but keep for future; ensure headers)
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -68,7 +67,7 @@ export class ApplicationService {
   /*------------------------ Get Employer Applications with Filters ------------------------*/
   //#region Get Employer Application with Search & Filter
 
-  getEmployerApplications(filterParams?: ApplicationFilterParams): Observable<IemployerApplications[]> {
+  getEmployerApplications(filterParams?: any): Observable<IemployerApplications[]> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.authService.getToken()}`
     });
@@ -76,24 +75,12 @@ export class ApplicationService {
     let params = new HttpParams();
     
     if (filterParams) {
-      if (filterParams.jobId) {
-        params = params.set('jobId', filterParams.jobId.toString());
+      if (filterParams.searchValue) {
+        params = params.set('searchValue', filterParams.searchValue);
       }
       
-      if (filterParams.applicantId) {
-        params = params.set('applicantId', filterParams.applicantId.toString());
-      }
-      
-      if (filterParams.status !== undefined && filterParams.status !== null) {
-        params = params.set('status', filterParams.status.toString());
-      }
-      
-      if (filterParams.pageIndex !== undefined) {
-        params = params.set('pageIndex', filterParams.pageIndex.toString());
-      }
-      
-      if (filterParams.pageSize !== undefined) {
-        params = params.set('pageSize', filterParams.pageSize.toString());
+      if (filterParams.status) {
+        params = params.set('status', filterParams.status);
       }
     }
     
@@ -103,13 +90,8 @@ export class ApplicationService {
     );
   }
 
-  // Legacy method for backward compatibility
-  getEmployerApplication(): Observable<IemployerApplications[]> {
-    return this.getEmployerApplications();
-  }
-
   /*------------------------ Update Application Status ------------------------*/
-  updateApplicationStatus(applicationId: number, status: number): Observable<any> {
+  updateApplicationStatus(applicationId: number, status: string): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.authService.getToken()}`,
       'Content-Type': 'application/json'
@@ -118,11 +100,38 @@ export class ApplicationService {
     const statusDto = { status: status };
     
     return this.http.put(
-      `${this.baseUrl}/${applicationId}/status`,
+      `${this.baseUrl}/status/${applicationId}`,
       statusDto,
       { headers }
     );
   }
 
+
+
+  /*------------------------ Submit New Application ------------------------*/
+  submitApplication(formData: FormData): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    
+    return this.http.post(`${this.baseUrl}`, formData, { headers });
+  }
+
+
+  /*------------------------ Get Job Applications ------------------------*/
+  getJobApplicationsByJobId(jobId: number): Observable<any>{
+    return this.http.get<any>(`${this.baseUrl}/job-applications/${jobId}`);
+  }
+  
+
+  /*------------------------ Get Job Applications ------------------------*/
+  getAppDetailsByAppbId(appId: number): Observable<any>{
+    return this.http.get<any>(`${this.baseUrl}/${appId}`);
+  }
+
   //#endregion
+
+
+
+
 }

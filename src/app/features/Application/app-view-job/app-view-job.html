@@ -2,8 +2,8 @@
 
 <div>
     <div class="nav">
-        <a routerLink="/empDashboard"><i class="bi bi-arrow-left me-3 fs-3"></i> </a>
-        <h5 class="mt-2">Back to Dashboard</h5>
+        <a routerLink="/empPostedJobs"><i class="bi bi-arrow-left me-3 fs-3"></i> </a>
+        <h5 class="mt-2">Back to Your Posted Jobs</h5>
     </div>
     <div class="header-section">
         <div class="title-container">
@@ -21,57 +21,6 @@
 
     <div class="container">
 
-        <div class="filter-section">
-            <div class="search-container">
-                <input type="text" 
-                    class="form-control"
-                    placeholder="Search by job title..."
-                    (input)="onSearchInput($event)" 
-                    [value]="searchTerm()" />
-            </div>
-
-            <div class="clear-filter">
-                <button class="clear-filter-btn" 
-                        (click)="clearFilters()" 
-                        [disabled]="!hasActiveFilters()">
-                    <i class="bi bi-x-lg me-2"></i> Clear Filters
-                </button>
-            </div>
-        </div>
-
-        <div class="status-filter-section">
-            <button class="status-btn" 
-                    [class.active]="isStatusActive('')" 
-                    (click)="onStatusFilterClick('')">
-                All Status
-            </button>
-            <button class="status-btn" 
-                    [class.active]="isStatusActive('Pending')" 
-                    (click)="onStatusFilterClick('Pending')">
-                New
-            </button>
-            <button class="status-btn" 
-                    [class.active]="isStatusActive('UnderReview')" 
-                    (click)="onStatusFilterClick('UnderReview')">
-                Under Review
-            </button>
-            <button class="status-btn" 
-                    [class.active]="isStatusActive('Interviewed')" 
-                    (click)="onStatusFilterClick('Interviewed')">
-                Interview
-            </button>
-            <button class="status-btn" 
-                    [class.active]="isStatusActive('Accepted')" 
-                    (click)="onStatusFilterClick('Accepted')">
-                Hired
-            </button>
-            <button class="status-btn" 
-                    [class.active]="isStatusActive('Rejected')" 
-                    (click)="onStatusFilterClick('Rejected')">
-                Rejected
-            </button>
-        </div>
-
         <div class="applications-section my-3">
             <div *ngIf="isLoading()" class="loading">Loading applications...</div>
 
@@ -80,16 +29,6 @@
                     <h5>{{applicationsList().length}} Application{{applicationsList().length !== 1 ? 's' : ''}} found</h5>
                 </div>
 
-                <div *ngIf="applicationsList().length === 0" class="no-results">
-                    <h3>No applications found</h3>
-                    <p *ngIf="hasActiveFilters()">Try adjusting your search criteria or filters.</p>
-                    <p *ngIf="!hasActiveFilters()">No applications have been received yet.</p>
-                    <button class="clear-all-filters-btn" 
-                            (click)="clearFilters()" 
-                            *ngIf="hasActiveFilters()">
-                        <i class="bi bi-x-lg me-2"></i> Clear Filters
-                    </button>
-                </div>
 
                 <div *ngIf="applicationsList().length > 0" class="application-list">
                     <div *ngFor="let app of applicationsList(); trackBy: trackByApplicationId" 
@@ -124,10 +63,10 @@
                                        <i class="bi bi-box-arrow-up-right me-2"></i> Open CV
                                     </a>
 
-                                    <!-- View Application -->
                                     <button class="view-profile-btn" [routerLink]="['/appView',app.id]">
                                         <i class="bi bi-eye me-2"></i> View Application Details
                                     </button>
+
                                 </div>
                             </div>
                         </div>

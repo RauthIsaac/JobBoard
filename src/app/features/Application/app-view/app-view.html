@@ -1,5 +1,9 @@
 
 <body>
+  <div class="nav">
+      <a routerLink="/appViewEmp"><i class="bi bi-arrow-left me-3 fs-3"></i> </a>
+      <h5 class="mt-2">Back to All Applications</h5>
+  </div>
   <div class="container my-5">
     <!-- Page Header -->
     <div class="mb-4">
@@ -29,7 +33,7 @@
                 </div>
                 <div>
                     <div class="info-label">Full Name</div>
-                    <div class="info-value">Sarah Johnson</div>
+                    <div class="info-value">{{appDetails().fullName}}</div>
                 </div>
               </div>
             </div>
@@ -40,7 +44,7 @@
                     </div>
                     <div>
                         <div class="info-label">Phone</div>
-                        <div class="info-value">+1 (555) 123-4567</div>
+                        <div class="info-value">{{appDetails().phoneNumber}}</div>
                     </div>
                 </div>
             </div>
@@ -51,7 +55,7 @@
                     </div>
                     <div>
                         <div class="info-label">Email</div>
-                        <div class="info-value">sarah.johnson&#64;email.com</div>
+                        <div class="info-value">{{appDetails().email}}</div>
                     </div>
                 </div>
             </div>
@@ -62,7 +66,7 @@
                     </div>
                     <div>
                         <div class="info-label">Location</div>
-                        <div class="info-value">San Francisco, CA</div>
+                        <div class="info-value">{{appDetails().currentLocation}}</div>
                     </div>
                 </div>
             </div>
@@ -84,7 +88,7 @@
                     </div>
                     <div>
                         <div class="info-label">Current Position</div>
-                        <div class="info-value">Senior Frontend Developer</div>
+                        <div class="info-value">{{appDetails().currentJobTitle}}</div>
                     </div>
                 </div>
             </div>
@@ -95,7 +99,7 @@
                     </div>
                     <div>
                         <div class="info-label">Experience</div>
-                        <div class="info-value"><span class="small-badge">6 years</span></div>
+                        <div class="info-value"><span class="small-badge">{{appDetails().yearsOfExperience}}</span></div>
                     </div>
                 </div>
             </div>
@@ -117,7 +121,7 @@
             <!-- Collapsible Content -->
             <div [ngClass]="{'collapse': true, 'show': isOpen}" class="mt-4" id="coverLetterContent">
                 <div class="p-4 bg-light rounded">
-                No Cover letter added.
+                {{appDetails().coverLetter}}
                 </div>
             </div>
         </div>
@@ -125,21 +129,19 @@
 
       </div>
 
+
       <!-- Right Column -->
       <div class="col-lg-4">
         <!-- Documents & Links -->
         <div class="card card-custom p-5">
           <div class="section-title">Documents & Links</div>
-          <a class="btn btn-primary w-100 mb-2 btn-custom">
+          <a class="btn btn-primary w-100 mb-2 btn-custom" [href]="appDetails().resumeUrl" target="_blank" >
             <i class="bi bi-box-arrow-in-up-right me-2 text-white"></i> Open CV
           </a>
-          <a class="btn btn-outline-secondary w-100 mb-2 btn-custom">
-            <i class="bi bi-folder me-2"></i> Portfolio
-          </a>
-          <a class="btn btn-outline-secondary w-100 mb-2 btn-custom">
+          <a class="btn btn-outline-secondary w-100 mb-2 btn-custom" href="https://linkedin.com" target="_blank">
             <i class="bi bi-linkedin me-2"></i> LinkedIn
           </a>
-          <a class="btn btn-outline-secondary w-100 btn-custom">
+          <a class="btn btn-outline-secondary w-100 btn-custom" href="https://github.com/" target="_blank">
             <i class="bi bi-github me-2"></i> GitHub
           </a>
         </div>
@@ -147,9 +149,30 @@
         <!-- Actions -->
         <div class="card card-custom p-5">
           <div class="section-title">Actions</div>
-          <button class="btn btn-primary w-100 mb-2 btn-custom">Accept Application </button>
-          <button class="btn btn-outline-secondary w-100 mb-2 btn-custom">Pend Application</button>
-          <button class="reject-btn btn btn-outline-secondary w-100 btn-custom">Reject Application</button>
+          <button class="accept-btn w-100 btn-custom" 
+                  (click)="updateAppStatus(appDetails().id, 'Accepted')"
+                  [disabled]="appDetails().status === 'Approved'">
+           <i class="bi bi-check2-all me-2 text-white"></i><strong>Accept Application</strong> 
+          </button>
+          
+
+          <button class="under-review-btn w-100 btn-custom"
+                  (click)="updateAppStatus(appDetails().id, 'UnderReview')"
+                  [disabled]="appDetails().status === 'UnderReview'">
+            <i class="bi bi-journals me-2"></i><strong>Under Review</strong> 
+          </button>
+
+          <button class="interview-btn w-100 btn-custom"
+                  (click)="updateAppStatus(appDetails().id, 'Interviewed')"
+                  [disabled]="appDetails().status === 'UnderReview'">
+            <i class="bi bi-calendar-check me-2"></i><strong>Interview</strong>
+          </button>
+          
+          <button class="reject-btn reject-btn w-100 btn-custom"
+                  (click)="updateAppStatus(appDetails().id, 'Rejected')"
+                  [disabled]="appDetails().status === 'Rejected'">
+            <i class="bi bi-x-square me-2 text-danger"></i><strong>Reject Application</strong>
+          </button>
         </div>
       </div>
     </div>

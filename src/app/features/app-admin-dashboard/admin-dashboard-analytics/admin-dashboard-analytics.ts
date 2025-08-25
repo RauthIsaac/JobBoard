@@ -14,6 +14,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Chart, registerables } from 'chart.js';
 import { forkJoin, Subject, takeUntil } from 'rxjs';
 import { AdminService, AdminStats, Employer, Job, Seeker } from '../admin-service';
+import { AuthService } from '../../../auth/auth-service';
+import { Router } from '@angular/router';
 
 type DetailType = 'seeker' | 'employer' | 'job';
 
@@ -63,12 +65,17 @@ export class AdminDashboardAnalytics implements OnInit, AfterViewInit, OnDestroy
   selectedEmployer: Employer | null = null;
   selectedJob: Job | null = null;
 
-  constructor(private adminService: AdminService, private snackBar: MatSnackBar, private cdr: ChangeDetectorRef) {
+  isLoggedIn : boolean = false;
+
+  constructor(private adminService: AdminService, private snackBar: MatSnackBar, private cdr: ChangeDetectorRef,private authService:AuthService, private router:Router) {
     Chart.register(...registerables);
   }
 
   ngOnInit(): void {
     this.loadDashboardData();
+
+    this.isLoggedIn = this.adminService.isLoggedIn();
+    console.log('Is Logged In ? :', this.isLoggedIn);
   }
 
   ngAfterViewInit(): void {
@@ -322,4 +329,19 @@ getGenderLabel(gender: any): string {
       verticalPosition: 'top'
     });
   }
+
+
+  logout(): void {
+    this.authService.clearAuthData();
+    this.isLoggedIn = false;
+    
+    this.snackBar.open('Logged out successfully', 'Close', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top'
+    });
+    
+    this.router.navigate(['/login']);
+  }
+
 }

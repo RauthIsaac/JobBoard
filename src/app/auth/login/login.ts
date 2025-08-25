@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { Component, NgZone, OnDestroy, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -35,6 +35,7 @@ interface LoginResponse {
   standalone: true,
   imports: [
     CommonModule,
+    NgIf,
     ReactiveFormsModule,
     RouterModule,
     MatCardModule,
@@ -125,6 +126,8 @@ export class Login implements AfterViewInit, OnDestroy {
             this.router.navigate(['/empDashboard']);
           } else if (userType === 'seeker'){
             this.router.navigate(['/home']);
+          } else if (userType === 'admin'){
+            this.router.navigate(['/admin'])
           }
         },
         error: () => {
