@@ -2,6 +2,7 @@ import { CurrencyPipe, DatePipe, NgIf } from '@angular/common';
 import { Component, Input, OnInit, signal, effect, OnChanges, SimpleChanges } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { JobsService } from '../jobs-service';
+import { AuthService } from '../../../auth/auth-service';
 
 @Component({
   selector: 'app-job-view',
@@ -14,8 +15,9 @@ export class JobView implements OnInit, OnChanges {
   @Input({ required: true }) job!: any;
 
   isSavedFlag = signal<boolean>(false);
+  userType = signal<string | null>(null);
 
-  constructor(private jobService: JobsService) {
+  constructor(private jobService: JobsService, private authService: AuthService) {
     // Listen to changes in savedJobsState for ANY job changes
     effect(() => {
       if (this.job?.id) {
@@ -27,6 +29,10 @@ export class JobView implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.updateSavedState();
+
+    /* Get the user type */
+    this.userType.set(this.getUserType());
+    console.log('User Type : ',this.userType());
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -48,28 +54,22 @@ export class JobView implements OnInit, OnChanges {
     const currentSavedState = this.isSavedFlag();
 
     if (currentSavedState) {
-      // إزالة من المحفوظات باستخدام الـ endpoint الجديدة
       this.jobService.removeFromSavedJobsByJobId(jobId).subscribe({
         next: () => {
-          // الـ effect سيحدث التحديث تلقائياً
           console.log(`Job ${jobId} removed from saved jobs`);
         },
         error: (err) => {
           console.error('Error removing job from saved:', err);
-          // في حالة الخطأ، أعد الحالة كما كانت
           this.isSavedFlag.set(true);
         }
       });
     } else {
-      // إضافة إلى المحفوظات
       this.jobService.addToSavedJobs(jobId).subscribe({
         next: () => {
-          // الـ effect سيحدث التحديث تلقائياً
           console.log(`Job ${jobId} added to saved jobs`);
         },
         error: (err) => {
           console.error('Error adding job to saved:', err);
-          // في حالة الخطأ، أعد الحالة كما كانت
           this.isSavedFlag.set(false);
         }
       });
@@ -87,4 +87,26 @@ export class JobView implements OnInit, OnChanges {
     
     return this.job.description.substring(0, limit).trim() + '...';
   }
+
+  getUserType(): string | null{
+    if(this.authService.getUserType() != null){
+      return this.authService.getUserType();
+    }
+    else{
+      return 'User'
+    }
+  }
+
+  isEmployer(): boolean {
+    return this.userType() === 'Employer';
+  }
+
+  isSeeker(): boolean {
+    return this.userType() === 'Seeker';
+  }
+
+  isAdmin(): boolean{
+    return this.userType() === 'Admin';
+  }
+
 }

@@ -35,7 +35,6 @@ import { AppView } from './features/Application/app-view/app-view';
 import { AppViewEmp } from './features/Application/app-view-emp/app-view-emp';
 import { AppViewJob } from './features/Application/app-view-job/app-view-job';
 
-// import { VerifyEmailComponent } from './verify-email/verify-email';
 
 
 export const routes: Routes = [
@@ -47,13 +46,9 @@ export const routes: Routes = [
         component: Navbar,
         children: [
             {path: 'home', component: Home},
-            {path: 'jobDtl/:id', component: JobDetails},
             {path: 'jobView', component: JobView},
             {path: 'savedJobs', component: SavedJobs},
-
             {path: 'explore', component: Explore},
-
-
             {path: 'savedJobs', component: SavedJobs},
             {path: 'editSeeker', component: EditSeekerProfile},
             {path: 'seekerProfile', component: SeekerProfile},
@@ -61,6 +56,7 @@ export const routes: Routes = [
         ]
     },
 
+    {path: 'jobDtl/:id', component: JobDetails},
 
     {
         path: 'seekerApp/:jobId',
