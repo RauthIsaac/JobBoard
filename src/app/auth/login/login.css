@@ -60,15 +60,6 @@
 }
 
 /* Google Sign-in Section Styling */
-.google-signin-section {
-    background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
-    padding: 2rem;
-    border-radius: 12px;
-    border: 1px solid #e9ecef;
-    margin: 2rem 0;
-    position: relative;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
 
 .signin-divider {
     text-align: center;

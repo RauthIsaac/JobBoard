@@ -90,7 +90,7 @@ export const routes: Routes = [
     {path: 'addJob', component: AddJob},
     {path: 'editJob/:id', component: EditJob},
     
-    {path: 'appView/:idng serve -o', component: AppView},
+    {path: 'appView/:id', component: AppView},
     {path: 'appViewEmp', component: AppViewEmp},
     {path: 'appViewJob/:id', component: AppViewJob},
 

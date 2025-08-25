@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { JobsService } from '../jobs-service';
 import { IJob } from '../../../shared/models/ijob';
 import { ISkill } from '../../../shared/models/iskill';
@@ -10,7 +10,7 @@ import { ICategory } from '../../../shared/models/icategory';
 @Component({
   selector: 'app-add-job',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule,NgIf,NgIf],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule,NgIf,NgIf, RouterLink],
   templateUrl: './add-job.html',
   styleUrl: './add-job.css'
 })

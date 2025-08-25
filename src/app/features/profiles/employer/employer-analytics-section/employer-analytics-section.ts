@@ -1,10 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { JobsService } from '../../../Jobs/jobs-service';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-employer-analytics-section',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './employer-analytics-section.html',
   styleUrl: './employer-analytics-section.css'
 })

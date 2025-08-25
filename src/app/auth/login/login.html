@@ -13,60 +13,6 @@
         <span class="fs-2 fw-medium">Login to your account</span>
       </div>
 
-
-      <!-- Google Sign-in Section -->
-      <div class="google-signin-section" [formGroup]="loginForm">
-        <!-- Loading Overlay -->
-        <div *ngIf="isGoogleLoading" class="google-loading-overlay">
-          <div class="spinner"></div>
-          <p>Signing you in...</p>
-        </div>
-
-        <!-- Google Success Message -->
-        <div *ngIf="googleSuccessMessage" class="google-alert google-alert-success">
-          {{ googleSuccessMessage }}
-          <button type="button" class="alert-close" (click)="googleSuccessMessage = ''">×</button>
-        </div>
-
-        <!-- Google Error Message -->
-        <div *ngIf="googleErrorMessage" class="google-alert google-alert-danger">
-          {{ googleErrorMessage }}
-          <button type="button" class="alert-close" (click)="googleErrorMessage = ''">×</button>
-        </div>
-
-        <div class="signin-header">
-          <h6>Quick Sign-in with Google</h6>
-          <p>Access your account in seconds</p>
-        </div>
-
-        <!-- Google config -->
-        <div id="g_id_onload"
-            data-client_id="224595746676-3mi5ivedv9khq6m9f2fmqff27vlc96t5.apps.googleusercontent.com"
-            data-context="signin"
-            data-ux_mode="popup"
-            data-auto_prompt="false">
-        </div>
-
-        <div class="google-button-container">
-          <div class="g_id_signin"></div>
-        </div>
-
-
-        <div class="signin-footer">
-          <small>
-            By signing in, you agree to our 
-            <a href="/terms" target="_blank">Terms of Service</a> and 
-            <a href="/privacy" target="_blank">Privacy Policy</a>
-          </small>
-        </div>
-      </div>
-
-
-      <!-- Divider -->
-      <div class="signin-divider">
-        <span>or login with email</span>
-      </div>
-
       <!-- Traditional Login Form -->
       <form class="w-100" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
@@ -95,7 +41,7 @@
 
         <!-- Remember Me -->
         <div class="checkbox-group my-2">
-          <input type="checkbox" formControlName="rememberMe" id="rememberMe" />
+          <input type="checkbox" formControlName="rememberMe" id="rememberMe" class="me-2" />
           <label for="rememberMe">Remember Me</label>
         </div>
 
@@ -104,6 +50,44 @@
           <span *ngIf="isLoading">Logging in...</span>
           <span *ngIf="!isLoading">Login</span>
         </button>
+
+        <span class="d-flex justify-content-center fw-lighter">OR</span>
+
+        <!-- Google Sign-in Section -->
+        <div class="google-signin-section" [formGroup]="loginForm">
+          <!-- Loading Overlay -->
+          <div *ngIf="isGoogleLoading" class="google-loading-overlay">
+            <div class="spinner"></div>
+            <p>Signing you in...</p>
+          </div>
+
+          <!-- Google Success Message -->
+          <div *ngIf="googleSuccessMessage" class="google-alert google-alert-success">
+            {{ googleSuccessMessage }}
+            <button type="button" class="alert-close" (click)="googleSuccessMessage = ''">×</button>
+          </div>
+
+          <!-- Google Error Message -->
+          <div *ngIf="googleErrorMessage" class="google-alert google-alert-danger">
+            {{ googleErrorMessage }}
+            <button type="button" class="alert-close" (click)="googleErrorMessage = ''">×</button>
+          </div>
+
+          <!-- Google config -->
+          <div id="g_id_onload"
+              data-client_id="224595746676-3mi5ivedv9khq6m9f2fmqff27vlc96t5.apps.googleusercontent.com"
+              data-context="signin"
+              data-ux_mode="popup"
+              data-auto_prompt="false">
+          </div>
+
+          <div class="google-button-container">
+            <div class="g_id_signin"></div>
+          </div>
+
+
+          
+        </div>
 
         <!-- Links -->
         <p class="text-center fs-5 mt-3">

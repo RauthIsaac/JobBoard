@@ -29,6 +29,7 @@ export class AppView implements OnInit{
       const id = +params['id'];
       if (id && id > 0) {
         this.appId.set(id);
+        console.log(this.appId());
         this.loadAppDetails();
       }
     });

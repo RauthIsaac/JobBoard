@@ -15,17 +15,20 @@ import { Subscription } from 'rxjs';
 })
 export class NavbarEmp implements OnInit, OnDestroy{
 
+  isMobileView = false;
+  
   constructor(private authService: AuthService, 
     private snackBar: MatSnackBar, 
     private router: Router,
     private notificationService: NotificationService,
     private elementRef: ElementRef) {
       this.initNotificationSound();
+      this.checkMobileView();
   }
 
   @Input() toggleSidebar: () => void = () => {}; // Input to receive toggleSidebar from parent
   @Input() isSidebarOpen: boolean = true; // Input to receive sidebar state
-  userInitials = 'JD'; // Replace with actual user data from AuthService
+  
 
 
   notifications = signal<NotificationDto[]>([]);
@@ -216,6 +219,15 @@ export class NavbarEmp implements OnInit, OnDestroy{
     });
     
     this.router.navigate(['/login']);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkMobileView();
+  }
+
+  private checkMobileView() {
+    this.isMobileView = window.innerWidth < 576;
   }
 
 }

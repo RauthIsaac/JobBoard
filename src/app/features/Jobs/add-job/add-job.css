@@ -1,3 +1,14 @@
+.nav{
+    background: var(--basic-color);
+    color: white;
+    padding: 20px 50px;
+
+    a{
+        color: white;
+    }
+}
+
+
 .card-header{
     background: var(--basic-color);
     color: white;
