@@ -1,0 +1,175 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    color: #334155;
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.not-found-container {
+    max-width: 800px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 50px 40px;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+.logo {
+    margin-bottom: 40px;
+    font-weight: 700;
+    font-size: 28px;
+    color: #3b82f6;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-circle {
+    width: 40px;
+    height: 40px;
+    background: #3b82f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.graphic-container {
+    position: relative;
+    margin: 20px 0 40px;
+    width: 300px;
+    height: 200px;
+}
+
+.error-code {
+    font-size: 100px;
+    font-weight: 800;
+    color: #f12c12;
+    line-height: 1;
+    margin-bottom: 10px;
+    text-shadow: 4px 4px 0px rgba(59, 130, 246, 0.1);
+}
+
+.error-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #1e293b;
+}
+
+.error-message {
+    font-size: 18px;
+    color: #64748b;
+    margin-bottom: 40px;
+    max-width: 500px;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 28px;
+    background-color: #3b82f6;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);
+}
+
+.btn:hover {
+    background-color: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(59, 130, 246, 0.25);
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+    box-shadow: none;
+}
+
+.btn-outline:hover {
+    background-color: #f8fafc;
+    color: #3b82f6;
+    border-color: #3b82f6;
+    transform: translateY(-2px);
+}
+    
+.support-text {
+    margin-top: 30px;
+    font-size: 15px;
+    color: #94a3b8;
+}
+
+.support-text a {
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+.support-text a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+    .error-code {
+        font-size: 100px;
+    }
+    
+    .error-title {
+        font-size: 26px;
+    }
+    
+    .error-message {
+        font-size: 16px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+    
+    .graphic-container {
+        width: 250px;
+        height: 180px;
+    }
+}

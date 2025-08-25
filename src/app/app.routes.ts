@@ -34,85 +34,132 @@ import { Navbar } from './shared/components/navbar/navbar';
 import { AppView } from './features/Application/app-view/app-view';
 import { AppViewEmp } from './features/Application/app-view-emp/app-view-emp';
 import { AppViewJob } from './features/Application/app-view-job/app-view-job';
+import { AuthGuard } from './auth/auth-guard';
+import { Unauthorized } from './Pages/unauthorized/unauthorized';
 
+
+export type UserType = 'Admin' | 'Seeker' | 'Employer';
 
 
 export const routes: Routes = [
 
     {path: '', redirectTo: 'home', pathMatch: 'full'},
+    {
+        path:'',
+        component: Navbar,
+        children: [
+            { path: 'home', component: Home},
+        ]
+    },
 
     {
         path: '',
         component: Navbar,
+        canActivate: [AuthGuard],
+        data: { allowedUserTypes: ['Seeker'] as UserType[] },
         children: [
-            {path: 'home', component: Home},
-            {path: 'jobView', component: JobView},
-            {path: 'savedJobs', component: SavedJobs},
-            {path: 'explore', component: Explore},
-            {path: 'savedJobs', component: SavedJobs},
-            {path: 'editSeeker', component: EditSeekerProfile},
-            {path: 'seekerProfile', component: SeekerProfile},
-
+            { path: 'savedJobs', component: SavedJobs},
+            { path: 'explore', component: Explore},
+            { path: 'savedJobs', component: SavedJobs},
+            { path: 'editSeeker', component: EditSeekerProfile},
+            { path: 'seekerProfile', component: SeekerProfile},
         ]
     },
-
-    {path: 'jobDtl/:id', component: JobDetails},
 
     {
         path: 'seekerApp/:jobId',
         component: Layout,
+        canActivate: [AuthGuard],
+        data: { allowedUserTypes: ['Seeker'] as UserType[] },
         children: [
             { path: 'personal-info', component: PersonalInfo },
             { path: 'documents', component: Documents },
             { path: 'questions', component: Questions },
             { path: 'review', component: Review },
+            { path: 'profile', component: SeekerProfile},
             { path: '', redirectTo: 'personal-info', pathMatch: 'full' },
-            {path: 'profile', component: SeekerProfile},
         ]
     },
 
     {
         path: '',
         component: EmployerDashboard,
+        canActivate: [AuthGuard],
+        data: { allowedUserTypes: ['Employer'] as UserType[] },
         children: [
-            {path: 'empDashboard', component: EmployerDashbordSection},
-            {path: 'empProfile', component: EmployerProfileSection},
-            {path: 'empAnalytics', component: EmployerAnalyticsSection},
-
-            
+            { path: 'empDashboard', component: EmployerDashbordSection},
+            { path: 'empProfile', component: EmployerProfileSection},
+            { path: 'empAnalytics', component: EmployerAnalyticsSection},            
             { path: '', redirectTo: 'empDashboard', pathMatch: 'full' }
         ]
     },
-
-
-    {path: 'empPostedJobs', component: EmpPostedJobs},
-    {path: 'editEmp', component: EditEmpProfile},
-    {path: 'addJob', component: AddJob},
-    {path: 'editJob/:id', component: EditJob},
     
+    {
+        path: 'admin',
+        component: AdminDashboardAnalytics,
+        canActivate: [AuthGuard],
+        data: { allowedUserTypes: ['Admin'] as UserType[] }
+    },
+
+
+    
+    /*---------------- Emplyer ----------------*/
+    {
+        path: 'editEmp', 
+        component:EditEmpProfile,
+        canActivate: [AuthGuard],
+        data: { allowedUserTypes: ['Employer'] as UserType[] }
+    },
+
+    /*---------------- Applications  ----------------*/
     {path: 'appView/:id', component: AppView},
     {path: 'appViewEmp', component: AppViewEmp},
     {path: 'appViewJob/:id', component: AppViewJob},
 
 
+    /*---------------- Jobs ----------------*/
+    {path: 'jobDtl/:id', component: JobDetails},
+    {path: 'jobView', component: JobView},
 
-    {path: 'register', component: Signup },
-    {path: 'login', component: Login },
-    {path: 'confirm-email', component: ConfirmEmail},
-    {path: 'forget-password', component: ForgetPassword},
-    {path: 'reset-password', component: ResetPassword},
+    {
+        path: 'addJob', 
+        component: AddJob,
+        canActivate: [AuthGuard],
+        data: { allowedUserTypes: ['Employer'] as UserType[] }
+    },
+
+    {
+        path: 'editJob/:id', 
+        component: EditJob,
+        canActivate: [AuthGuard],
+        data: { allowedUserTypes: ['Employer'] as UserType[] }
+    },
+
+    {
+        path: 'empPostedJobs', 
+        component: EmpPostedJobs,
+        canActivate: [AuthGuard],
+        data: { allowedUserTypes: ['Employer'] as UserType[] }
+    },
 
 
-    {path: 'chatBtn', component: ChatButton},
-    {path: 'appForm', component: ApplicationForm},
-    {path: 'notification', component: NotificationComponent},
+    /*---------------- Sign Up & Login ----------------*/
+    { path: 'register', component: Signup },
+    { path: 'login', component: Login },
+    { path: 'confirm-email', component: ConfirmEmail},
+    { path: 'forget-password', component: ForgetPassword},
+    { path: 'reset-password', component: ResetPassword},
+    { path: 'externalLogin', component:ExternalLogin},
 
 
-        
-    {path:'externalLogin', component:ExternalLogin},
-    {path: 'admin', component: AdminDashboardAnalytics},
-
-
-    {path: '**', component: NotFound}
+    /*---------------- AI Chat ----------------*/
+    { path: 'chatBtn', component: ChatButton},
+    { path: 'appForm', component: ApplicationForm},
+    { path: 'notification', component: NotificationComponent},
+ 
+ 
+     
+    { path: 'unauthorized', component: Unauthorized},
+    { path: '**', component: NotFound}
     
 ];

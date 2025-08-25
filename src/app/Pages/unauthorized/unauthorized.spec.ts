@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ConfirmEmail } from './confirm-email';
+import { Unauthorized } from './unauthorized';
 
-describe('ConfirmEmail', () => {
-  let component: ConfirmEmail;
-  let fixture: ComponentFixture<ConfirmEmail>;
+describe('Unauthorized', () => {
+  let component: Unauthorized;
+  let fixture: ComponentFixture<Unauthorized>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ConfirmEmail]
+      imports: [Unauthorized]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ConfirmEmail);
+    fixture = TestBed.createComponent(Unauthorized);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

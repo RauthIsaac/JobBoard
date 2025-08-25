@@ -2,6 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
+
+export type UserType = 'Admin' | 'Seeker' | 'Employer';
 @Injectable({
   providedIn: 'root'
 })
@@ -339,4 +341,40 @@ export class AuthService {
 
     return this.http.get(`${this.baseUrl}/api/Seeker/resume-url`, { headers });
   }
+
+
+
+  /********************************************************************/
+  /*------------------- Guard Section -----------------------*/
+  hasPermission(allowedTypes: UserType[]): boolean {
+    const userType = this.getUserType();
+    if (!userType) return false;
+    
+    return this.checkUserPermission(userType, allowedTypes);
+  }
+
+  private checkUserPermission(currentUserType: string, allowedTypes: UserType[]): boolean {
+    if (!this.isValidUserType(currentUserType)) {
+      return false;
+    }
+
+    return allowedTypes.includes(currentUserType as UserType);
+  }
+
+  private isValidUserType(userType: string): userType is UserType {
+    return ['Admin', 'Seeker', 'Employer'].includes(userType);
+  }
+
+  isAdmin(): boolean {
+    return this.hasPermission(['Admin']);
+  }
+
+  isSeeker(): boolean {
+    return this.hasPermission(['Seeker']);
+  }
+
+  isEmployer(): boolean {
+    return this.hasPermission(['Employer']);
+  }
+    
 }

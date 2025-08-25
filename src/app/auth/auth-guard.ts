@@ -1,58 +1,44 @@
-import { inject } from '@angular/core';
-import { Router } from '@angular/router';
+// src/app/guards/auth.guard.ts
+import { Injectable } from '@angular/core';
+import { 
+  CanActivate, 
+  ActivatedRouteSnapshot, 
+  RouterStateSnapshot, 
+  Router, 
+  UrlTree 
+} from '@angular/router';
+import { Observable } from 'rxjs';
 import { AuthService } from './auth-service';
 
-export const authGuard = () => {
-  const authService = inject(AuthService);
-  const router = inject(Router);
+export type UserType = 'Admin' | 'Seeker' | 'Employer';
 
-  if (authService.isLoggedIn()) {
-    return true;
-  } else {
-    router.navigate(['/login']);
-    return false;
-  }
-};
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthGuard implements CanActivate {
 
-export const employerGuard = () => {
-  const authService = inject(AuthService);
-  const router = inject(Router);
+  constructor(private authService: AuthService, private router: Router) {}
 
-  if (authService.isLoggedIn() && authService.getUserType() === 'employer') {
-    return true;
-  } else {
-    router.navigate(['/login']);
-    return false;
-  }
-};
-
-export const seekerGuard = () => {
-  const authService = inject(AuthService);
-  const router = inject(Router);
-
-  if (authService.isLoggedIn() && authService.getUserType() === 'seeker') {
-    return true;
-  } else {
-    router.navigate(['/login']);
-    return false;
-  }
-};
-
-export const guestGuard = () => {
-  const authService = inject(AuthService);
-  const router = inject(Router);
-
-  if (!authService.isLoggedIn()) {
-    return true;
-  } else {
-    const userType = authService.getUserType();
-    if (userType === 'employer') {
-      router.navigate(['/employer/dashboard']);
-    } else if (userType === 'seeker') {
-      router.navigate(['/seeker/dashboard']);
-    } else {
-      router.navigate(['/home']);
+  canActivate(
+    route: ActivatedRouteSnapshot,
+  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/login']);
+      return false;
     }
+
+    const allowedUserTypes = route.data['allowedUserTypes'] as UserType[];
+    
+    if (!allowedUserTypes || allowedUserTypes.length === 0) {
+      return true;
+    }
+
+    if (this.authService.hasPermission(allowedUserTypes)) {
+      return true;
+    }
+
+    this.router.navigate(['/unauthorized']);
     return false;
   }
-};
+}
