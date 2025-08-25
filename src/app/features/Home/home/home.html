@@ -92,19 +92,19 @@
             <div class="hero-sixth-div">
                 <div class="mx-5">
                     <div class="icon"><i class="bi bi-suitcase-lg"></i></div>
-                    <h2>50k+</h2>
+                    <h2>{{ formatNumber(stats().activeJobs) }}</h2>
                     <span>Active Jobs</span>
                 </div>
 
                 <div class="mx-5">
                     <div class="icon"><i class="bi bi-people"></i></div>
-                    <h2>100k+</h2>
+                    <h2>{{ formatNumber(stats().totalSeekers) }}</h2>
                     <span>Job Seekers</span>
                 </div>
 
                 <div class="mx-5">
                     <div class="icon"><i class="bi bi-graph-up-arrow"></i></div>
-                    <h2>95%</h2>
+                    <h2>{{ calculateSuccessRate() }}%</h2>
                     <span>Success Rate</span>
                 </div>
 
@@ -122,8 +122,8 @@
                     <div class="d-flex flex-column">
                         <span>Active Jobs</span>
                         <div class="d-flex align-items-center">
-                            <h3>50,000+</h3>
-                            <span style="color: green;">+12%</span>
+                            <h3>{{ formatNumber(stats().activeJobs) }}</h3>
+                            <!-- <span style="color: green;">+12%</span> -->
                         </div>
                         <span>New Opportunities Daily</span>
                     </div>
@@ -139,8 +139,8 @@
                     <div class="d-flex flex-column">
                         <span>Companies</span>
                         <div class="d-flex align-items-center">
-                            <h3>5,000+</h3>
-                            <span style="color: green;">+8%</span>
+                            <h3>{{ formatNumber(stats().totalEmployers) }}</h3>
+                            <!-- <span style="color: green;">+8%</span> -->
                         </div>
                         <span>Top Opportunities Worldwide</span>
                     </div>
@@ -155,8 +155,8 @@
                     <div class="d-flex flex-column">
                         <span>Success Rate</span>
                         <div class="d-flex align-items-center">
-                            <h3>95%</h3>
-                            <span style="color: green;">+5%</span>
+                            <h3>{{ calculateSuccessRate() }}</h3>
+                            <!-- <span style="color: green;">+5%</span> -->
                         </div>
                         <span>Job Placement Success</span>
                     </div>

@@ -7,6 +7,8 @@ import { ICategory } from '../../../shared/models/icategory';
 import { JobView } from '../../Jobs/job-view/job-view';
 import { AuthService } from '../../../auth/auth-service';
 import { CommonModule } from '@angular/common';
+import { IPublicStats } from '../../../shared/models/IPublicStats';
+import { StatsService } from '../../../core/stats.service';
 
 @Component({
   selector: 'app-home',
@@ -16,10 +18,17 @@ import { CommonModule } from '@angular/common';
 })
 export class Home implements OnInit {
 
-  jobsList = signal<IJob[]>([]); 
+  jobsList = signal<IJob[]>([]);
   categories = signal<ICategory[]>([]);
-
   isLoggin = signal<boolean>(false);
+
+  stats = signal<IPublicStats>({
+    totalSeekers: 0,
+    totalEmployers: 0,
+    totalJobs: 0,
+    approvedJobs: 0,
+    activeJobs: 0
+  });
 
   // Form controls for search
   searchControl = new FormControl('');
@@ -29,17 +38,16 @@ export class Home implements OnInit {
   constructor(
     private jobService: JobsService,
     private router: Router,
-    private AuthService: AuthService
+    private AuthService: AuthService,
+    private statsService: StatsService
   ) {}
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
-
+    this.loadStats();
     this.jobsList = this.jobService.JobsList;
-
     this.jobService.GetAllJobs();
     this.loadCategories();
-
     this.isUserloggin();
   }
 
@@ -54,31 +62,21 @@ export class Home implements OnInit {
     });
   }
 
-  // Handle main search form submission
   onSearchSubmit(): void {
     const searchParams: any = {};
-
     const searchValue = this.searchControl.value?.trim();
     const locationValue = this.locationControl.value?.trim();
     const categoryValue = this.categoryControl.value;
 
-    if (searchValue) {
-      searchParams.search = searchValue;
-    }
-    if (locationValue) {
-      searchParams.location = locationValue;
-    }
-    if (categoryValue && categoryValue !== '') {
-      searchParams.categoryId = categoryValue;
-    }
+    if (searchValue) searchParams.search = searchValue;
+    if (locationValue) searchParams.location = locationValue;
+    if (categoryValue && categoryValue !== '') searchParams.categoryId = categoryValue;
 
     this.router.navigate(['/explore'], { queryParams: searchParams });
   }
 
-  // Handle quick filter buttons
   onQuickFilter(filterType: string, value: string): void {
     const queryParams: any = {};
-
     switch (filterType) {
       case 'workplaceType':
         queryParams.workplaceType = value;
@@ -90,24 +88,43 @@ export class Home implements OnInit {
         queryParams.experienceLevel = value;
         break;
     }
-
     this.router.navigate(['/explore'], { queryParams });
   }
 
-  // Handle "Start Job Searching" button
   onStartJobSearching(): void {
     this.router.navigate(['/login']);
   }
 
-  // Handle "Post Your First Job" button  
   onPostJob(): void {
     this.router.navigate(['/login']);
   }
 
-  isUserloggin(){
+  isUserloggin() {
     this.isLoggin.set(this.AuthService.isLoggedIn());
     console.log(this.isLoggin());
   }
 
+  private loadStats(): void {
+    this.statsService.getPublicStats().subscribe({
+      next: (stats: IPublicStats) => {
+        this.stats.set(stats);
+        console.log('Stats loaded:', stats);
+      },
+      error: (error: any) => {
+        console.error('Error loading stats:', error);
+      }
+    });
+  }
 
+  formatNumber(num: number): string {
+    if (num >= 1000) {
+      return Math.floor(num / 1000) + 'k+';
+    }
+    return num.toString();
+  }
+
+  calculateSuccessRate(): number {
+    const totalJobs = this.stats().totalJobs || 1; // Avoid division by zero
+    return this.stats().approvedJobs ? Math.round((this.stats().approvedJobs / totalJobs) * 100) : 0;
+  }
 }
