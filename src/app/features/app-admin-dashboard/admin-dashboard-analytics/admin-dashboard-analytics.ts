@@ -95,7 +95,7 @@ export class AdminDashboardAnalytics implements OnInit, AfterViewInit, OnDestroy
       employers: this.adminService.getAllEmployers(),
       pendingJobs: this.adminService.getPendingJobs()
     };
-
+   
     forkJoin(requests)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -114,6 +114,7 @@ export class AdminDashboardAnalytics implements OnInit, AfterViewInit, OnDestroy
           this.destroyCharts();
           this.createCharts();
         },
+        
         error: (error) => {
           this.showMessage(`Error: ${error.message}`);
         },
@@ -124,7 +125,7 @@ export class AdminDashboardAnalytics implements OnInit, AfterViewInit, OnDestroy
           this.isLoadingJobs = false;
           this.cdr.detectChanges();
         }
-      });
+      });    
   }
 
   // User actions
@@ -193,6 +194,7 @@ export class AdminDashboardAnalytics implements OnInit, AfterViewInit, OnDestroy
           this.cdr.detectChanges();
         }
       });
+      console.log(seeker);
   }
 
   showEmployerDetails(employer: Employer): void {
@@ -294,6 +296,14 @@ private createCharts(): void {
     this.userChart?.destroy();
     this.jobStatusChart?.destroy();
   }
+  
+getGenderLabel(gender: any): string {
+  if (gender === 0 || gender === '0') return 'Male';
+  if (gender === 1 || gender === '1') return 'Female';
+  if (gender === 'Male' || gender === 'Female') return gender;
+  return 'N/A';
+}
+
 
   // Helper methods
   formatNumber(num: number): string {

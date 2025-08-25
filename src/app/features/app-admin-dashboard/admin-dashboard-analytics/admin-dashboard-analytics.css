@@ -266,16 +266,14 @@ mat-chip-set {
 
 /* Charts Section */
 .secondary-sections {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;       
+  gap: 16px;            
 }
 
 .chart-card {
-  border-radius: 16px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  flex: 1 1 45%;        
+  min-width: 300px;    
 }
 
 .chart-card:hover {
@@ -284,9 +282,9 @@ mat-chip-set {
 }
 
 .chart-container {
-  height: 350px;
+  position: relative;
   width: 100%;
-  padding: 1rem;
+  height: 400px;       
 }
 
 /* Details Card/Modal Styles */
@@ -559,6 +557,13 @@ mat-chip[style*="background-color"] {
   
   .table-container {
     max-height: 400px;
+  }
+  .chart-card {
+    flex: 1 1 100%;     
+  }
+  
+  .chart-container {
+    height: 250px;      
   }
 }
 
