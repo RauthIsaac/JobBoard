@@ -4,6 +4,9 @@
     <mat-card-title style="color: aliceblue;" >Admin Dashboard</mat-card-title>
     <mat-card-subtitle>Manage users and jobs across the platform</mat-card-subtitle>
   </mat-card-header>
+  <div>
+    <button class="logout-btn" *ngIf="isLoggedIn" (click)="logout()">Log Out</button>
+  </div>
 
   <mat-card-content>
     <!-- Loading Spinner -->

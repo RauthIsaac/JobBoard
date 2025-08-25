@@ -86,6 +86,16 @@
                                 {{ isSavedFlag() ? 'Saved' : ' Save' }}
                             </button>  
                         </div>
+
+                        <!-- Accept or Reject job - only for Admin -->
+                        <div class="col-lg-3" *ngIf="isAdmin()">
+                            <button class="accept-job-btn " (click)="ApproveJob(jobDetails().id)">
+                                <i class="bi bi-check2-all me-2 text-white"></i><strong>Accept Job</strong> 
+                            </button>
+                            <button class="reject-job-btn" (click)="RejectJob(jobDetails().id)">
+                                <i class="bi bi-x-square me-2"></i><strong>Reject Job</strong>
+                            </button> 
+                        </div>
                     </div>  
                 </section>
                 

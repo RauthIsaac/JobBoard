@@ -5,6 +5,8 @@ import { JobsService } from '../jobs-service';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { AuthService } from '../../../auth/auth-service';
+import { AdminService } from '../../app-admin-dashboard/admin-service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -61,7 +63,9 @@ export class JobDetails implements OnInit {
   constructor(
     private jobService: JobsService, 
     private route: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    private adminService : AdminService, 
+    private snackBar : MatSnackBar
   ) {
     // Listen to changes in savedJobsState
     effect(() => {
@@ -171,4 +175,50 @@ export class JobDetails implements OnInit {
     return this.userType() === 'Admin';
   }
  
+
+
+
+  ApproveJob(jobId:number){
+    this.adminService.approveJob(jobId).subscribe({
+      next:(res) => {
+        console.log(res);
+        this.snackBar.open('Job is approved successfully!', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
+      },
+      error: (err) =>{
+        console.error(err);
+        this.snackBar.open('Error occurs while approving the job', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+        });
+      }
+    })
+  }
+
+  RejectJob(jobId:number){
+    this.adminService.rejectJob(jobId).subscribe({
+      next:(res) => {
+        console.log(res);
+        this.snackBar.open('Job is rejected successfully!', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
+      },
+      error: (err) =>{
+        console.error(err);
+        this.snackBar.open('Error occurs while rejecting the job', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+        });
+      }
+    })
+  }
+
+
 }

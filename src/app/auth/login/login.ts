@@ -126,6 +126,8 @@ export class Login implements AfterViewInit, OnDestroy {
             this.router.navigate(['/empDashboard']);
           } else if (userType === 'seeker'){
             this.router.navigate(['/home']);
+          } else if (userType === 'admin'){
+            this.router.navigate(['/admin'])
           }
         },
         error: () => {

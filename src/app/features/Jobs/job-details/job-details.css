@@ -67,3 +67,27 @@
     width:fit-content;
     margin-right: 10px;
 }
+
+
+.accept-job-btn{
+    border: none;
+    margin-bottom: 10px;
+    padding: 10px 40px;
+    border-radius: 15px;
+    background: var(--basic-color);
+    color: white;
+}
+
+
+.reject-job-btn{
+    border: none;
+    margin-bottom: 10px;
+    padding: 10px 40px;
+    border-radius: 15px;
+    background: var(--basic-gray);
+}
+
+.reject-job-btn:hover{
+    background-color: #c82333;
+    color: white;
+}
