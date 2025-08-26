@@ -11,16 +11,6 @@
           You have {{ getTotalCount() }} saved job{{ getTotalCount() > 1 ? 's' : '' }}
         </p>
       </div>
-      <div class="col-md-4 text-end">
-        <button 
-          class="btn btn-outline-danger btn-sm"
-          (click)="clearAllSavedJobs()"
-          [disabled]="getTotalCount() === 0 || isLoading()"
-          *ngIf="getTotalCount() > 0">
-          <i class="bi bi-trash me-1"></i>
-          Clear All
-        </button>
-      </div>
     </div>
   </div>
 
@@ -120,7 +110,6 @@
         <div class="job-card-wrapper">
            <app-job-saved-view
              [job]="job" 
-             (jobRemoved)="onJobRemoved($event)"
              class="w-100"></app-job-saved-view> 
         </div>
       </div>

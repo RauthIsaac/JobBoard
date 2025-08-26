@@ -36,6 +36,7 @@ import { AppViewEmp } from './features/Application/app-view-emp/app-view-emp';
 import { AppViewJob } from './features/Application/app-view-job/app-view-job';
 import { AuthGuard } from './auth/auth-guard';
 import { Unauthorized } from './Pages/unauthorized/unauthorized';
+import { AppViewSeeker } from './features/Application/app-view-seeker/app-view-seeker';
 
 
 export type UserType = 'Admin' | 'Seeker' | 'Employer';
@@ -44,6 +45,7 @@ export type UserType = 'Admin' | 'Seeker' | 'Employer';
 export const routes: Routes = [
 
     {path: '', redirectTo: 'home', pathMatch: 'full'},
+    
     {
         path:'',
         component: Navbar,
@@ -63,6 +65,7 @@ export const routes: Routes = [
             { path: 'savedJobs', component: SavedJobs},
             { path: 'editSeeker', component: EditSeekerProfile},
             { path: 'seekerProfile', component: SeekerProfile},
+            { path: 'appViewSeeker', component: AppViewSeeker},
         ]
     },
 
