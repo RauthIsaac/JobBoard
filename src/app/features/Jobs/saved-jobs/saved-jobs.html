@@ -11,16 +11,6 @@
           You have {{ getTotalCount() }} saved job{{ getTotalCount() > 1 ? 's' : '' }}
         </p>
       </div>
-      <div class="col-md-4 text-end">
-        <button 
-          class="btn btn-outline-danger btn-sm"
-          (click)="clearAllSavedJobs()"
-          [disabled]="getTotalCount() === 0 || isLoading()"
-          *ngIf="getTotalCount() > 0">
-          <i class="bi bi-trash me-1"></i>
-          Clear All
-        </button>
-      </div>
     </div>
   </div>
 
@@ -81,14 +71,6 @@
             No saved jobs match your search
           </span>
         </small>
-        
-        <button 
-          class="btn btn-outline-secondary btn-sm"
-          (click)="refreshSavedJobs()"
-          [disabled]="isLoading()">
-          <i class="bi bi-arrow-clockwise me-1"></i>
-          Refresh
-        </button>
       </div>
     </div>
   </div>
@@ -101,18 +83,6 @@
     <p class="text-muted">Loading your saved jobs...</p>
   </div>
 
-  <!-- Error State -->
-  <div class="alert alert-danger my-4" *ngIf="error()" role="alert">
-    <i class="bi bi-exclamation-triangle me-2"></i>
-    {{ error() }}
-    <button 
-      class="btn btn-outline-danger btn-sm ms-3"
-      (click)="refreshSavedJobs()"
-      [disabled]="isLoading()">
-      Try Again
-    </button>
-  </div>
-
   <!-- Jobs List -->
   <div *ngIf="!isLoading() && !error() && filteredJobsList().length > 0" class="jobs-container my-3">
     <div class="row g-4">
@@ -120,7 +90,6 @@
         <div class="job-card-wrapper">
            <app-job-saved-view
              [job]="job" 
-             (jobRemoved)="onJobRemoved($event)"
              class="w-100"></app-job-saved-view> 
         </div>
       </div>
@@ -157,10 +126,6 @@
     <button class="btn btn-outline-primary me-2" (click)="clearSearch()">
       <i class="bi bi-x-circle me-2"></i>
       Clear Search
-    </button>
-    <button class="btn btn-primary" (click)="refreshSavedJobs()">
-      <i class="bi bi-arrow-clockwise me-2"></i>
-      Refresh
     </button>
   </div>
 </div>

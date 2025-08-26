@@ -64,9 +64,9 @@ export class ApplicationService {
   }
   //#endregion
 
-  /*------------------------ Get Employer Applications with Filters ------------------------*/
+  
   //#region Get Employer Application with Search & Filter
-
+  /*------------------------ Get Employer Applications with Filters ------------------------*/
   getEmployerApplications(filterParams?: any): Observable<IemployerApplications[]> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.authService.getToken()}`
@@ -106,18 +106,6 @@ export class ApplicationService {
     );
   }
 
-
-
-  /*------------------------ Submit New Application ------------------------*/
-  submitApplication(formData: FormData): Observable<any> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.authService.getToken()}`
-    });
-    
-    return this.http.post(`${this.baseUrl}`, formData, { headers });
-  }
-
-
   /*------------------------ Get Job Applications ------------------------*/
   getJobApplicationsByJobId(jobId: number): Observable<any>{
     return this.http.get<any>(`${this.baseUrl}/job-applications/${jobId}`);
@@ -131,7 +119,32 @@ export class ApplicationService {
 
   //#endregion
 
+  /*------------------------ Submit New Application ------------------------*/
+  submitApplication(formData: FormData): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    
+    return this.http.post(`${this.baseUrl}`, formData, { headers });
+  }
 
 
+  /*------------------------ Submit New Application ------------------------*/
+  getSeekerApplications(): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    
+    return this.http.get(`${this.baseUrl}/my-applications`, { headers });
+  }
+
+  /*------------------------ Submit New Application ------------------------*/
+  isJobApplied(jobId:number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    
+    return this.http.get(`${this.baseUrl}/has-applied/${jobId}`, { headers });
+  }
 
 }

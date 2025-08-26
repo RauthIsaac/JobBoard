@@ -2,11 +2,10 @@ import { Component, NgZone, OnDestroy, AfterViewInit, ChangeDetectorRef } from '
 import { ReactiveFormsModule, FormGroup, Validators, AbstractControl, FormBuilder, FormsModule } from '@angular/forms';
 import { MaterialModule } from '../../shared/material.module';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { of, timeout, catchError } from 'rxjs';
 import { AuthService } from '../auth-service';
 
@@ -274,7 +273,7 @@ export class Signup implements AfterViewInit, OnDestroy {
           size: 'large',
           text: 'signup_with',
           shape: 'rectangular',
-          width: 300,
+          width: 100,
           logo_alignment: 'left',
           locale: 'en'
         });

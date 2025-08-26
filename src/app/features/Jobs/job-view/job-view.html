@@ -31,7 +31,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-1" *ngIf="!isAdmin() || !isEmployer()">
+        <div class="col-1" *ngIf="!isAdmin() && !isEmployer()">
             <button class="save-job-btn" (click)="AddToSaved()" [class.saved]="isSavedFlag()">
                 <i class="bi" [class.bi-bookmark-check]="isSavedFlag()" [class.bi-bookmark]="!isSavedFlag()"></i>
             </button>
@@ -57,17 +57,33 @@
                 <i class="bi bi-box-arrow-up-right me-2"></i> View Details
             </button>
         </div>
-        <div class="col-lg-4 col-md-12 col-sm-12" *ngIf="!isAdmin() || !isEmployer()">
-            <button class="apply-now-btn my-2" [routerLink]="['/seekerApp', job.id, 'personal-info']">
+        <div class="col-lg-4 col-md-12 col-sm-12" *ngIf="!isAdmin() && !isEmployer()">
+            
+            <!-- Show Apply Now button if not applied -->
+            <button 
+                class="apply-now-btn my-2" 
+                [routerLink]="['/seekerApp', job.id, 'personal-info']"
+                *ngIf="!isJobApplied() && !isCheckingApplied()">
                 Apply Now
+            </button>
+            
+            <!-- Show Already Applied button if applied -->
+            <button 
+                class="already-applied-btn my-2" 
+                disabled
+                *ngIf="isJobApplied() && !isCheckingApplied()">
+                <i class="bi bi-check-circle me-2"></i>
+                Already Applied
+            </button>
+
+            <!-- Show loading state -->
+            <button 
+                class="apply-now-btn my-2" 
+                disabled
+                *ngIf="isCheckingApplied()">
+                <i class="bi bi-arrow-clockwise me-2"></i>
+                Checking...
             </button>
         </div>
     </div>
-</div> 
-
-
-
-
-
-
-
+</div>

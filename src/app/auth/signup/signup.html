@@ -78,10 +78,6 @@
         </svg>
       </button>
     </div>
-    <div *ngIf="signupForm.get('password')?.touched && signupForm.get('password')?.invalid" class="valid-form">
-      <div *ngIf="signupForm.get('password')?.errors?.['required']">Password is required</div>
-      <div *ngIf="signupForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</div>
-    </div>
     <div *ngIf="passwordError" class="valid-form">{{ passwordError }}</div>
   </div>
 
@@ -99,10 +95,6 @@
           <line *ngIf="!hideConfirmPassword" x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2"/>
         </svg>
       </button>
-    </div>
-    <div *ngIf="signupForm.get('confirmPassword')?.touched && signupForm.get('confirmPassword')?.invalid" class="valid-form">
-      <div *ngIf="signupForm.get('confirmPassword')?.errors?.['required']">Confirm password is required</div>
-      <div *ngIf="signupForm.get('confirmPassword')?.errors?.['minlength']">Confirm password must be at least 6 characters</div>
     </div>
     <div *ngIf="confirmPasswordError" class="valid-form">{{ confirmPasswordError }}</div>
   </div>

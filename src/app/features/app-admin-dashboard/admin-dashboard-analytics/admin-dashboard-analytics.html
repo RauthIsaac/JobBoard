@@ -1,21 +1,21 @@
 <!-- Job Board Admin Dashboard -->
-<mat-card class="analytics-dashboard-card">
+<div class="analytics-dashboard-card mx-auto">
   <mat-card-header>
-    <mat-card-title style="color: aliceblue;" >Admin Dashboard</mat-card-title>
+    <mat-card-title style="color: aliceblue;">Admin Dashboard</mat-card-title>
     <mat-card-subtitle>Manage users and jobs across the platform</mat-card-subtitle>
+      <button class="logout-btn" *ngIf="isLoggedIn()" (click)="logout()">Log Out</button>
+
   </mat-card-header>
-  <div>
-    <button class="logout-btn" *ngIf="isLoggedIn" (click)="logout()">Log Out</button>
-  </div>
+
 
   <mat-card-content>
     <!-- Loading Spinner -->
-    <div *ngIf="isLoading" class="loading-container">
+    <div *ngIf="isLoadingStats()" class="loading-container">
       <mat-spinner diameter="50"></mat-spinner>
       <p>Loading dashboard data...</p>
     </div>
 
-    <div *ngIf="!isLoading">
+    <div *ngIf="!isLoadingStats()">
       <!-- Performance Section -->
       <div class="performance-section">
         <div class="variant-tabs">
@@ -29,10 +29,10 @@
                 <mat-icon class="card-icon">work</mat-icon>
               </div>
               <h4>Total Jobs</h4>
-              <p class="value">{{ formatNumber(stats.totalJobs) }}</p>
+              <p class="value">{{ formatNumber(stats().totalJobs) }}</p>
               <p class="growth-rate">
                 <mat-icon>trending_up</mat-icon> 
-                {{ getGrowthPercentage(stats.totalJobs, stats.totalJobs - 50) }}% growth
+                {{ getGrowthPercentage(stats().totalJobs, stats().totalJobs - 50) }}% growth
               </p>
             </mat-card-content>
           </mat-card>
@@ -44,7 +44,7 @@
                 <mat-icon class="card-icon">pending_actions</mat-icon>
               </div>
               <h4>Pending Jobs</h4>
-              <p class="value">{{ stats.pendingJobs }}</p>
+              <p class="value">{{ stats().pendingJobs }}</p>
               <p class="growth-rate">
                 <mat-icon>schedule</mat-icon> 
                 Requires approval
@@ -59,10 +59,10 @@
                 <mat-icon class="card-icon">people</mat-icon>
               </div>
               <h4>Total Users</h4>
-              <p class="value">{{ formatNumber(stats.totalSeekers + stats.totalEmployers) }}</p>
+              <p class="value">{{ formatNumber(totalUsers()) }}</p>
               <p class="growth-rate">
                 <mat-icon>trending_up</mat-icon> 
-                {{ formatNumber(stats.totalSeekers) }} seekers, {{ formatNumber(stats.totalEmployers) }} employers
+                {{ formatNumber(stats().totalSeekers) }} seekers, {{ formatNumber(stats().totalEmployers) }} employers
               </p>
             </mat-card-content>
           </mat-card>
@@ -75,14 +75,14 @@
       <div class="table-section">
         <h3 class="section-title">Users Management</h3>
         <mat-tab-group>
-          <mat-tab class="usertype" label="Job Seekers ({{ stats.totalSeekers }})">
-            <div *ngIf="isLoadingSeekers" class="loading-table">
+          <mat-tab class="usertype" label="Job Seekers ({{ stats().totalSeekers }})">
+            <div *ngIf="isLoadingSeekers()" class="loading-table">
               <mat-spinner diameter="30"></mat-spinner>
               <p>Loading job seekers...</p>
             </div>
             
-            <div *ngIf="!isLoadingSeekers" class="table-container">
-              <table mat-table [dataSource]="seekers" class="full-width-table mat-elevation-z2">
+            <div *ngIf="!isLoadingSeekers()" class="table-container">
+              <table mat-table [dataSource]="seekers()" class="full-width-table mat-elevation-z2">
                 <ng-container matColumnDef="name">
                   <th mat-header-cell *matHeaderCellDef>Name</th>
                   <td mat-cell *matCellDef="let seeker">{{ seeker.name }}</td>
@@ -134,15 +134,14 @@
             </div>
           </mat-tab>
 
-          <mat-tab label="Employers ({{ stats.totalEmployers }})">
-            <div *ngIf="isLoadingEmployers" class="loading-table">
+          <mat-tab label="Employers ({{ stats().totalEmployers }})">
+            <div *ngIf="isLoadingEmployers()" class="loading-table">
               <mat-spinner diameter="30"></mat-spinner>
               <p>Loading employers...</p>
             </div>
             
-            <div *ngIf="!isLoadingEmployers" class="table-container">
-              <table mat-table [dataSource]="employers" class="full-width-table mat-elevation-z2">
-                
+            <div *ngIf="!isLoadingEmployers()" class="table-container">
+              <table mat-table [dataSource]="employers()" class="full-width-table mat-elevation-z2">
                 
                 <ng-container matColumnDef="email">
                   <th mat-header-cell *matHeaderCellDef>Email</th>
@@ -180,20 +179,20 @@
 
       <!-- Pending Jobs Section -->
       <div class="table-section">
-        <h3 class="section-title">Pending Job Approvals ({{ stats.pendingJobs }})</h3>
+        <h3 class="section-title">Pending Job Approvals ({{ stats().pendingJobs }})</h3>
         
-        <div *ngIf="isLoadingJobs" class="loading-table">
+        <div *ngIf="isLoadingJobs()" class="loading-table">
           <mat-spinner diameter="30"></mat-spinner>
           <p>Loading pending jobs...</p>
         </div>
         
-        <div *ngIf="!isLoadingJobs && pendingJobs.length === 0" class="no-data">
+        <div *ngIf="!isLoadingJobs() && pendingJobs().length === 0" class="no-data">
           <mat-icon>check_circle</mat-icon>
           <p>No pending jobs to approve!</p>
         </div>
         
-        <div *ngIf="!isLoadingJobs && pendingJobs.length > 0" class="table-container">
-          <table mat-table [dataSource]="pendingJobs" class="full-width-table mat-elevation-z2">
+        <div *ngIf="!isLoadingJobs() && pendingJobs().length > 0" class="table-container">
+          <table mat-table [dataSource]="pendingJobs()" class="full-width-table mat-elevation-z2">
             <ng-container matColumnDef="title">
               <th mat-header-cell *matHeaderCellDef>Job Title</th>
               <td mat-cell *matCellDef="let job">{{ job.title }}</td>
@@ -254,228 +253,228 @@
       </div>
 
       <!-- Details Modal -->
-      <div *ngIf="showDetailsCard" class="details-card-overlay" (click)="closeDetails()">
+      <div *ngIf="showDetailsCard()" class="details-card-overlay" (click)="closeDetails()">
         <mat-card class="details-card" (click)="$event.stopPropagation()">
           <mat-card-header>
-            <mat-card-title ></mat-card-title>
+            <mat-card-title></mat-card-title>
             <button mat-icon-button class="close-button" (click)="closeDetails()">
               <mat-icon>close</mat-icon>
             </button>
           </mat-card-header>
           <mat-card-content>
             <!-- Loading Details -->
-            <div *ngIf="isLoadingDetails" class="loading-container">
+            <div *ngIf="isLoadingDetails()" class="loading-container">
               <mat-spinner diameter="40"></mat-spinner>
               <p>Loading detailed information...</p>
             </div>
 
             <!-- Seeker Details -->
-            <div *ngIf="detailsType === 'seeker' && selectedSeeker && !isLoadingDetails">
+            <div *ngIf="detailsType() === 'seeker' && selectedSeeker() && !isLoadingDetails()">
               <div class="profile-header">
-                <img [src]="selectedSeeker.profileImageUrl || 'https://via.placeholder.com/150'" 
+                <img [src]="selectedSeeker()?.profileImageUrl || 'https://via.placeholder.com/150'" 
                      alt="Profile Image" class="profile-image">
                 <div>
-                  <h3>{{ selectedSeeker.name }}</h3>
-                  <p class="profile-title">{{ selectedSeeker.title || 'Job Seeker' }}</p>
+                  <h3>{{ selectedSeeker()?.name }}</h3>
+                  <p class="profile-title">{{ selectedSeeker()?.title || 'Job Seeker' }}</p>
                 </div>
               </div>
               <mat-divider></mat-divider>
               <div class="details-grid">
                 <div class="details-row">
                   <span class="details-label">Email:</span>
-                  <span class="details-value">{{ selectedSeeker.email }}</span>
+                  <span class="details-value">{{ selectedSeeker()?.email }}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Phone:</span>
-                  <span class="details-value">{{ selectedSeeker.phoneNumber || 'N/A' }}</span>
+                  <span class="details-value">{{ selectedSeeker()?.phoneNumber || 'N/A' }}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Address:</span>
-                  <span class="details-value">{{ selectedSeeker.address || 'N/A' }}</span>
+                  <span class="details-value">{{ selectedSeeker()?.address || 'N/A' }}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Gender:</span>
-                  <span class="details-value">{{ selectedSeeker.gender || 'N/A' }}</span>
+                  <span class="details-value">{{ getGenderLabel(selectedSeeker()?.gender) }}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Date of Birth:</span>
-                  <span class="details-value">{{ selectedSeeker.dateOfBirth || 'N/A' }}</span>
+                  <span class="details-value">{{ selectedSeeker()?.dateOfBirth || 'N/A' }}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Summary:</span>
-                  <span class="details-value">{{ selectedSeeker.summary || 'N/A' }}</span>
+                  <span class="details-value">{{ selectedSeeker()?.summary || 'N/A' }}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">CV:</span>
-                  <a *ngIf="selectedSeeker.cV_Url" [href]="selectedSeeker.cV_Url" 
+                  <a *ngIf="selectedSeeker()?.cV_Url" [href]="selectedSeeker()?.cV_Url" 
                      target="_blank" class="details-value cv-link">
                     <mat-icon>description</mat-icon> View CV
                   </a>
-                  <span *ngIf="!selectedSeeker.cV_Url" class="details-value">N/A</span>
+                  <span *ngIf="!selectedSeeker()?.cV_Url" class="details-value">N/A</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Skills:</span>
                   <div class="details-value">
-                    <mat-chip-set  *ngIf="selectedSeeker.skillName?.length">
-                      <mat-chip class="bla" *ngFor="let skill of selectedSeeker.skillName">{{ skill }} </mat-chip>
+                    <mat-chip-set *ngIf="selectedSeeker()?.skillName?.length">
+                      <mat-chip class="bla" *ngFor="let skill of selectedSeeker()?.skillName">{{ skill }}</mat-chip>
                     </mat-chip-set>
-                    <span *ngIf="!selectedSeeker.skillName?.length">N/A</span>
+                    <span *ngIf="!selectedSeeker()?.skillName?.length">N/A</span>
                   </div>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Certificates:</span>
                   <div class="details-value">
-                    <mat-chip-set *ngIf="selectedSeeker.certificateName?.length">
-                      <mat-chip class="bla" *ngFor="let cert of selectedSeeker.certificateName">{{ cert }}</mat-chip>
+                    <mat-chip-set *ngIf="selectedSeeker()?.certificateName?.length">
+                      <mat-chip class="bla" *ngFor="let cert of selectedSeeker()?.certificateName">{{ cert }}</mat-chip>
                     </mat-chip-set>
-                    <span *ngIf="!selectedSeeker.certificateName?.length">N/A</span>
+                    <span *ngIf="!selectedSeeker()?.certificateName?.length">N/A</span>
                   </div>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Training:</span>
                   <div class="details-value">
-                    <mat-chip-set *ngIf="selectedSeeker.trainingName?.length">
-                      <mat-chip class="bla" *ngFor="let training of selectedSeeker.trainingName">{{ training }}</mat-chip>
+                    <mat-chip-set *ngIf="selectedSeeker()?.trainingName?.length">
+                      <mat-chip class="bla" *ngFor="let training of selectedSeeker()?.trainingName">{{ training }}</mat-chip>
                     </mat-chip-set>
-                    <span *ngIf="!selectedSeeker.trainingName?.length">N/A</span>
+                    <span *ngIf="!selectedSeeker()?.trainingName?.length">N/A</span>
                   </div>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Interests:</span>
                   <div class="details-value">
-                    <mat-chip-set *ngIf="selectedSeeker.interestName?.length">
-                      <mat-chip class="bla" *ngFor="let interest of selectedSeeker.interestName">{{ interest }}</mat-chip>
+                    <mat-chip-set *ngIf="selectedSeeker()?.interestName?.length">
+                      <mat-chip class="bla" *ngFor="let interest of selectedSeeker()?.interestName">{{ interest }}</mat-chip>
                     </mat-chip-set>
-                    <span *ngIf="!selectedSeeker.interestName?.length">N/A</span>
+                    <span *ngIf="!selectedSeeker()?.interestName?.length">N/A</span>
                   </div>
                 </div>
               </div>
             </div>
 
             <!-- Employer Details -->
-            <div *ngIf="detailsType === 'employer' && selectedEmployer && !isLoadingDetails">
+            <div *ngIf="detailsType() === 'employer' && selectedEmployer() && !isLoadingDetails()">
               <div class="profile-header">
-                <img [src]="selectedEmployer.companyImage || 'https://via.placeholder.com/150'" 
+                <img [src]="selectedEmployer()?.companyImage || 'https://via.placeholder.com/150'" 
                      alt="Company Logo" class="profile-image">
                 <div>
-                  <h3>{{ selectedEmployer.companyName }}</h3>
-                  <p class="profile-title">{{ selectedEmployer.companyName || 'Employer' }}</p>
+                  <h3>{{ selectedEmployer()?.companyName }}</h3>
+                  <p class="profile-title">{{ selectedEmployer()?.companyName || 'Employer' }}</p>
                 </div>
               </div>
               <mat-divider></mat-divider>
               <div class="details-grid">
                 <div class="details-row">
                   <span class="details-label">Email:</span>
-                  <span class="details-value">{{ selectedEmployer.email || 'N/A'}}</span>
+                  <span class="details-value">{{ selectedEmployer()?.email || 'N/A'}}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Phone:</span>
-                  <span class="details-value">{{ selectedEmployer.phone || 'N/A'}}</span>
+                  <span class="details-value">{{ selectedEmployer()?.phone || 'N/A'}}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Company Name:</span>
-                  <span class="details-value">{{ selectedEmployer.companyName || 'N/A' }}</span>
+                  <span class="details-value">{{ selectedEmployer()?.companyName || 'N/A' }}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Website:</span>
-                  <a *ngIf="selectedEmployer.website" [href]="selectedEmployer.website" 
+                  <a *ngIf="selectedEmployer()?.website" [href]="selectedEmployer()?.website" 
                      target="_blank" class="details-value website-link">
                     <mat-icon>language</mat-icon> Visit Website
                   </a>
-                  <span *ngIf="!selectedEmployer.website" class="details-value">N/A</span>
+                  <span *ngIf="!selectedEmployer()?.website" class="details-value">N/A</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Location:</span>
-                  <span class="details-value">{{ selectedEmployer.companyLocation || 'N/A' }}</span>
+                  <span class="details-value">{{ selectedEmployer()?.companyLocation || 'N/A' }}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Industry:</span>
-                  <span class="details-value">{{ selectedEmployer.industry || 'N/A' }}</span>
+                  <span class="details-value">{{ selectedEmployer()?.industry || 'N/A' }}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Company Size:</span>
-                  <span class="details-value">{{ selectedEmployer.employeeRange || 'N/A' }}</span>
+                  <span class="details-value">{{ selectedEmployer()?.employeeRange || 'N/A' }}</span>
                 </div>
                 <div class="details-row full-width">
                   <span class="details-label">Description:</span>
-                  <span class="details-value">{{ selectedEmployer.companyDescription || 'N/A' }}</span>
+                  <span class="details-value">{{ selectedEmployer()?.companyDescription || 'N/A' }}</span>
                 </div>
               </div>
             </div>
 
             <!-- Job Details -->
-            <div *ngIf="detailsType === 'job' && selectedJob && !isLoadingDetails">
+            <div *ngIf="detailsType() === 'job' && selectedJob() && !isLoadingDetails()">
               <div class="profile-header">
-                <img [src]="selectedJob.companyImage" 
+                <img [src]="selectedJob()?.companyImage" 
                      alt="Company Logo" class="profile-image">
                 <div>
-                  <h3>{{ selectedJob.title }}</h3>
-                  <p class="profile-title">{{ selectedJob.companyName }}</p>
+                  <h3>{{ selectedJob()?.title }}</h3>
+                  <p class="profile-title">{{ selectedJob()?.companyName }}</p>
                 </div>
               </div>
               <mat-divider></mat-divider>
               <div class="details-grid">
                 <div class="details-row">
                   <span class="details-label">Title:</span>
-                  <span class="details-value">{{ selectedJob.title }}</span>
+                  <span class="details-value">{{ selectedJob()?.title }}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Location:</span>
-                  <span class="details-value">{{ selectedJob.location }}</span>
+                  <span class="details-value">{{ selectedJob()?.location }}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Salary:</span>
-                  <span class="details-value">{{ selectedJob.salary | currency:'EGP':'symbol':'1.0-0' }}</span>
+                  <span class="details-value">{{ selectedJob()?.salary | currency:'EGP':'symbol':'1.0-0' }}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Employment Type:</span>
-                  <span class="details-value">{{ selectedJob.jobType }}</span>
+                  <span class="details-value">{{ selectedJob()?.jobType }}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Posted Date:</span>
-                  <span class="details-value">{{ selectedJob.postedDate | date:'dd/MM/yyyy' }}</span>
+                  <span class="details-value">{{ selectedJob()?.postedDate | date:'dd/MM/yyyy' }}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Status:</span>
                   <span class="details-value">
-                    <mat-chip class="bla" [style.background-color]="selectedJob.isApproved ? '#a5b3f1' : '#bfabd3'">
-                      {{ selectedJob.isApproved ? 'Approved' : 'Pending' }}
+                    <mat-chip class="bla" [style.background-color]="selectedJob()?.isApproved ? '#a5b3f1' : '#bfabd3'">
+                      {{ selectedJob()?.isApproved ? 'Approved' : 'Pending' }}
                     </mat-chip>
                   </span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Employer Email:</span>
-                  <span class="details-value">{{ selectedJob.email || 'N/A' }}</span>
+                  <span class="details-value">{{ selectedJob()?.email || 'N/A' }}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Employer Phone:</span>
-                  <span class="details-value">{{ selectedJob.phone || 'N/A' }}</span>
+                  <span class="details-value">{{ selectedJob()?.phone || 'N/A' }}</span>
                 </div>
                 <div class="details-row">
                   <span class="details-label">Company Website:</span>
-                  <a *ngIf="selectedJob?.website" [href]="selectedJob.website" 
+                  <a *ngIf="selectedJob()?.website" [href]="selectedJob()?.website" 
                      target="_blank" class="details-value website-link">
                     <mat-icon>language</mat-icon> Visit Website
                   </a>
-                  <span *ngIf="!selectedJob?.website" class="details-value">N/A</span>
+                  <span *ngIf="!selectedJob()?.website" class="details-value">N/A</span>
                 </div>
                 <div class="details-row full-width">
                   <span class="details-label">Description:</span>
-                  <span class="details-value">{{ selectedJob.description }}</span>
+                  <span class="details-value">{{ selectedJob()?.description }}</span>
                 </div>
                 <div class="details-row full-width">
                   <span class="details-label">Requirements:</span>
-                  <span class="details-value">{{ selectedJob.requirements }}</span>
+                  <span class="details-value">{{ selectedJob()?.requirements }}</span>
                 </div>
               </div>
               
               <!-- Action buttons for job approval -->
               <div class="details-actions" style="display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid #f0f0f0;">
-                <button mat-raised-button color="primary" (click)="approveJob(selectedJob.id); closeDetails()">
+                <button mat-raised-button color="primary" (click)="approveJobAndClose(selectedJob()?.id); closeDetails()">
                   <mat-icon>check_circle</mat-icon>
                   Approve Job
                 </button>
-                <button mat-raised-button color="warn" (click)="rejectJob(selectedJob.id); closeDetails()">
+                <button mat-raised-button color="warn" (click)="rejectJobAndClose(selectedJob()?.id); closeDetails()">
                   <mat-icon>cancel</mat-icon>
                   Reject Job
                 </button>
@@ -486,4 +485,4 @@
       </div>
     </div>
   </mat-card-content>
-</mat-card>
+</div>

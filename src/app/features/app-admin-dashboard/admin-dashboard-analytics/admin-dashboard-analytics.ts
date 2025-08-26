@@ -1,6 +1,6 @@
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -11,11 +11,11 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Chart, registerables } from 'chart.js';
-import { forkJoin, Subject, takeUntil } from 'rxjs';
-import { AdminService, AdminStats, Employer, Job, Seeker } from '../admin-service';
-import { AuthService } from '../../../auth/auth-service';
 import { Router } from '@angular/router';
+import { Chart, registerables } from 'chart.js';
+import { Subject, takeUntil } from 'rxjs';
+import { AuthService } from '../../../auth/auth-service';
+import { AdminService, AdminStats, Employer, Job, Seeker } from '../admin-service';
 
 type DetailType = 'seeker' | 'employer' | 'job';
 
@@ -30,7 +30,8 @@ type DetailType = 'seeker' | 'employer' | 'job';
     MatTabsModule, MatTableModule, MatSnackBarModule, MatProgressSpinnerModule,
     MatChipsModule, MatTooltipModule
   ],
-  providers: [AdminService]
+  providers: [AdminService],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminDashboardAnalytics implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('userChart') userChartRef!: ElementRef<HTMLCanvasElement>;
@@ -39,43 +40,58 @@ export class AdminDashboardAnalytics implements OnInit, AfterViewInit, OnDestroy
   private destroy$ = new Subject<void>();
   private userChart?: Chart;
   private jobStatusChart?: Chart;
+  private adminService = inject(AdminService);
+  private snackBar = inject(MatSnackBar);
+  private cdr = inject(ChangeDetectorRef);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
-  // Loading states
-  isLoading = true;
-  isLoadingSeekers = true;
-  isLoadingEmployers = true;
-  isLoadingJobs = true;
-  isLoadingDetails = false;
+  // Signals for state
+  stats = signal<AdminStats>({ totalSeekers: 0, totalEmployers: 0, totalJobs: 0, pendingJobs: 0 });
+  seekers = signal<Seeker[]>([]);
+  employers = signal<Employer[]>([]);
+  pendingJobs = signal<Job[]>([]);
+  
+  // Computed signals
+  totalUsers = computed(() => this.stats().totalSeekers + this.stats().totalEmployers);
+  approvedJobs = computed(() => this.stats().totalJobs - this.stats().pendingJobs);
 
-  // Data
-  stats: AdminStats = { totalSeekers: 0, totalEmployers: 0, totalJobs: 0, pendingJobs: 0 };
-  seekers: Seeker[] = [];
-  employers: Employer[] = [];
-  pendingJobs: Job[] = [];
+  // Loading signals
+  isLoadingStats = signal(true);
+  isLoadingSeekers = signal(true);
+  isLoadingEmployers = signal(true);
+  isLoadingJobs = signal(true);
+  isLoadingDetails = signal(false);
 
   // Table configurations
   seekerColumns = ['name', 'email', 'phoneNumber', 'address', 'skills', 'actions'];
   employerColumns = ['email', 'companyName', 'actions'];
   jobColumns = ['title', 'company', 'salary', 'actions'];
 
-  // Details modal
-  showDetailsCard = false;
-  detailsType: DetailType = 'seeker';
-  selectedSeeker: Seeker | null = null;
-  selectedEmployer: Employer | null = null;
-  selectedJob: Job | null = null;
+  // Other states
+  showDetailsCard = signal(false);
+  detailsType = signal<DetailType>('seeker');
+  selectedSeeker = signal<Seeker | null>(null);
+  selectedEmployer = signal<Employer | null>(null);
+  selectedJob = signal<Job | null>(null);
+  isLoggedIn = signal(false);
 
-  isLoggedIn : boolean = false;
-
-  constructor(private adminService: AdminService, private snackBar: MatSnackBar, private cdr: ChangeDetectorRef,private authService:AuthService, private router:Router) {
+  constructor() {
     Chart.register(...registerables);
   }
 
   ngOnInit(): void {
-    this.loadDashboardData();
+    this.isLoggedIn.set(this.adminService.isLoggedIn());
+    console.log('Is Logged In ? :', this.isLoggedIn());
 
-    this.isLoggedIn = this.adminService.isLoggedIn();
-    console.log('Is Logged In ? :', this.isLoggedIn);
+    if (!this.isLoggedIn()) {
+      this.showMessage('Authentication required. Please login first.');
+      this.isLoadingStats.set(false);
+      this.cdr.detectChanges();
+      return;
+    }
+
+    this.loadDashboardData();
   }
 
   ngAfterViewInit(): void {
@@ -89,52 +105,52 @@ export class AdminDashboardAnalytics implements OnInit, AfterViewInit, OnDestroy
   }
 
   private loadDashboardData(): void {
-    if (!this.adminService.isLoggedIn()) {
-      this.showMessage('Authentication required. Please login first.');
-      this.isLoading = false;
-      this.cdr.detectChanges();
-      return;
-    }
-
-    const requests = {
-      stats: this.adminService.getStats(),
-      seekers: this.adminService.getAllSeekers(),
-      employers: this.adminService.getAllEmployers(),
-      pendingJobs: this.adminService.getPendingJobs()
-    };
-
-    forkJoin(requests)
+    // Load stats first
+    this.adminService.getStats()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response) => {
-          this.stats = response.stats;
-          this.seekers = response.seekers;
-          this.employers = response.employers;
-          this.pendingJobs = response.pendingJobs;
-
-          this.isLoadingSeekers = false;
-          this.isLoadingEmployers = false;
-          this.isLoadingJobs = false;
-          this.isLoading = false;
-
-          this.cdr.detectChanges();
-          this.destroyCharts();
-          this.createCharts();
+        next: (stats) => {
+          console.log('API stats response:', stats); // Debug log
+          this.stats.set(stats);
+          this.isLoadingStats.set(false);
+          setTimeout(() => this.createCharts(), 0); // Ensure DOM is ready
+          this.cdr.detectChanges(); // Force change detection
         },
-        error: (error) => {
-          this.showMessage(`Error: ${error.message}`);
+        error: (error) => this.handleError(error, 'Stats')
+      });
+
+    // Load lists independently
+    this.adminService.getAllSeekers()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (seekers) => {
+          this.seekers.set(seekers);
+          this.isLoadingSeekers.set(false);
         },
-        complete: () => {
-          this.isLoading = false;
-          this.isLoadingSeekers = false;
-          this.isLoadingEmployers = false;
-          this.isLoadingJobs = false;
-          this.cdr.detectChanges();
-        }
+        error: (error) => this.handleError(error, 'Seekers')
+      });
+
+    this.adminService.getAllEmployers()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (employers) => {
+          this.employers.set(employers);
+          this.isLoadingEmployers.set(false);
+        },
+        error: (error) => this.handleError(error, 'Employers')
+      });
+
+    this.adminService.getPendingJobs()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (jobs) => {
+          this.pendingJobs.set(jobs);
+          this.isLoadingJobs.set(false);
+        },
+        error: (error) => this.handleError(error, 'Jobs')
       });
   }
 
-  // User actions
   deleteUser(userId: string): void {
     if (!confirm('Are you sure you want to delete this user?')) return;
 
@@ -144,7 +160,7 @@ export class AdminDashboardAnalytics implements OnInit, AfterViewInit, OnDestroy
         next: () => {
           this.showMessage('User deleted successfully');
           this.loadDashboardData();
-          if (this.selectedSeeker?.userId === userId || this.selectedEmployer?.userId === userId) {
+          if (this.selectedSeeker()?.userId === userId || this.selectedEmployer()?.userId === userId) {
             this.closeDetails();
           }
         },
@@ -178,131 +194,165 @@ export class AdminDashboardAnalytics implements OnInit, AfterViewInit, OnDestroy
       });
   }
 
-  // Details modal methods
+  approveJobAndClose(jobId: number | undefined): void {
+    if (!jobId) {
+      this.showMessage('No job selected');
+      return;
+    }
+    this.approveJob(jobId);
+    this.closeDetails();
+  }
+
+  rejectJobAndClose(jobId: number | undefined): void {
+    if (!jobId) {
+      this.showMessage('No job selected');
+      return;
+    }
+    this.rejectJob(jobId);
+    this.closeDetails();
+  }
+
   showSeekerDetails(seeker: Seeker): void {
-    this.isLoadingDetails = true;
-    this.detailsType = 'seeker';
-    this.showDetailsCard = true;
+    this.isLoadingDetails.set(true);
+    this.detailsType.set('seeker');
+    this.showDetailsCard.set(true);
     this.resetOtherSelections();
 
     this.adminService.getSeekerById(seeker.userId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (detailedSeeker) => {
-          this.selectedSeeker = detailedSeeker;
-          this.isLoadingDetails = false;
-          this.cdr.detectChanges();
+          this.selectedSeeker.set(detailedSeeker);
+          this.isLoadingDetails.set(false);
         },
         error: (error) => {
           this.showMessage(`Error loading details: ${error.message}`);
-          this.selectedSeeker = seeker;
-          this.isLoadingDetails = false;
-          this.cdr.detectChanges();
+          this.selectedSeeker.set(seeker);
+          this.isLoadingDetails.set(false);
         }
       });
   }
 
   showEmployerDetails(employer: Employer): void {
-    this.isLoadingDetails = true;
-    this.detailsType = 'employer';
-    this.showDetailsCard = true;
+    this.isLoadingDetails.set(true);
+    this.detailsType.set('employer');
+    this.showDetailsCard.set(true);
     this.resetOtherSelections();
 
     this.adminService.getEmployerById(employer.userId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (detailedEmployer) => {
-          this.selectedEmployer = detailedEmployer;
-          this.isLoadingDetails = false;
-          this.cdr.detectChanges();
+          this.selectedEmployer.set(detailedEmployer);
+          this.isLoadingDetails.set(false);
         },
         error: (error) => {
           this.showMessage(`Error loading details: ${error.message}`);
-          this.selectedEmployer = employer;
-          this.isLoadingDetails = false;
-          this.cdr.detectChanges();
+          this.selectedEmployer.set(employer);
+          this.isLoadingDetails.set(false);
         }
       });
   }
 
   showJobDetails(job: Job): void {
-    this.selectedJob = job;
-    this.detailsType = 'job';
-    this.showDetailsCard = true;
+    this.selectedJob.set(job);
+    this.detailsType.set('job');
+    this.showDetailsCard.set(true);
     this.resetOtherSelections();
   }
 
   private resetOtherSelections(): void {
-    if (this.detailsType !== 'seeker') this.selectedSeeker = null;
-    if (this.detailsType !== 'employer') this.selectedEmployer = null;
-    if (this.detailsType !== 'job') this.selectedJob = null;
+    if (this.detailsType() !== 'seeker') this.selectedSeeker.set(null);
+    if (this.detailsType() !== 'employer') this.selectedEmployer.set(null);
+    if (this.detailsType() !== 'job') this.selectedJob.set(null);
   }
 
   closeDetails(): void {
-    this.showDetailsCard = false;
-    this.selectedSeeker = null;
-    this.selectedEmployer = null;
-    this.selectedJob = null;
-    this.isLoadingDetails = false;
+    this.showDetailsCard.set(false);
+    this.selectedSeeker.set(null);
+    this.selectedEmployer.set(null);
+    this.selectedJob.set(null);
+    this.isLoadingDetails.set(false);
   }
 
-private createCharts(): void {
-  if (this.userChart) this.userChart.destroy();
-  if (this.jobStatusChart) this.jobStatusChart.destroy();
+  private createCharts(): void {
+    const ctxUser = this.userChartRef?.nativeElement?.getContext('2d');
+    const ctxJob = this.jobStatusChartRef?.nativeElement?.getContext('2d');
 
-  const ctxUser = this.userChartRef?.nativeElement?.getContext('2d');
-  const ctxJob = this.jobStatusChartRef?.nativeElement?.getContext('2d');
+    console.log('Creating charts with stats:', this.stats()); // Debug log
+    console.log('User Chart Ref:', this.userChartRef); // Debug canvas reference
+    console.log('User Chart Context:', ctxUser); // Debug context
 
-  if (ctxUser && this.stats.totalSeekers > 0 && this.stats.totalEmployers > 0) {
-    this.userChart = new Chart(ctxUser, {
-      type: 'bar',
-      data: {
-        labels: ['Job Seekers', 'Employers'],
-        datasets: [{
-          label: 'Total Users',
-          data: [this.stats.totalSeekers, this.stats.totalEmployers],
-          backgroundColor: ['rgba(108, 117, 125, 0.3)', 'rgba(40, 167, 69, 0.3)'],
-          borderColor: ['#6c757d', '#28a745'],
-          borderWidth: 2
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: { y: { beginAtZero: true } }
-      }
-    });
+    if (ctxUser && this.userChartRef.nativeElement && this.stats().totalSeekers >= 0 && this.stats().totalEmployers >= 0) {
+      console.log('User Chart Data:', {
+        seekers: this.stats().totalSeekers,
+        employers: this.stats().totalEmployers
+      });
+      this.userChart?.destroy();
+      this.userChart = new Chart(ctxUser, {
+        type: 'bar',
+        data: {
+          labels: ['Job Seekers', 'Employers'],
+          datasets: [{
+            label: 'Total Users',
+            data: [this.stats().totalSeekers, this.stats().totalEmployers],
+            backgroundColor: ['rgba(108, 117, 125, 0.3)', 'rgba(40, 167, 69, 0.3)'],
+            borderColor: ['#6c757d', '#28a745'],
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+    } else {
+      console.warn('User Chart not created: Invalid canvas or data. Details - ctxUser:', ctxUser, 'nativeElement:', this.userChartRef?.nativeElement, 'Stats:', this.stats());
+    }
+
+    if (ctxJob && this.jobStatusChartRef.nativeElement && this.stats().totalJobs >= 0 && this.stats().pendingJobs >= 0) {
+      console.log('Job Chart Data:', {
+        approved: this.approvedJobs(),
+        pending: this.stats().pendingJobs
+      });
+      this.jobStatusChart?.destroy();
+      this.jobStatusChart = new Chart(ctxJob, {
+        type: 'doughnut',
+        data: {
+          labels: ['Approved Jobs', 'Pending Jobs'],
+          datasets: [{
+            data: [this.approvedJobs(), this.stats().pendingJobs],
+            backgroundColor: ['#466bd1ff', '#6c757d'],
+            borderColor: ['#596b9cff', '#9ca2a7ff'],
+            borderWidth: 2,
+            hoverOffset: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } }
+        }
+      });
+    } else {
+      console.warn('Job Chart not created: Invalid canvas or data. Details - ctxJob:', ctxJob, 'nativeElement:', this.jobStatusChartRef?.nativeElement, 'Stats:', this.stats());
+    }
   }
 
-  if (ctxJob && this.stats.totalJobs > 0 && this.stats.pendingJobs >= 0) {
-    const approvedJobs = this.stats.totalJobs - this.stats.pendingJobs;
-    this.jobStatusChart = new Chart(ctxJob, {
-      type: 'doughnut',
-      data: {
-        labels: ['Approved Jobs', 'Pending Jobs'],
-        datasets: [{
-          data: [approvedJobs, this.stats.pendingJobs],
-          backgroundColor: ['#466bd1ff', '#6c757d'],
-          borderColor: ['#596b9cff', '#9ca2a7ff'],
-          borderWidth: 2,
-          hoverOffset: 4
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { position: 'bottom' } }
-      }
-    });
-  }
-}
   private destroyCharts(): void {
     this.userChart?.destroy();
     this.jobStatusChart?.destroy();
   }
 
-  // Helper methods
+  getGenderLabel(gender: any): string {
+    if (gender === 0 || gender === '0') return 'Male';
+    if (gender === 1 || gender === '1') return 'Female';
+    if (gender === 'Male' || gender === 'Female') return gender;
+    return 'N/A';
+  }
+
   formatNumber(num: number): string {
     return num >= 1000 ? `${(num / 1000).toFixed(1)}K` : num.toString();
   }
@@ -320,10 +370,17 @@ private createCharts(): void {
     });
   }
 
+  private handleError(error: any, section: string): void {
+    this.showMessage(`Error loading ${section}: ${error.message}`);
+    if (section === 'Stats') this.isLoadingStats.set(false);
+    else if (section === 'Seekers') this.isLoadingSeekers.set(false);
+    else if (section === 'Employers') this.isLoadingEmployers.set(false);
+    else if (section === 'Jobs') this.isLoadingJobs.set(false);
+  }
 
   logout(): void {
     this.authService.clearAuthData();
-    this.isLoggedIn = false;
+    this.isLoggedIn.set(false);
     
     this.snackBar.open('Logged out successfully', 'Close', {
       duration: 3000,
@@ -333,5 +390,4 @@ private createCharts(): void {
     
     this.router.navigate(['/login']);
   }
-
 }

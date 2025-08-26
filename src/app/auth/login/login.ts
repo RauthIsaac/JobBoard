@@ -285,7 +285,7 @@ export class Login implements AfterViewInit, OnDestroy {
           size: 'large',
           text: 'signin_with',
           shape: 'rectangular',
-          width: 300,
+          width: 100,
           logo_alignment: 'left',
           locale: 'en'
         });
