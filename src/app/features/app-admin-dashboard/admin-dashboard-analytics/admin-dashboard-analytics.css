@@ -1,7 +1,7 @@
 /* General Layout */
 
 .analytics-dashboard-card {
-  max-width: 1400px;
+  max-width: 100%;
   padding: 1.5rem;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
   background: linear-gradient(135deg, #1e408a 0%, #3b82f6 100%);
