@@ -62,7 +62,7 @@
                     <div *ngIf="!isAdmin() && !isEmployer()">
                         <!-- Show Apply Now button if not applied -->
                         <button 
-                            class="apply-now-btn my-2" 
+                            class="apply-now-btn my-2 form-control" 
                             [routerLink]="['/seekerApp', job.jobId, 'personal-info']"
                             *ngIf="!isJobApplied() && !isCheckingApplied()">
                             Apply Now
@@ -70,7 +70,7 @@
                         
                         <!-- Show Already Applied button if applied -->
                         <button 
-                            class="already-applied-btn my-2" 
+                            class="already-applied-btn my-2 form-control" 
                             disabled
                             *ngIf="isJobApplied() && !isCheckingApplied()">
                             <i class="bi bi-check-circle me-2"></i>
@@ -79,7 +79,7 @@
 
                         <!-- Show loading state -->
                         <button 
-                            class="apply-now-btn my-2" 
+                            class="apply-now-btn my-2 form-control" 
                             disabled
                             *ngIf="isCheckingApplied()">
                             <i class="bi bi-arrow-clockwise me-2"></i>
