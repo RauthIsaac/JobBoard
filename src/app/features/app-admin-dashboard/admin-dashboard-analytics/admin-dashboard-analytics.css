@@ -1,10 +1,12 @@
 /* General Layout */
+
 .analytics-dashboard-card {
   max-width: 1400px;
   padding: 1.5rem;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
   background: linear-gradient(135deg, #1e408a 0%, #3b82f6 100%);
   color: #ffffff;
+  border-radius: 0%;
 }
 
 .analytics-dashboard-card mat-card-content {
@@ -41,6 +43,8 @@ mat-card-subtitle {
   padding: 10px 30px;
   color: black;
   font-size: medium;
+  display: flex;
+  justify-self: end;
 }
 
 .header-actions {
