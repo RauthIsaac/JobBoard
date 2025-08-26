@@ -1,14 +1,13 @@
-import { AuthService } from './../auth-service';
-import { Component, NgZone, OnDestroy, AfterViewInit } from '@angular/core';
-import { ReactiveFormsModule, FormGroup, Validators, AbstractControl, FormBuilder, FormsModule } from '@angular/forms';
-import { MaterialModule } from '../../shared/material.module';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { AfterViewInit, Component, NgZone, OnDestroy } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { timeout, catchError, of } from 'rxjs';
+import { Router, RouterModule } from '@angular/router';
+import { catchError, of, timeout } from 'rxjs';
+import { MaterialModule } from '../../shared/material.module';
+import { AuthService } from './../auth-service';
 
 declare const google: any;
 
