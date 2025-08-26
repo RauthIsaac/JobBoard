@@ -59,8 +59,30 @@
                 </button>
             </div>
             <div class="d-flex justify-content-end flex-column">
-                <button class="apply-now-btn my-2" [routerLink]="['/seekerApp', job.id, 'personal-info']">
+                <!-- Show Apply Now button if not applied -->
+                <button 
+                    class="apply-now-btn my-2 form-control" 
+                    [routerLink]="['/seekerApp', job.id, 'personal-info']"
+                    *ngIf="!isJobApplied() && !isCheckingApplied()">
                     Apply Now
+                </button>
+                
+                <!-- Show Already Applied button if applied -->
+                <button 
+                    class="already-applied-btn my-2 form-control" 
+                    disabled
+                    *ngIf="isJobApplied() && !isCheckingApplied()">
+                    <i class="bi bi-check-circle me-2"></i>
+                    Already Applied
+                </button>
+
+                <!-- Show loading state -->
+                <button 
+                    class="apply-now-btn my-2 form-control" 
+                    disabled
+                    *ngIf="isCheckingApplied()">
+                    <i class="bi bi-arrow-clockwise me-2"></i>
+                    Checking...
                 </button>
 
                 <button class="view-dtl-btn" [routerLink]="['/jobDtl',job.id]">

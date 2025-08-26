@@ -78,23 +78,36 @@
                         
                         <!-- Apply and Save buttons - only for seekers -->
                         <div class="col-lg-3" *ngIf="isSeeker()">
-                            <button class="apply-now-btn form-control" [routerLink]="['/seekerApp', jobId()]">
+                            <!-- Show Apply Now button if not applied -->
+                            <button 
+                                class="apply-now-btn my-2 form-control" 
+                                [routerLink]="['/seekerApp', jobDetails().id, 'personal-info']"
+                                *ngIf="!isJobApplied() && !isCheckingApplied()">
                                 Apply Now
                             </button>
+                            
+                            <!-- Show Already Applied button if applied -->
+                            <button 
+                                class="already-applied-btn my-2 form-control" 
+                                disabled
+                                *ngIf="isJobApplied() && !isCheckingApplied()">
+                                <i class="bi bi-check-circle me-2"></i>
+                                Already Applied
+                            </button>
+
+                            <!-- Show loading state -->
+                            <button 
+                                class="apply-now-btn my-2 form-control" 
+                                disabled
+                                *ngIf="isCheckingApplied()">
+                                <i class="bi bi-arrow-clockwise me-2"></i>
+                                Checking...
+                            </button>
+
                             <button class="save-job-btn form-control" (click)="toggleSaved()" [class.saved]="isSavedFlag()">
                                 <i class="bi" [class.bi-bookmark-check]="isSavedFlag()" [class.bi-bookmark]="!isSavedFlag()"></i> 
                                 {{ isSavedFlag() ? 'Saved' : ' Save' }}
                             </button>  
-                        </div>
-
-                        <!-- Accept or Reject job - only for Admin -->
-                        <div class="col-lg-3" *ngIf="isAdmin()">
-                            <button class="accept-job-btn " (click)="ApproveJob(jobDetails().id)">
-                                <i class="bi bi-check2-all me-2 text-white"></i><strong>Accept Job</strong> 
-                            </button>
-                            <button class="reject-job-btn" (click)="RejectJob(jobDetails().id)">
-                                <i class="bi bi-x-square me-2"></i><strong>Reject Job</strong>
-                            </button> 
                         </div>
                     </div>  
                 </section>
@@ -195,7 +208,7 @@
                                 </div>
 
                                 <!-- Ready To Apply - only for seekers -->
-                                <div class="mt-5 p-5" style="background-color: rgb(244, 244, 244); border-radius: 15px;" *ngIf="isSeeker()">
+                                <div class="mt-5 p-5" style="background-color: rgb(244, 244, 244); border-radius: 15px;" *ngIf="isSeeker() && !isJobApplied()">
                                     <div class="row">
                                         <div class="col-lg-8 col-md-7 col-sm-12">
                                             <h5>Ready to Apply?</h5>

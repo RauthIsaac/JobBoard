@@ -1,0 +1,248 @@
+/* Header section */
+.header-section {
+    margin-bottom: 20px;
+    background: var(--basic-color);
+    height: fit-content;
+    color:white;
+    padding: 40px 100px;
+}
+
+.icon{
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 30px;
+    height: fit-content;
+    margin-right: 10px;
+    margin-top: 10px;
+    background-color: #698eb6;
+}
+.title-container h1 {
+    font-size: 50px;
+    margin: 0;
+}
+
+.title-container p {
+    font-size: 20px;
+    color: #d1cfcf;
+    margin: 5px 0 0;
+}
+
+
+
+.view-profile-btn, .open-cv-btn{
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: black;
+    background: var(--basic-gray);
+    margin-right: 10px;
+    transition: all 0.3s ease;
+}
+
+.view-profile-btn:hover, .open-cv-btn:hover{
+    background: var(--basic-gray-hover);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px) scale(1.01);
+}
+
+
+/* Applications section */
+.applications-section {
+    min-height: 200px;
+}
+
+.results-container {
+    width: 100%;
+}
+
+.loading {
+    text-align: center;
+    font-size: 16px;
+    color: #666;
+    padding: 40px;
+}
+
+.results-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #333;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.no-results {
+    text-align: center;
+    padding: 40px 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 2px dashed #ddd;
+}
+
+.no-results h3 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    color: #666;
+}
+
+.no-results p {
+    margin: 0 0 15px;
+    color: #666;
+}
+
+/* Application card */
+.application-list {
+    display: grid;
+    gap: 30px;
+}
+
+.application-card {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-left: 4px solid #007bff;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.application-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px) scale(1.01);
+}
+
+.application-card.new { border-left-color: #007bff; }
+.application-card.under-review { border-left-color: #ffc107; }
+.application-card.interview { border-left-color: #17a2b8; }
+.application-card.hired { border-left-color: #28a745; }
+.application-card.rejected { border-left-color: #dc3545; }
+
+.card-left {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    flex: 1;
+}
+
+img {
+    width: 90px;
+    height: 90px;
+    /* border-radius: 50%; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    flex-shrink: 0;
+}
+ 
+.initials-sc { background-color: #007bff; }
+.initials-ar { background-color: #28a745; }
+.initials-ew { background-color: #dc3545; }
+.initials-mb { background-color: #ffc107; }
+.initials-lp { background-color: #17a2b8; }
+
+.applicant-info {
+    flex: 1;
+}
+
+
+.applicant-info p {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+
+.card-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 15px;
+    min-width: 200px;
+}
+
+.status {
+    padding: 6px 14px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: white;
+}
+
+.status-new { background: #007bff; }
+.status-under-review { background: #f6edd0; color: #bc8d0c; }
+.status-interview { background: #b0e5ed; color: #07488e;}
+.status-hired { background: #28a745; color: #b9e3c3;}
+.status-rejected { background: #dc3545; }
+
+.card-right .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+    min-width: 120px;
+}
+
+.card-right .action-buttons .btn {
+    text-align: center;
+    white-space: nowrap;
+}
+
+
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .header-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .stats-section {
+        flex-direction: column;
+    }
+    
+    .filter-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-container{
+        min-width: auto;
+    }
+    
+    .status-filter-section {
+        justify-content: center;
+    }
+    
+    .application-card {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .card-right {
+        align-items: flex-start;
+        min-width: auto;
+    }
+    
+    .card-right .action-buttons {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .results-info {
+        flex-direction: column;
+        gap: 5px;
+    }
+}

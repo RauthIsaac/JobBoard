@@ -5,8 +5,7 @@ import { JobsService } from '../jobs-service';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { AuthService } from '../../../auth/auth-service';
-import { AdminService } from '../../app-admin-dashboard/admin-service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ApplicationService } from '../../Application/application-service';
 
 
 @Component({
@@ -23,6 +22,10 @@ export class JobDetails implements OnInit {
   error = signal<string | null>(null);
 
   userType = signal<string | null>(null);
+
+  isSavedFlag = signal<boolean>(false);
+  isJobApplied = signal<boolean>(false);
+  isCheckingApplied = signal<boolean>(false);
 
   requirementsList = computed(() => {
     const details = this.jobDetails();
@@ -58,14 +61,11 @@ export class JobDetails implements OnInit {
       .map((benefit: string) => benefit.endsWith('.') ? benefit : benefit + '.');
   });
 
-  isSavedFlag = signal<boolean>(false);
-
   constructor(
     private jobService: JobsService, 
     private route: ActivatedRoute,
     private authService: AuthService,
-    private adminService : AdminService, 
-    private snackBar : MatSnackBar
+    private applicationService : ApplicationService
   ) {
     // Listen to changes in savedJobsState
     effect(() => {
@@ -91,6 +91,14 @@ export class JobDetails implements OnInit {
     /* Get the user type */
     this.userType.set(this.getUserType());
     console.log('User Type : ',this.userType());
+
+    // Check if job is already applied for seekers
+    if (this.isSeeker() && this.jobId()) {
+      console.log('Checking if job is applied for job ID:', this.jobId());
+      this.checkIfJobApplied();
+    } else {
+      console.log('Not checking applied status - User type:', this.userType(), 'Job ID:', this.jobId());
+    }
   }
 
   private loadJobDetails(): void {
@@ -177,48 +185,22 @@ export class JobDetails implements OnInit {
  
 
 
+  private checkIfJobApplied(): void {
+    if (!this.jobId()) return;
 
-  ApproveJob(jobId:number){
-    this.adminService.approveJob(jobId).subscribe({
-      next:(res) => {
-        console.log(res);
-        this.snackBar.open('Job is approved successfully!', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
+    this.isCheckingApplied.set(true);
+    
+    this.applicationService.isJobApplied(this.jobId()).subscribe({
+      next: (response) => {
+        this.isJobApplied.set(response);
+        this.isCheckingApplied.set(false);
       },
-      error: (err) =>{
-        console.error(err);
-        this.snackBar.open('Error occurs while approving the job', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-        });
+      error: (err) => {
+        console.error('Error checking if job is applied:', err);
+        this.isJobApplied.set(false);
+        this.isCheckingApplied.set(false);
       }
-    })
+    });
   }
-
-  RejectJob(jobId:number){
-    this.adminService.rejectJob(jobId).subscribe({
-      next:(res) => {
-        console.log(res);
-        this.snackBar.open('Job is rejected successfully!', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
-      },
-      error: (err) =>{
-        console.error(err);
-        this.snackBar.open('Error occurs while rejecting the job', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-        });
-      }
-    })
-  }
-
 
 }
