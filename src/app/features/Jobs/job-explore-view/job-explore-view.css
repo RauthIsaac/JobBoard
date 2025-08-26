@@ -123,3 +123,30 @@
 .apply-now-btn:hover{
     background: var(--basic-color-hover);
 }
+
+/* New styles for already applied button */
+.already-applied-btn{
+    background: #28a745; /* Green background */
+    color: white;
+    padding: 10px 40px;
+    border-radius: 10px;
+    border: none;
+    cursor: not-allowed;
+    outline: none;
+    box-shadow: none;
+    opacity: 0.8;
+}
+
+.already-applied-btn:disabled {
+    background: #28a745;
+    color: white;
+    opacity: 0.8;
+}
+
+/* Loading state for checking button */
+.apply-now-btn:disabled {
+    background: #6c757d;
+    color: white;
+    cursor: not-allowed;
+    opacity: 0.6;
+}

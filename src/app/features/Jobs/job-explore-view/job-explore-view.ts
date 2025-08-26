@@ -2,6 +2,7 @@ import { CommonModule, CurrencyPipe, DatePipe, NgIf } from '@angular/common';
 import { Component, Input, OnInit, signal, effect, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { JobsService } from '../jobs-service';
+import { ApplicationService } from '../../Application/application-service';
 
 @Component({
   selector: 'app-job-explore-view',
@@ -15,8 +16,13 @@ export class JobExploreView implements OnInit, OnChanges {
   @Output() jobRemoved = new EventEmitter<number>(); 
 
   isSavedFlag = signal<boolean>(false);
+  isJobApplied = signal<boolean>(false);
+  isCheckingApplied = signal<boolean>(false);
 
-  constructor(private jobService: JobsService) {
+  constructor(
+    private jobService: JobsService,
+    private applicationService : ApplicationService
+  ) {
     // Listen to changes in savedJobsState for real-time updates
     effect(() => {
       if (this.job?.id) {
@@ -33,11 +39,22 @@ export class JobExploreView implements OnInit, OnChanges {
     setTimeout(() => {
       this.updateSavedState();
     }, 50);
+
+
+    // Check if job is already applied for seekers
+    if ( this.job?.id) {
+      console.log('Checking if job is applied for job ID:', this.job.id);
+      this.checkIfJobApplied();
+    } 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['job'] && this.job) {
       this.updateSavedState();
+
+      // Check if job is already applied when job changes
+      this.checkIfJobApplied();
+
     }
   }
 
@@ -89,5 +106,22 @@ export class JobExploreView implements OnInit, OnChanges {
     return this.job.description.substring(0, limit).trim() + '...';
   }
 
-  
+  private checkIfJobApplied(): void {
+    if (!this.job?.id) return;
+
+    this.isCheckingApplied.set(true);
+    
+    this.applicationService.isJobApplied(this.job.id).subscribe({
+      next: (response) => {
+        this.isJobApplied.set(response);
+        this.isCheckingApplied.set(false);
+      },
+      error: (err) => {
+        console.error('Error checking if job is applied:', err);
+        this.isJobApplied.set(false);
+        this.isCheckingApplied.set(false);
+      }
+    });
+  }
+
 }

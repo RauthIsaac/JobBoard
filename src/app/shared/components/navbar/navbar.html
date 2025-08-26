@@ -16,14 +16,18 @@
 
     <!-- Navbar Content -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="isSeeker()">
         <!-- Explore Link -->
         <li class="nav-item">
-          <a class="nav-link fw-medium" routerLink="/explore" routerLinkActive="active">Explore Jobs</a>
+          <a class="nav-link fw-medium" routerLink="/explore" routerLinkActive="active">EXPLORE</a>
         </li>
         <!-- Saved Jobs -->
         <li class="nav-item">
-          <a class="nav-link fw-medium" routerLink="/savedJobs" routerLinkActive="active">Saved Jobs</a>
+          <a class="nav-link fw-medium" routerLink="/savedJobs" routerLinkActive="active">SAVED</a>
+        </li>
+        <!-- Saved Jobs -->
+        <li class="nav-item">
+          <a class="nav-link fw-medium" routerLink="/appViewSeeker" routerLinkActive="active">APPLICATIONS</a>
         </li>
 
       </ul>

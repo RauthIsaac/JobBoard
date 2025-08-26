@@ -113,8 +113,8 @@ export class AppViewEmp implements OnInit {
   }
 
   getStatusClass(status: string): string {
-    const statusLower = status.toLowerCase();
-    switch (statusLower) {
+    // const statusLower = status.toLowerCase();
+    switch (status) {
       case 'pending':
       case 'new':
         return 'status-new';

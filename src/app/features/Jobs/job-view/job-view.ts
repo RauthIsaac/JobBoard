@@ -3,6 +3,7 @@ import { Component, Input, OnInit, signal, effect, OnChanges, SimpleChanges } fr
 import { RouterLink } from '@angular/router';
 import { JobsService } from '../jobs-service';
 import { AuthService } from '../../../auth/auth-service';
+import { ApplicationService } from '../../Application/application-service';
 
 @Component({
   selector: 'app-job-view',
@@ -16,8 +17,14 @@ export class JobView implements OnInit, OnChanges {
 
   isSavedFlag = signal<boolean>(false);
   userType = signal<string | null>(null);
+  isJobApplied = signal<boolean>(false);
+  isCheckingApplied = signal<boolean>(false);
 
-  constructor(private jobService: JobsService, private authService: AuthService) {
+  constructor(
+    private jobService: JobsService, 
+    private authService: AuthService,
+    private applicationService: ApplicationService
+  ) {
     // Listen to changes in savedJobsState for ANY job changes
     effect(() => {
       if (this.job?.id) {
@@ -33,11 +40,24 @@ export class JobView implements OnInit, OnChanges {
     /* Get the user type */
     this.userType.set(this.getUserType());
     console.log('User Type : ',this.userType());
+
+    // Check if job is already applied for seekers
+    if (this.isSeeker() && this.job?.id) {
+      console.log('Checking if job is applied for job ID:', this.job.id);
+      this.checkIfJobApplied();
+    } else {
+      console.log('Not checking applied status - User type:', this.userType(), 'Job ID:', this.job?.id);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['job'] && this.job) {
       this.updateSavedState();
+      
+      // Check if job is already applied when job changes
+      if (this.isSeeker() && this.job?.id) {
+        this.checkIfJobApplied();
+      }
     }
   }
 
@@ -45,6 +65,24 @@ export class JobView implements OnInit, OnChanges {
     if (this.job?.id) {
       this.isSavedFlag.set(this.jobService.isJobSaved(this.job.id));
     }
+  }
+
+  private checkIfJobApplied(): void {
+    if (!this.job?.id) return;
+
+    this.isCheckingApplied.set(true);
+    
+    this.applicationService.isJobApplied(this.job.id).subscribe({
+      next: (response) => {
+        this.isJobApplied.set(response);
+        this.isCheckingApplied.set(false);
+      },
+      error: (err) => {
+        console.error('Error checking if job is applied:', err);
+        this.isJobApplied.set(false);
+        this.isCheckingApplied.set(false);
+      }
+    });
   }
 
   AddToSaved(): void {
