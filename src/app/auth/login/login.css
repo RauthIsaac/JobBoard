@@ -29,9 +29,6 @@
 .valid-form {
     color: #dc3545;
     font-size: 0.9rem;
-     /* background-color: #fbe5e7; */ /* Removed */
-    /* padding: 0.5rem; */ /* Removed */
-    /* border-radius: 5px; */ /* Removed */
     margin-top: 0.25rem;
 }
 
@@ -59,7 +56,7 @@
     opacity: 0.6;
 }
 
-/* Google Sign-in Section Styling */
+/* Google Sign-in Section Styling - Matches signup */
 .google-signin-section {
     background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
     padding: 2rem;
@@ -125,7 +122,7 @@
     margin: 0 auto;
 }
 
-/* Loading overlay for Google signup */
+/* Loading overlay for Google signin */
 .google-loading-overlay {
     position: absolute;
     top: 0;
@@ -398,4 +395,143 @@
 .is-invalid {
     border-color: #e57373 !important;
     box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15) !important;
+}
+
+/* Extra styling for snackbar */
+::ng-deep .error-snackbar {
+    background-color: #dc3545 !important;
+    color: white !important;
+}
+
+::ng-deep .error-snackbar .mat-simple-snackbar-action {
+    color: white !important;
+}
+
+/* Custom Google Button Styling - From signup */
+.custom-google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 300px;
+    height: 50px;
+    background-color: #4285f4;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(66, 133, 244, 0.2);
+}
+
+.custom-google-btn:hover {
+    background-color: #357ae8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(66, 133, 244, 0.3);
+}
+
+.custom-google-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(66, 133, 244, 0.2);
+}
+
+/* Alternative white version */
+.custom-google-btn-white {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 300px;
+    height: 50px;
+    background-color: white;
+    color: #757575;
+    border: 2px solid #dadce0;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.custom-google-btn-white:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border-color: #4285f4;
+    color: #4285f4;
+}
+
+/* Alternative outline version */
+.custom-google-btn-outline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 300px;
+    height: 50px;
+    background-color: transparent;
+    color: #4285f4;
+    border: 2px solid #4285f4;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.custom-google-btn-outline:hover {
+    background-color: #4285f4;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(66, 133, 244, 0.3);
+}
+
+/* Hide default Google button if using custom */
+.g_id_signin .g_id_signin_button {
+    display: none !important;
+}
+
+/* Modern gradient version */
+.custom-google-btn-gradient {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 300px;
+    height: 50px;
+    background: linear-gradient(135deg, #4285f4 0%, #34a853 50%, #fbbc05 100%);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.custom-google-btn-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.custom-google-btn-gradient:hover::before {
+    left: 100%;
+}
+
+.custom-google-btn-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(66, 133, 244, 0.4);
 }

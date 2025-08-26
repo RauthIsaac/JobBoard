@@ -61,34 +61,27 @@
 
         <span class="d-flex justify-content-center fw-lighter">OR</span>
 
-        <!-- Google Sign-in Section -->
-        <div class="google-signin-section" [formGroup]="loginForm">
-          <!-- Loading Overlay -->
+        <!-- Google Sign-in Section - Updated to match signup -->
+        <div class="my-3" [formGroup]="loginForm">
+          <!-- Loading Overlay for Google -->
           <div *ngIf="isGoogleLoading" class="google-loading-overlay">
             <div class="spinner"></div>
             <p>Signing you in...</p>
           </div>
-
+          
           <!-- Google Success Message -->
           <div *ngIf="googleSuccessMessage" class="google-alert google-alert-success">
             {{ googleSuccessMessage }}
             <button type="button" class="alert-close" (click)="googleSuccessMessage = ''">×</button>
           </div>
-
+          
           <!-- Google Error Message -->
           <div *ngIf="googleErrorMessage" class="google-alert google-alert-danger">
             {{ googleErrorMessage }}
             <button type="button" class="alert-close" (click)="googleErrorMessage = ''">×</button>
           </div>
-
-          <!-- Google config -->
-          <div id="g_id_onload"
-              data-client_id="224595746676-3mi5ivedv9khq6m9f2fmqff27vlc96t5.apps.googleusercontent.com"
-              data-context="signin"
-              data-ux_mode="popup"
-              data-auto_prompt="false">
-          </div>
-
+          
+          <!-- Google button container -->
           <div class="google-button-container">
             <div class="g_id_signin"></div>
           </div>
