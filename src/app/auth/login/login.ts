@@ -1,5 +1,5 @@
 import { CommonModule, NgIf } from '@angular/common';
-import { Component, NgZone, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, NgZone, OnDestroy, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -54,7 +54,7 @@ export class Login implements AfterViewInit, OnDestroy {
   hidePassword = true;
   isLoading = false;
   
-  // Google Sign-in properties
+  // Google Sign-in properties - Updated to match signup
   isGoogleLoading = false;
   googleErrorMessage = '';
   googleSuccessMessage = '';
@@ -68,7 +68,8 @@ export class Login implements AfterViewInit, OnDestroy {
     private authService: AuthService,
     private snackBar: MatSnackBar,
     private http: HttpClient,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private cdr: ChangeDetectorRef
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -78,10 +79,29 @@ export class Login implements AfterViewInit, OnDestroy {
       companyName: [''],
       companyLocation: ['']
     });
+
+    // Load Google script immediately
+    this.loadGoogleScript();
   }
 
   ngAfterViewInit(): void {
-    this.initializeGoogleSignIn();
+    // Try to initialize Google if script is already loaded
+    if (this.googleScriptLoaded) {
+      this.initializeGoogleSignIn();
+    } else {
+      // Check every 100ms if script is loaded
+      const checkInterval = setInterval(() => {
+        if (this.googleScriptLoaded) {
+          this.initializeGoogleSignIn();
+          clearInterval(checkInterval);
+        }
+      }, 100);
+
+      // Clear interval after 10 seconds to prevent infinite checking
+      setTimeout(() => {
+        clearInterval(checkInterval);
+      }, 10000);
+    }
   }
 
   ngOnDestroy(): void {
@@ -91,6 +111,48 @@ export class Login implements AfterViewInit, OnDestroy {
   private getApiBaseUrl(): string {
     const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     return isDevelopment ? 'http://localhost:5007/api' : 'https://localhost:5007/api';
+  }
+
+  private clearMessages(): void {
+    this.googleErrorMessage = '';
+    this.googleSuccessMessage = '';
+  }
+
+  private loadGoogleScript(): void {
+    // Check if script is already loaded
+    if (typeof google !== 'undefined' && google.accounts) {
+      this.googleScriptLoaded = true;
+      return;
+    }
+
+    // Check if script tag already exists
+    const existingScript = document.querySelector('script[src="https://accounts.google.com/gsi/client"]');
+    if (existingScript) {
+      this.googleScriptLoaded = true;
+      return;
+    }
+
+    // Create and load the script
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    
+    script.onload = () => {
+      console.log('Google GSI script loaded');
+      this.googleScriptLoaded = true;
+      this.ngZone.run(() => {
+        this.initializeGoogleSignIn();
+      });
+    };
+    
+    script.onerror = (error) => {
+      console.error('Failed to load Google GSI script:', error);
+      this.googleErrorMessage = 'Failed to load Google Sign-in. Please refresh the page.';
+      this.cdr.detectChanges();
+    };
+
+    document.head.appendChild(script);
   }
 
   // Traditional login method
@@ -154,15 +216,21 @@ export class Login implements AfterViewInit, OnDestroy {
     this.hidePassword = !this.hidePassword;
   }
 
-
   private initializeGoogleSignIn(): void {
     try {
+      // Wait for Google to be available
       if (typeof google === 'undefined' || !google.accounts) {
-        setTimeout(() => this.initializeGoogleSignIn(), 1000);
+        console.log('Google not ready yet, retrying...');
+        setTimeout(() => this.initializeGoogleSignIn(), 500);
         return;
       }
 
-      if (this.googleInitialized) return;
+      if (this.googleInitialized) {
+        console.log('Google already initialized');
+        return;
+      }
+
+      console.log('Initializing Google Sign-in...');
 
       google.accounts.id.initialize({
         client_id: "224595746676-3mi5ivedv9khq6m9f2fmqff27vlc96t5.apps.googleusercontent.com",
@@ -174,42 +242,71 @@ export class Login implements AfterViewInit, OnDestroy {
         use_fedcm_for_prompt: false
       });
 
-      // Render button after ensuring DOM is ready
       this.renderGoogleButton();
       this.googleInitialized = true;
+      this.clearMessages();
+
+      console.log('Google Sign-in initialized successfully');
 
     } catch (error) {
-      console.error('Error initializing Google Sign-In:', error);
-      this.googleErrorMessage = 'Failed to initialize Google Sign-up. Please refresh the page.';
+      console.error('Error initializing Google Sign-in:', error);
+      this.googleErrorMessage = 'Failed to initialize Google Sign-in. Please refresh the page.';
+      this.cdr.detectChanges();
     }
   }
 
-
   private renderGoogleButton(): void {
-    const buttonElement = document.querySelector('.g_id_signin');
-    if (buttonElement) {
-      buttonElement.innerHTML = '';
+    const maxAttempts = 10;
+    let attempts = 0;
+    
+    const tryRender = () => {
+      const buttonElement = document.querySelector('.g_id_signin') as HTMLElement;
+      
+      if (!buttonElement) {
+        attempts++;
+        if (attempts < maxAttempts) {
+          console.log(`Button container not found, attempt ${attempts}/${maxAttempts}`);
+          setTimeout(tryRender, 200);
+        } else {
+          console.error('Google button container not found after maximum attempts');
+          this.googleErrorMessage = 'Google button container not found.';
+          this.cdr.detectChanges();
+        }
+        return;
+      }
+
       try {
+        // Clear any existing content
+        buttonElement.innerHTML = '';
+        
+        // Render the Google button
         google.accounts.id.renderButton(buttonElement, {
-          theme: "outline",
-          size: "large",
-          text: "signin_with",
-          shape: "rectangular",
-          width: 250
+          theme: 'filled_blue',
+          size: 'large',
+          text: 'signin_with',
+          shape: 'rectangular',
+          width: 300,
+          logo_alignment: 'left',
+          locale: 'en'
         });
-        console.log('Google Sign-in button rendered successfully');
+
+        console.log('Google button rendered successfully');
+        
       } catch (renderError) {
         console.error('Error rendering Google button:', renderError);
-        this.googleErrorMessage = 'Failed to load Google Sign-up button.';
+        this.googleErrorMessage = 'Failed to load Google Sign-in button.';
+        this.cdr.detectChanges();
       }
-    } else {
-      console.warn('Google button container not found, retrying...');
-      setTimeout(() => this.renderGoogleButton(), 500);
-    }
+    };
+
+    // Start the rendering process
+    tryRender();
   }
 
   handleGoogleLogin(response: GoogleResponse): void {
     if (this.isGoogleLoading) return;
+
+    this.clearMessages();
 
     this.isGoogleLoading = true;
     const idToken = response.credential;
@@ -233,16 +330,18 @@ export class Login implements AfterViewInit, OnDestroy {
         next: (res: LoginResponse) => {
           console.log('Google API Response:', res);
           this.handleGoogleLoginSuccess(res);
+          this.cdr.detectChanges();
         },
         error: (error: HttpErrorResponse) => {
           this.handleGoogleLoginError(error);
+          this.cdr.detectChanges();
         },
         complete: () => {
           this.isGoogleLoading = false;
+          this.cdr.detectChanges();
         }
       });
   }
-
 
   private handleGoogleLoginSuccess(response: LoginResponse): void {
     if (response.succeeded && response.token) {
@@ -265,7 +364,6 @@ export class Login implements AfterViewInit, OnDestroy {
       this.googleErrorMessage = response.message || 'Login failed. Please try again.';
     }
   }
-
 
   private handleGoogleLoginError(error: HttpErrorResponse): void {
     let errorMsg = 'Login failed. Please try again.';

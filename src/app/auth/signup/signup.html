@@ -133,12 +133,16 @@
             <button type="button" class="alert-close" (click)="googleErrorMessage = ''">×</button>
           </div>
           
+
           <!-- Add the missing Google button container -->
           <div class="google-button-container">
             <div class="g_id_signin"></div>
           </div>
         </div>
-        
+        <div *ngIf="isGoogleLoading && googleSuccessMessage" class="google-alert google-alert-info">
+  <div class="spinner"></div>
+  <span>Sending confirmation email...</span>
+</div>
         <p class="text-center fs-5 mt-2">
           Already have an account?
           <a routerLink="/login" class="text-primary" style="cursor: pointer; text-decoration: underline">Login</a>

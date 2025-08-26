@@ -149,23 +149,24 @@ export class Signup implements AfterViewInit, OnDestroy {
     return null;
   }
 
-  updateCompanyValidators(userType: string) {
-    const companyName = this.signupForm.get('companyName');
-    const companyLocation = this.signupForm.get('companyLocation');
+ updateCompanyValidators(userType: string) {
+  const companyName = this.signupForm.get('companyName');
+  const companyLocation = this.signupForm.get('companyLocation');
 
-    if (userType === 'Employer') {
-      companyName?.setValidators([Validators.required, Validators.minLength(2), Validators.maxLength(100)]);
-      companyLocation?.setValidators([Validators.required, Validators.minLength(3), Validators.maxLength(200)]);
-    } else {
-      companyName?.clearValidators();
-      companyLocation?.clearValidators();
-      companyName?.setValue('');
-      companyLocation?.setValue('');
-    }
-
-    companyName?.updateValueAndValidity();
-    companyLocation?.updateValueAndValidity();
+  if (userType === 'Employer') {
+    // Change minLength from 2 to 3 to match backend
+    companyName?.setValidators([Validators.required, Validators.minLength(3), Validators.maxLength(100)]);
+    companyLocation?.setValidators([Validators.required, Validators.minLength(3), Validators.maxLength(200)]);
+  } else {
+    companyName?.clearValidators();
+    companyLocation?.clearValidators();
+    companyName?.setValue('');
+    companyLocation?.setValue('');
   }
+
+  companyName?.updateValueAndValidity();
+  companyLocation?.updateValueAndValidity();
+}
 
   private loadGoogleScript(): void {
     // Check if script is already loaded
@@ -292,131 +293,243 @@ export class Signup implements AfterViewInit, OnDestroy {
   }
 
   handleGoogleSignup(response: GoogleResponse): void {
-    if (this.isGoogleLoading) return;
-
+    if (!this.validateGoogleForm()) {
+    return;
+  }
+  this.isGoogleLoading = true;
     this.clearMessages();
 
-    if (!this.validateGoogleForm()) {
-      this.cdr.detectChanges();
-      return;
-    }
-
-    this.isGoogleLoading = true;
-    const idToken = response.credential;
     const role = this.signupForm.value.user_type;
+    const companyName = this.isEmployer ? this.signupForm.value.companyName?.trim() : null;
+    const companyLocation = this.isEmployer ? this.signupForm.value.companyLocation?.trim() : null;
 
-    const dto: any = {
-      idToken: idToken,
-      roleFromClient: role
+    const payload = {
+      idToken: response.credential,
+      roleFromClient: role,
+      companyName: companyName,
+      companyLocation: companyLocation
     };
 
-    if (role === 'Employer') {
-      dto.companyName = this.signupForm.value.companyName?.trim();
-      dto.companyLocation = this.signupForm.value.companyLocation?.trim();
-    }
-
-    this.http.post<LoginResponse>(`${this.API_BASE_URL}/Auth/ExternalLogin`, dto)
-      .pipe(
-        timeout(30000),
-        catchError(error => {
-          if (error.name === 'TimeoutError') {
-            return of({
-              succeeded: false,
-              message: 'Request timed out. Please check your connection and try again.'
-            } as LoginResponse);
-          }
-          throw error;
-        })
-      )
-      .subscribe({
-        next: (res: LoginResponse) => {
-          this.handleGoogleSignupSuccess(res, role);
-          this.cdr.detectChanges();
-        },
-        error: (error: HttpErrorResponse) => {
-          this.handleGoogleSignupError(error);
-          this.cdr.detectChanges();
-        },
-        complete: () => {
-          this.isGoogleLoading = false;
-          this.cdr.detectChanges();
+  console.log('Google signup payload:', payload);
+  this.http.post<LoginResponse>(`${this.API_BASE_URL}/Auth/ExternalLogin`, payload)
+    .pipe(
+      timeout(30000),
+      catchError((error: HttpErrorResponse) => {
+        this.isGoogleLoading = false;
+        this.handleGoogleSignupError(error);
+        return of(null);
+      })
+    )
+    .subscribe({
+      next: (response) => {
+        this.isGoogleLoading = false;
+        if (response?.succeeded) {
+          // بدلاً من الدخول مباشرة، أرسل إيميل تأكيد
+          this.sendConfirmationEmailForGoogleUser(response, role);
+        } else {
+          this.googleErrorMessage = response?.message || 'Registration failed. Please try again.';
         }
-      });
+      }
+    });
+}
+
+private sendConfirmationEmailForGoogleUser(loginResponse: LoginResponse, role: string): void {
+  // استخراج الإيميل من الـ token
+  let userEmail = '';
+  try {
+    if (loginResponse.token) {
+      const tokenPayload = JSON.parse(atob(loginResponse.token.split('.')[1]));
+      
+      // الطريقة الصحيحة لاستخراج الإيميل من JWT
+      userEmail = tokenPayload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] || // UserName
+                 tokenPayload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'] || // Email claim
+                 tokenPayload.email || // Standard email claim
+                 tokenPayload.name; // Fallback to name
+      
+      console.log('Token payload:', tokenPayload);
+      console.log('Extracted email:', userEmail);
+    }
+  } catch (error) {
+    console.error('Could not extract email from token:', error);
+    this.googleErrorMessage = 'Failed to process registration. Please try again.';
+    return;
   }
 
-  private validateGoogleForm(): boolean {
-    const role = this.signupForm.value.user_type;
-
-    if (role === 'Employer') {
-      const companyName = this.signupForm.value.companyName?.trim();
-      const companyLocation = this.signupForm.value.companyLocation?.trim();
-
-      if (!companyName || companyName.length < 2) {
-        this.googleErrorMessage = 'Please provide a valid company name (minimum 2 characters).';
-        return false;
-      }
-
-      if (!companyLocation || companyLocation.length < 3) {
-        this.googleErrorMessage = 'Please provide a valid company location (minimum 3 characters).';
-        return false;
-      }
-    }
-
-    return true;
+  if (!userEmail) {
+    this.googleErrorMessage = 'Failed to extract email address. Please try again.';
+    console.error('No email found in token payload');
+    return;
   }
 
-  private handleGoogleSignupSuccess(response: LoginResponse, role: string): void {
-    if (response.succeeded && response.token) {
-      const finalRole = response.role || role;
+  // التحقق من صحة الإيميل
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(userEmail)) {
+    this.googleErrorMessage = 'Invalid email address extracted from token.';
+    console.error('Invalid email format:', userEmail);
+    return;
+  }
 
-      localStorage.setItem('auth_token', response.token);
-      localStorage.setItem('user_type', finalRole);
+  console.log('Sending confirmation email to:', userEmail);
 
-      if (response.expiration) {
-        localStorage.setItem('tokenExpiration', response.expiration);
+  // إرسال إيميل التأكيد
+  this.http.post(`${this.API_BASE_URL}/Auth/send-confirmation-email`, `"${userEmail}"`, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .pipe(
+    timeout(15000),
+    catchError((error: HttpErrorResponse) => {
+      console.error('Confirmation email error:', error);
+      
+      // إذا كان الخطأ بسبب أن الإيميل مؤكد بالفعل، اعرض رسالة مختلفة
+      if (error.error?.message?.includes('already confirmed') || 
+          error.error?.includes('already confirmed')) {
+        this.handleAlreadyConfirmedUser(userEmail, role);
+        return of(null);
       }
+      
+      // حتى لو فشل إرسال الإيميل، اعرض رسالة نجاح التسجيل
+      this.showRegistrationSuccess(userEmail, role);
+      return of(null);
+    })
+  )
+  .subscribe({
+    next: (emailResponse: any) => {
+      console.log('Confirmation email response:', emailResponse);
+      this.showRegistrationSuccess(userEmail, role);
+    }
+  });
+}
 
-      try {
-        const tokenPayload = JSON.parse(atob(response.token.split('.')[1]));
-        if (tokenPayload.email) {
-          localStorage.setItem('user_email', tokenPayload.email);
-        }
-        if (tokenPayload.name || tokenPayload.given_name) {
-          localStorage.setItem('user_name', tokenPayload.name || tokenPayload.given_name);
-        }
+private showRegistrationSuccess(email: string, role: string): void {
+  this.googleSuccessMessage = `Account created successfully as ${role}! Please check your email (${email}) to confirm your account before logging in.`;
+  
+  this.snackBar.open(
+    `Registration successful! Please check ${email} for confirmation email.`, 
+    'Close', 
+    {
+      duration: 8000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['success-snackbar']
+    }
+  );
 
-        if (tokenPayload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']) {
-          const jwtRole = tokenPayload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-          localStorage.setItem('user_type', jwtRole);
-        }
-
-      } catch (error) {
-        console.log('Could not parse token payload:', error);
+  setTimeout(() => {
+    this.router.navigate(['/login'], { 
+      queryParams: { 
+        message: 'Please confirm your email before logging in',
+        email: email,
+        newUser: 'true' 
       }
+    });
+  }, 3000);
+}
 
-      this.googleSuccessMessage = `Successfully registered as ${finalRole}!`;
+ private validateGoogleForm(): boolean {
+  const role = this.signupForm.value.user_type;
 
-      setTimeout(() => {
-        this.redirectUser(finalRole);
-      }, 1000);
-    } else {
-      this.googleErrorMessage = response.message || 'Registration failed. Please try again.';
+  if (role === 'Employer') {
+    const companyName = this.signupForm.value.companyName?.trim();
+    const companyLocation = this.signupForm.value.companyLocation?.trim();
+
+    // Change minimum from 2 to 3 characters to match backend
+    if (!companyName || companyName.length < 3) {
+      this.googleErrorMessage = 'Please provide a valid company name (minimum 3 characters).';
+      return false;
+    }
+
+    if (companyName.length > 100) {
+      this.googleErrorMessage = 'Company name must not exceed 100 characters.';
+      return false;
+    }
+
+    if (!companyLocation || companyLocation.length < 3) {
+      this.googleErrorMessage = 'Please provide a valid company location (minimum 3 characters).';
+      return false;
+    }
+
+    if (companyLocation.length > 200) {
+      this.googleErrorMessage = 'Company location must not exceed 200 characters.';
+      return false;
     }
   }
 
-  private handleGoogleSignupError(error: HttpErrorResponse): void {
-    let errorMsg = 'Registration failed. Please try again.';
+  return true;
+}
 
-    if (error.status === 0) {
-      errorMsg = 'Unable to connect to the server. Please check your connection.';
-    } else if (error.error?.message) {
-      errorMsg = error.error.message;
-    } else if (error.status >= 500) {
-      errorMsg = 'Server error occurred. Please try again later.';
+  private handleAlreadyConfirmedUser(email: string, role: string): void {
+  this.googleSuccessMessage = `Welcome back! Your account (${email}) is already confirmed. You can log in directly.`;
+  
+  this.snackBar.open(
+    'Account already exists and is confirmed. Redirecting to login...', 
+    'Close', 
+    {
+      duration: 5000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['info-snackbar']
     }
+  );
 
-    this.googleErrorMessage = errorMsg;
+  setTimeout(() => {
+    this.router.navigate(['/login'], { 
+      queryParams: { 
+        email: email,
+        message: 'Account already exists - please log in'
+      }
+    });
+  }, 2000);
+}
+
+ private handleGoogleSignupError(error: HttpErrorResponse): void {
+  let errorMsg = 'Registration failed. Please try again.';
+
+  console.error('Google signup error:', error);
+
+  if (error.status === 0) {
+    errorMsg = 'Unable to connect to the server. Please check your connection.';
+  } else if (error.error?.message) {
+    errorMsg = error.error.message;
+    
+    // التحقق من وجود حساب مسبق
+    if (errorMsg.toLowerCase().includes('already exists') || 
+        errorMsg.toLowerCase().includes('user already exist')) {
+      // استخراج الإيميل من Google token للمستخدم الموجود
+      this.handleExistingGoogleUser(errorMsg);
+      return;
+    }
+  } else if (error.status >= 500) {
+    errorMsg = 'Server error occurred. Please try again later.';
   }
+
+  this.googleErrorMessage = errorMsg;
+}
+
+private handleExistingGoogleUser(errorMessage: string): void {
+  this.googleErrorMessage = 'An account with this Google email already exists. Please log in instead.';
+  
+  this.snackBar.open(
+    'Account already exists. Redirecting to login...', 
+    'Close', 
+    {
+      duration: 5000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['info-snackbar']
+    }
+  );
+
+  setTimeout(() => {
+    this.router.navigate(['/login'], {
+      queryParams: { 
+        message: 'Please log in with your existing account',
+        source: 'google'
+      }
+    });
+  }, 3000);
+}
 
   private redirectUser(role: string): void {
     switch (role.toLowerCase()) {
@@ -438,81 +551,81 @@ export class Signup implements AfterViewInit, OnDestroy {
   }
 
   // Traditional form submission method
-  private validateForm(): boolean {
-    this.errorMessage = null;
-    this.googleErrorMessage = '';
+private validateForm(): boolean {
+  this.errorMessage = null;
+  this.googleErrorMessage = '';
 
-    if (!this.signupForm.valid) {
-      this.signupForm.markAllAsTouched();
+  if (!this.signupForm.valid) {
+    this.signupForm.markAllAsTouched();
 
-      const userName = this.signupForm.get('userName');
-      const email = this.signupForm.get('email');
-      const password = this.signupForm.get('password');
-      const confirmPassword = this.signupForm.get('confirmPassword');
-      const companyName = this.signupForm.get('companyName');
-      const companyLocation = this.signupForm.get('companyLocation');
+    const userName = this.signupForm.get('userName');
+    const email = this.signupForm.get('email');
+    const password = this.signupForm.get('password');
+    const confirmPassword = this.signupForm.get('confirmPassword');
+    const companyName = this.signupForm.get('companyName');
+    const companyLocation = this.signupForm.get('companyLocation');
 
-      if (userName?.errors?.['required']) {
-        this.errorMessage = 'Username is required';
-        return false;
-      }
-      if (userName?.errors?.['minlength']) {
-        this.errorMessage = 'Username must be at least 3 characters';
-        return false;
-      }
-      if (userName?.errors?.['pattern']) {
-        this.errorMessage = 'Username can only contain letters and numbers';
-        return false;
-      }
-      if (email?.errors?.['required']) {
-        this.errorMessage = 'Email is required';
-        return false;
-      }
-      if (email?.errors?.['email']) {
-        this.errorMessage = 'Please enter a valid email address';
-        return false;
-      }
-      if (password?.errors?.['required']) {
-        this.errorMessage = 'Password is required';
-        return false;
-      }
-      if (password?.errors?.['minlength']) {
-        this.errorMessage = 'Password must be at least 6 characters';
-        return false;
-      }
-      if (confirmPassword?.errors?.['required']) {
-        this.errorMessage = 'Please confirm your password';
-        return false;
-      }
-      if (this.signupForm.errors?.['passwordMismatch']) {
-        this.errorMessage = 'Passwords do not match';
-        return false;
-      }
-
-      if (this.signupForm.get('user_type')?.value === 'Employer') {
-        if (!companyName?.value?.trim()) {
-          this.errorMessage = 'Company name is required for employers';
-          return false;
-        }
-        if (!companyLocation?.value?.trim()) {
-          this.errorMessage = 'Company location is required for employers';
-          return false;
-        }
-        if (companyName?.errors?.['minlength']) {
-          this.errorMessage = 'Company name must be at least 2 characters';
-          return false;
-        }
-        if (companyLocation?.errors?.['minlength']) {
-          this.errorMessage = 'Company location must be at least 3 characters';
-          return false;
-        }
-      }
-
+    if (userName?.errors?.['required']) {
+      this.errorMessage = 'Username is required';
       return false;
     }
-    return true;
-  }
+    if (userName?.errors?.['minlength']) {
+      this.errorMessage = 'Username must be at least 3 characters';
+      return false;
+    }
+    if (userName?.errors?.['pattern']) {
+      this.errorMessage = 'Username can only contain letters and numbers';
+      return false;
+    }
+    if (email?.errors?.['required']) {
+      this.errorMessage = 'Email is required';
+      return false;
+    }
+    if (email?.errors?.['email']) {
+      this.errorMessage = 'Please enter a valid email address';
+      return false;
+    }
+    if (password?.errors?.['required']) {
+      this.errorMessage = 'Password is required';
+      return false;
+    }
+    if (password?.errors?.['minlength']) {
+      this.errorMessage = 'Password must be at least 6 characters';
+      return false;
+    }
+    if (confirmPassword?.errors?.['required']) {
+      this.errorMessage = 'Please confirm your password';
+      return false;
+    }
+    if (this.signupForm.errors?.['passwordMismatch']) {
+      this.errorMessage = 'Passwords do not match';
+      return false;
+    }
 
+    if (this.signupForm.get('user_type')?.value === 'Employer') {
+      if (!companyName?.value?.trim()) {
+        this.errorMessage = 'Company name is required for employers';
+        return false;
+      }
+      if (!companyLocation?.value?.trim()) {
+        this.errorMessage = 'Company location is required for employers';
+        return false;
+      }
+      if (companyName?.errors?.['minlength']) {
+        // Change error message from 2 to 3 characters
+        this.errorMessage = 'Company name must be at least 3 characters';
+        return false;
+      }
+      if (companyLocation?.errors?.['minlength']) {
+        this.errorMessage = 'Company location must be at least 3 characters';
+        return false;
+      }
+    }
+
+    return false;
+  }
+  return true;
+}
   onSubmit() {
     if (!this.validateForm()) {
       return;
@@ -638,14 +751,15 @@ export class Signup implements AfterViewInit, OnDestroy {
   }
 
   get companyNameError(): string {
-    const control = this.signupForm.get('companyName');
-    if (control?.errors && control.touched) {
-      if (control.errors['required']) return 'Company name is required';
-      if (control.errors['minlength']) return 'Company name must be at least 2 characters';
-      if (control.errors['maxlength']) return 'Company name must not exceed 100 characters';
-    }
-    return '';
+  const control = this.signupForm.get('companyName');
+  if (control?.errors && control.touched) {
+    if (control.errors['required']) return 'Company name is required';
+    // Change from 2 to 3 characters
+    if (control.errors['minlength']) return 'Company name must be at least 3 characters';
+    if (control.errors['maxlength']) return 'Company name must not exceed 100 characters';
   }
+  return '';
+}
 
   get companyLocationError(): string {
     const control = this.signupForm.get('companyLocation');
