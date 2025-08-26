@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { AuthService } from '../../auth/auth-service';
 
 export interface Seeker {
   id: number;
@@ -67,19 +68,22 @@ export interface AdminStats {
 })
 export class AdminService {
   private readonly baseUrl = 'http://localhost:5007/api/Admin';
-  private readonly adminToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImViY2ZmODgxLTk0NmEtNDgzMi1iYjk4LTgyNzVjMmZhYmZmZCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJhZG1pbiIsImp0aSI6IjhmNzhlNGY2LWNmNmQtNDIyMS04YjMzLWQ4NzljODFmZDkzYiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzU2NDQxMDcwLCJpc3MiOiJKb2JCb2FyZEFQSSIsImF1ZCI6IkpvYkJvYXJkVXNlciJ9.EbVStP7UOMgZMLykJVTrMYqJktCgTMryZGH9rwAomGw";
+  // private readonly adminToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjM5MTU4ZDMwLTQ0YzYtNDVhMy1hYzVmLWEyNDQ4ZDhjYzlhZCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJhZG1pbiIsImp0aSI6IjhkMzBiZmJjLWJjZWYtNGJkZi05YmQ1LTBjOTcyMGFhZjdlNiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzU2NTg1NjU2LCJpc3MiOiJKb2JCb2FyZEFQSSIsImF1ZCI6IkpvYkJvYXJkVXNlciJ9.H2xrqNf8e2oxphzX3dScCc5SvsT0XbAnYARmd58FPWc";
 
-  constructor(private http: HttpClient) {
-    this.saveToken(this.adminToken);
+  constructor(
+    private http: HttpClient,    
+     private authService: AuthService) {
+   
   }
 
   private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('authToken');
+    const token = this.authService.getToken();
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
   }
+  
 
   private handleError = (error: any) => {
     const errorMessages = {
@@ -99,12 +103,12 @@ export class AdminService {
   };
 
   // Authentication methods
-  saveToken(token: string): void {
-    localStorage.setItem('authToken', token);
-  }
+  // saveToken(token: string): void {
+  //   localStorage.setItem('authToken', token);
+  // }
 
   isLoggedIn(): boolean {
-    const token = localStorage.getItem('authToken');
+    const token = this.authService.getToken();
     if (!token) return false;
     
     try {
