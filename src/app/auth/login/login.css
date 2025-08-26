@@ -29,9 +29,9 @@
 .valid-form {
     color: #dc3545;
     font-size: 0.9rem;
-    background-color: #fbe5e7;
-    padding: 0.5rem;
-    border-radius: 5px;
+     /* background-color: #fbe5e7; */ /* Removed */
+    /* padding: 0.5rem; */ /* Removed */
+    /* border-radius: 5px; */ /* Removed */
     margin-top: 0.25rem;
 }
 
@@ -60,6 +60,16 @@
 }
 
 /* Google Sign-in Section Styling */
+.google-signin-section {
+    background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    margin: 2rem 0;
+    position: relative;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    width: 100%;
+}
 
 .signin-divider {
     text-align: center;
@@ -188,38 +198,6 @@
     opacity: 1;
 }
 
-/* Employer section styling */
-.employer-section {
-    background: #f8f9ff;
-    padding: 1.5rem;
-    border-radius: 8px;
-    border-left: 4px solid #4285f4;
-    margin-bottom: 1rem;
-    animation: slideIn 0.3s ease-out;
-}
-
-.section-header h5 {
-    color: #2c3e50;
-    margin-bottom: 0.25rem;
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-.section-header small {
-    color: #6c757d;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 /* Form styling */
 .form-control {
     border: 2px solid #e9ecef;
@@ -237,39 +215,65 @@
     outline: none;
 }
 
-.form-label {
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
-    display: block;
+/* Password input container */
+.password-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input {
+    padding-right: 45px !important;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    transition: color 0.2s ease;
+}
+
+.password-toggle-btn:hover {
+    color: #495057;
+}
+
+.password-toggle-btn svg {
+    width: 20px;
+    height: 20px;
 }
 
 .form-group {
     margin-bottom: 1rem;
 }
 
-/* Radio button styling - FIXED */
-.radio-group {
-    display: flex;
-    gap: 1.5rem;
-    margin-top: 0.5rem;
-}
-
-.radio-option {
+.checkbox-group {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    cursor: pointer;
 }
 
-.radio-option input[type="radio"] {
+.checkbox-group input[type="checkbox"] {
     margin: 0;
     cursor: pointer;
 }
 
-.radio-option label {
+.checkbox-group label {
     cursor: pointer;
     font-weight: 500;
+    margin: 0;
+}
+
+.me-2 {
+    margin-right: 0.5rem;
 }
 
 /* Footer styling */
@@ -320,8 +324,16 @@
     margin: 1rem 0;
 }
 
+.my-2 {
+    margin: 0.5rem 0;
+}
+
 .mt-3 {
     margin-top: 1rem;
+}
+
+.mt-2 {
+    margin-top: 0.5rem;
 }
 
 .w-100 {
@@ -330,6 +342,18 @@
 
 .d-block {
     display: block;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.justify-content-center {
+    justify-content: center;
+}
+
+.fw-lighter {
+    font-weight: lighter;
 }
 
 /* Responsive design */
@@ -357,11 +381,6 @@
     .fs-2 {
         font-size: 1.3rem;
     }
-
-    .radio-group {
-        flex-direction: column;
-        gap: 1rem;
-    }
 }
 
 /* Error styling */
@@ -377,6 +396,6 @@
 }
 
 .is-invalid {
-    border-color: #dc3545 !important;
+    border-color: #e57373 !important;
     box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15) !important;
 }
