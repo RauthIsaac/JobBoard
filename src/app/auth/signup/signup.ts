@@ -1,26 +1,13 @@
-<<<<<<< HEAD
-=======
 import { Component, NgZone, OnDestroy, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, Validators, AbstractControl, FormBuilder, FormsModule } from '@angular/forms';
 import { MaterialModule } from '../../shared/material.module';
->>>>>>> origin/Manar
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { AfterViewInit, Component, NgZone, OnDestroy } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSnackBar } from '@angular/material/snack-bar';
-<<<<<<< HEAD
 import { Router, RouterModule } from '@angular/router';
-import { catchError, of, timeout } from 'rxjs';
-import { MaterialModule } from '../../shared/material.module';
-import { AuthService } from './../auth-service';
-=======
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { of, timeout, catchError } from 'rxjs';
 import { AuthService } from '../auth-service';
->>>>>>> origin/Manar
 
 declare const google: any;
  
@@ -285,7 +272,7 @@ export class Signup implements AfterViewInit, OnDestroy {
           size: 'large',
           text: 'signup_with',
           shape: 'rectangular',
-          width: 300,
+          width: 100,
           logo_alignment: 'left',
           locale: 'en'
         });

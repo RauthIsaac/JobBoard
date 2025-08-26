@@ -39,8 +39,7 @@
 
 .reset-btn {
     width: 100%;
-    background-color: 
-#007bff;
+    background-color: #007bff;
     color: white;
     border: none;
     padding: 12px;
@@ -171,8 +170,7 @@
 
 .google-loading-overlay p {
     margin-top: 1rem;
-    color: 
-#4285f4;
+    color: #4285f4;
     font-weight: 500;
 }
 
