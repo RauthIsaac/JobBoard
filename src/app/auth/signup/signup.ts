@@ -1,12 +1,12 @@
-import { Component, NgZone, OnDestroy, AfterViewInit, ChangeDetectorRef } from '@angular/core';
-import { ReactiveFormsModule, FormGroup, Validators, AbstractControl, FormBuilder, FormsModule } from '@angular/forms';
-import { MaterialModule } from '../../shared/material.module';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { AfterViewInit, ChangeDetectorRef, Component, NgZone, OnDestroy } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterModule } from '@angular/router';
-import { of, timeout, catchError } from 'rxjs';
+import { catchError, of, timeout } from 'rxjs';
+import { MaterialModule } from '../../shared/material.module';
 import { AuthService } from '../auth-service';
 
 declare const google: any;
