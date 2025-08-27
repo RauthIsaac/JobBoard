@@ -1,6 +1,9 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { JobsService } from '../../../Jobs/jobs-service';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../../auth/auth-service';
+import { IemplyerAnalytics } from '../../../../shared/models/iemplyer-analytics';
+import { IemployerHiringOverview } from '../../../../shared/models/iemployer-hiring-overview';
 
 
 @Component({
@@ -12,11 +15,15 @@ import { CommonModule } from '@angular/common';
 export class EmployerAnalyticsSection implements OnInit{
 
   topPerformingJobs = signal<any[]>([]);
+  employerAnalytics = signal<IemplyerAnalytics>({} as IemplyerAnalytics);
+  employerHiringOverview = signal<IemployerHiringOverview>({} as IemployerHiringOverview);
 
-  constructor(private jobService:JobsService){}
+  constructor(private jobService:JobsService, private authService: AuthService){}
 
   ngOnInit(): void {
     this.loadTopPerformingJobs();
+    this.loadEmployerAnalytics();
+    this.loadEmployerHiringOverview();
   }
 
   loadTopPerformingJobs(){
@@ -31,6 +38,32 @@ export class EmployerAnalyticsSection implements OnInit{
       }
     })
 
+  }
+
+  loadEmployerAnalytics(){
+    this.authService.getEmployerAnalytics().subscribe({
+      next:(analytic:any)=>{
+        console.log('Analytics from SQL :', analytic);
+        this.employerAnalytics.set(analytic);
+        console.log('Analytics :', this.employerAnalytics());
+      },
+      error: (err:any)=>{
+        console.error('Error fetching data', err);
+      }
+    })
+  }
+
+  loadEmployerHiringOverview(){
+    this.authService.getEmployerHiringOverview().subscribe({
+      next:(analytic:any)=>{
+        console.log('Hiring Overview from SQL :', analytic);
+        this.employerHiringOverview.set(analytic);
+        console.log('Hiring Overview :', this.employerHiringOverview());
+      },
+      error: (err:any)=>{
+        console.error('Error fetching data', err);
+      }
+    })
   }
   
 }
