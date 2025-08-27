@@ -10,12 +10,12 @@
                     <h6>Application Rate</h6>
                 </div>
                 <div>
-                    <span class="badge bg-success ms-2">+2.3%</span>
+                    <span class="badge bg-success ms-2">{{employerAnalytics().applicationRateChange}}%</span>
                 </div>
             </div>
-            <h2>12.5% <small>vs last month</small></h2>
+            <h2>{{employerAnalytics().applicationRate}} % <small>vs last month</small></h2>
         </div>
-      </div>
+      </div> 
 
       <div class="col-md-3">
         <div class="metric-card">
@@ -25,10 +25,10 @@
                     <h6>Profile Views</h6>
                 </div>
                 <div>
-                    <span class="badge bg-success ms-2">+156</span>
+                    <span class="badge bg-success ms-2">{{employerAnalytics().profileViewsChange}}</span>
                 </div>
             </div>
-            <h2>1,247 <small>this month</small></h2>
+            <h2>{{employerAnalytics().profileViews}} <small>this month</small></h2>
         </div>
       </div>
 
@@ -39,11 +39,8 @@
                     <i class="bi bi-clock-history me-2"></i>
                     <h6>Time to Hire</h6>
                 </div>
-                <div>
-                    <span class="badge bg-warning ms-2">-3 days</span>
-                </div>
             </div>
-            <h2>18 days <small>average</small></h2>
+            <h2>{{employerAnalytics().timeToHire}} days <small>average</small></h2>
         </div>
       </div>
 
@@ -55,10 +52,10 @@
                     <h6>Hire Success Rate</h6>
                 </div>
                 <div>
-                    <span class="badge bg-success ms-2">+5%</span>
+                    <span class="badge bg-success ms-2">{{employerAnalytics().hireSuccessRateChange}}%</span>
                 </div>
             </div>
-            <h2>23% <small>vs last quarter</small></h2>
+            <h2>{{employerAnalytics().hireSuccessRate}}% <small>vs last quarter</small></h2>
         </div>
       </div>
     </div>
@@ -102,25 +99,25 @@
             <div class="row g-4">
               <div class="col-md-3">
                 <div class="total-application">
-                  <h2>247</h2>
+                  <h2>{{employerHiringOverview().totalApplications}}</h2>
                   <p>Total Applications</p>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="under-review">
-                  <h2>89</h2>
+                  <h2>{{employerHiringOverview().underReview}}</h2>
                   <p>Under Review</p>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="accepted">
-                  <h2>23</h2>
+                  <h2>{{employerHiringOverview().accepted}}</h2>
                   <p>Accepted</p>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="pending">
-                  <h2>12</h2>
+                  <h2>{{employerHiringOverview().pending}}</h2>
                   <p>Pending</p>
                 </div>
               </div>
