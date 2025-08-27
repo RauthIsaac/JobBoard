@@ -250,4 +250,9 @@ export class Navbar implements OnInit, OnDestroy {
     }
     return 'User';
   }
+
+
+  isloggedIn(): boolean{
+    return this.authService.isLoggedIn();
+  }
 }
