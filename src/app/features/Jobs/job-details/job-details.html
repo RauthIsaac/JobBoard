@@ -80,7 +80,7 @@
                         <div class="col-lg-3" *ngIf="isSeeker()">
                             <!-- Show Apply Now button if not applied -->
                             <button 
-                                class="apply-now-btn my-2" 
+                                class="apply-now-btn my-2 form-control" 
                                 [routerLink]="['/seekerApp', jobDetails().id, 'personal-info']"
                                 *ngIf="!isJobApplied() && !isCheckingApplied()">
                                 Apply Now
