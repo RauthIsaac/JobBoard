@@ -253,6 +253,27 @@ export class AuthService {
     });
   }
 
+
+  /*---------------------------- Employer Analytics ----------------------------*/
+  getEmployerAnalytics(): Observable<any>{
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.getToken()}`
+    });
+
+    return this.http.get(`${this.baseUrl}/api/Employer/dashboard-stats`,{headers});
+  }
+
+  /*---------------------------- Employer Hiring Pipeline Overview ----------------------------*/
+  getEmployerHiringOverview():any{
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.getToken()}`
+    });
+
+    return this.http.get(`${this.baseUrl}/api/Employer/hiring-pipeline-overview`,{headers});
+  }
+
+
+
   /********************************************************************/
   /*------------------- Seeker Profile Methods -----------------------*/
   /*---------------------------- Get Seeker Profile ----------------------------*/

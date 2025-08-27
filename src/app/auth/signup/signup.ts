@@ -536,7 +536,6 @@ export class Signup implements AfterViewInit, OnDestroy {
           horizontalPosition: 'center',
           verticalPosition: 'top'
         });
-        this.router.navigate(['/login']);
       },
       error: (err: HttpErrorResponse) => {
         console.log('Error response:', err);

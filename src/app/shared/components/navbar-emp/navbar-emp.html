@@ -41,11 +41,8 @@
       <div class="notifications-list" *ngIf="notifications().length; else emptyState">
         <div class="notification-item" *ngFor="let notification of notifications(); let i = index"
              [class.unread]="!notification.isRead">
-          <div class="notification-content">
+          <div class="notification-content" *ngIf="notification.link" (click)="viewNotification(notification.link)">
             <p class="notification-message">{{ notification.message }}</p>
-            <small class="notification-link" *ngIf="notification.link" (click)="viewNotification(notification.link)">
-              View
-            </small>
             <div class="notification-meta">
               <span>{{ getTimeDifference(notification.createdAt + 'Z') }}</span>
             </div>
