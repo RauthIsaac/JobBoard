@@ -91,7 +91,7 @@
 .notification-badge {
   position: absolute;
   top: -5px;
-  right: -5px;
+  right: -10px;
   background: #ef4444;
   color: #ffffff;
   border-radius: 50%;
@@ -119,9 +119,9 @@
 /* Dropdown */
 .notification-dropdown {
   position: absolute;
-  top: 50px;
-  right: 0;
-  width: 300px;
+  top: 70px;
+  right: 70px;
+  width: 450px;
   background: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApplicationService } from '../../../application-service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-review',
@@ -18,7 +19,8 @@ export class Review implements OnInit {
   constructor(
     private appService: ApplicationService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private snackbar : MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -76,12 +78,21 @@ export class Review implements OnInit {
       this.http.post('http://localhost:5007/api/Application', formData).subscribe({
         next: (response) => {
           console.log('✅ Application submitted successfully:', response);
-          alert('✅ Application submitted successfully!');
+          this.snackbar.open('✅ Application submitted successfully', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
           this.appService.clearData();
-          this.router.navigate(['/']); // Navigate to home or success page
+          this.router.navigate(['/']); 
         },
         error: (error: HttpErrorResponse) => {
           console.error('❌ Submit error:', error);
+          this.snackbar.open('❌ Submit error', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
           this.handleSubmissionError(error);
         },
         complete: () => {
@@ -91,7 +102,11 @@ export class Review implements OnInit {
 
     } catch (error) {
       console.error('❌ Error preparing form data:', error);
-      alert('❌ Error preparing application data');
+      this.snackbar.open('❌ Error preparing application data', 'Close', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top'
+      });
       this.isSubmitting = false;
     }
   }
@@ -114,7 +129,11 @@ export class Review implements OnInit {
       errorMessage += `Server returned error ${error.status}.`;
     }
     
-    alert('❌ ' + errorMessage);
+    this.snackbar.open('❌ ' + errorMessage, 'Close', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top'
+    });
     console.log('Form data that was sent:', this.getFormDataEntries(error));
   }
 

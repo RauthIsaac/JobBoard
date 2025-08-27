@@ -13,6 +13,7 @@ body {
 }
 .stat-card:hover {
     transform: translateY(-3px) scale(1.01);
+    cursor: pointer;
 }
 
 .quick-actions .btn {
@@ -44,6 +45,7 @@ body {
     background-color: #ebebeb;
     border-radius: 15px;
     transform: translateX(5px);
+    cursor: pointer;
 }
 
 .job-status {
