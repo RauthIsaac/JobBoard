@@ -4,4 +4,7 @@ export interface IPublicStats {
   totalJobs: number;
   approvedJobs: number;
   activeJobs: number;
+  jobsGrowth: number;
+  approvalGrowth: number;
+  activeJobsGrowth: number;
 }
