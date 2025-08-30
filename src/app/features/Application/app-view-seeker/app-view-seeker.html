@@ -24,7 +24,7 @@
 
 
                 <div *ngIf="applicationsList().length > 0" class="application-list">
-                    <div *ngFor="let app of applicationsList(); trackBy: trackByApplicationId" class="application-card">
+                    <div *ngFor="let app of applicationsList(); trackBy: trackByApplicationId" class="application-card" [routerLink]="['/jobDtl',app.jobId]">
                         <div class="card-left row">
                             <div class="col-lg-1">
                                 <img src="{{app.companyImage}}"> 

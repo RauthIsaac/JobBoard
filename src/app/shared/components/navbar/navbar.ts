@@ -69,7 +69,7 @@ export class Navbar implements OnInit, OnDestroy {
 
     private initNotificationSound() {
       try {
-        this.notificationSound = new Audio('/assets/sounds/notification.mp3');
+        this.notificationSound = new Audio('sounds/notification.mp3');
         this.notificationSound.volume = 0.5;
       } catch (error) {
         console.warn('Could not initialize notification sound:', error);

@@ -1,0 +1,145 @@
+.snackbar {
+  position: fixed;
+  bottom: 60px; /* Slightly higher for better visibility */
+  right: 60px; /* Adjusted for better alignment */
+  min-width: 320px; /* Slightly wider for better content fit */
+  max-width: 90%;
+  padding: 20px 24px; /* Increased padding for a spacious feel */
+  border-radius: 8px; /* Softer, modern corners */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* Deeper shadow for elevation */
+  color: #ffffff; /* Explicit white for consistency */
+  z-index: 1200; /* Higher z-index to ensure visibility */
+  display: flex;
+  align-items: center;
+  font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif; /* Modern font stack */
+  font-size: 1.1rem; /* Slightly larger for readability */
+  font-weight: 500; /* Medium weight for clarity */
+  opacity: 0; /* Start hidden for animation */
+  transform: translateY(20px); /* Start position for slide-in */
+  animation: slideIn 0.4s ease-out forwards; /* New slide-in animation */
+}
+
+.snackbar__content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.snackbar__icon {
+  margin-right: 16px; /* More spacing for icon */
+  font-size: 1.5rem; /* Larger icon for emphasis */
+  line-height: 1; /* Ensure proper alignment */
+}
+
+.snackbar__message {
+  flex: 1;
+  margin-right: 16px; /* More spacing for message */
+}
+
+.snackbar__action {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 600; /* Bolder for emphasis */
+  margin-right: 12px;
+  text-transform: uppercase;
+  padding: 6px 12px; /* Slightly larger padding */
+  border-radius: 4px;
+  transition: background-color 0.2s ease, transform 0.2s ease; /* Smooth hover transition */
+}
+
+.snackbar__action:hover {
+  background: rgba(255, 255, 255, 0.25); /* Slightly darker hover effect */
+  transform: scale(1.05); /* Subtle scale on hover */
+}
+
+.snackbar__close {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 1.2rem; /* Slightly larger close icon */
+  padding: 0;
+  width: 28px; /* Larger hit area */
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, transform 0.2s ease; /* Smooth hover transition */
+}
+
+.snackbar__close:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  transform: scale(1.1); /* Subtle scale on hover */
+}
+
+.snackbar--success {
+  background: linear-gradient(135deg, #54cb57 0%, #46a049 100%); /* Gradient for modern look */
+}
+
+.snackbar--error {
+  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+}
+
+.snackbar--warning {
+  background: linear-gradient(135deg, #ff9800 0%, #e68a00 100%);
+}
+
+.snackbar--info {
+  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+@media (max-width: 600px) {
+  .snackbar {
+    bottom: 20px; /* Closer to bottom on small screens */
+    left: 10px; /* Adjust for smaller screens */
+    right: 10px;
+    min-width: 280px; /* Slightly smaller for mobile */
+    padding: 16px 20px; /* Reduced padding */
+    font-size: 1rem; /* Smaller font for mobile */
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1); /* Softer shadow */
+  }
+
+  .snackbar__icon {
+    font-size: 1.3rem; /* Slightly smaller icon */
+    margin-right: 12px;
+  }
+
+  .snackbar__message {
+    margin-right: 12px;
+  }
+
+  .snackbar__action {
+    padding: 4px 10px;
+  }
+
+  .snackbar__close {
+    width: 24px;
+    height: 24px;
+    font-size: 1rem;
+  }
+}

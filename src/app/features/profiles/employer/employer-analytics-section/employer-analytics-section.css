@@ -16,6 +16,7 @@ body {
 .metric-card:hover {
     transform: translateY(-6px) scale(1.02);
     box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    cursor: pointer;
 }
 
 .metric-card h6 {
@@ -49,6 +50,7 @@ body {
 .job-card:hover {
     background: #e0ecff;
     transform: translateX(5px);
+    cursor: pointer;
 }
 .job-card i {
     color: #4a90e2;
@@ -67,6 +69,7 @@ body {
 .total-application:hover , .accepted:hover{
     transform: translateY(-6px) scale(1.03);
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    cursor: pointer;
 }
 .total-application h2 , .accepted h2{
     font-size: 2.6rem;
@@ -89,6 +92,7 @@ body {
 .under-review:hover{
     transform: translateY(-6px) scale(1.03);
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    cursor: pointer;
 }
 .under-review h2{
     font-size: 2.6rem;
@@ -111,6 +115,7 @@ body {
 .pending:hover{
     transform: translateY(-6px) scale(1.03);
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    cursor: pointer;
 }
 .pending h2{
     font-size: 2.6rem;
