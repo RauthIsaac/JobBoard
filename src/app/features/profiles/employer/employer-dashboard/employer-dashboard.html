@@ -41,7 +41,7 @@
                     <section class="profile-section">
                         <div class="info row">
                             <div class="image col-lg-4 col-md-3 col-sm-12 me-3">
-                             <img [src]="empData().companyLogo ? empData().companyLogo : '/default.jpg'" alt="Company Logo" class="company-logo mb-3">
+                             <img [src]="empData().companyImage || 'assets/default.jpg'" alt="Company Logo" class="company-logo mb-3">
                             </div>
 
                             <div class="col-lg-6 col-md-4 col-sm-12">
