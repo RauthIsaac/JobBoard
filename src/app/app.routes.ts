@@ -62,7 +62,6 @@ export const routes: Routes = [
         children: [
             { path: 'savedJobs', component: SavedJobs},
             { path: 'explore', component: Explore},
-            { path: 'savedJobs', component: SavedJobs},
             { path: 'editSeeker', component: EditSeekerProfile},
             { path: 'seekerProfile', component: SeekerProfile},
             { path: 'appViewSeeker', component: AppViewSeeker},
