@@ -16,7 +16,7 @@ export enum ApplicationStatus {
 @Component({
   selector: 'app-app-view-emp',
   standalone: true,
-  imports: [CommonModule, NgIf],
+  imports: [CommonModule, NgIf,RouterLink],
   templateUrl: './app-view-seeker.html',
   styleUrls: ['./app-view-seeker.css']
 })

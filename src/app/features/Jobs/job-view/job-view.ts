@@ -1,9 +1,10 @@
 import { CurrencyPipe, DatePipe, NgIf } from '@angular/common';
-import { Component, Input, OnInit, signal, effect, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, OnChanges, SimpleChanges, signal, effect } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { JobsService } from '../jobs-service';
 import { AuthService } from '../../../auth/auth-service';
 import { ApplicationService } from '../../Application/application-service';
+import { SnackbarService } from '../../../shared/components/snackbar/snackbar-service';
 
 @Component({
   selector: 'app-job-view',
@@ -12,7 +13,6 @@ import { ApplicationService } from '../../Application/application-service';
   styleUrl: './job-view.css'
 })
 export class JobView implements OnInit, OnChanges {
-
   @Input({ required: true }) job!: any;
 
   isSavedFlag = signal<boolean>(false);
@@ -21,11 +21,12 @@ export class JobView implements OnInit, OnChanges {
   isCheckingApplied = signal<boolean>(false);
 
   constructor(
-    private jobService: JobsService, 
+    private jobService: JobsService,
     private authService: AuthService,
-    private applicationService: ApplicationService
+    private applicationService: ApplicationService,
+    private snackbarService: SnackbarService,
+    private cdr: ChangeDetectorRef
   ) {
-    // Listen to changes in savedJobsState for ANY job changes
     effect(() => {
       if (this.job?.id) {
         const isCurrentJobSaved = this.jobService.isJobSaved(this.job.id);
@@ -36,12 +37,8 @@ export class JobView implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.updateSavedState();
-
-    /* Get the user type */
     this.userType.set(this.getUserType());
-    console.log('User Type : ',this.userType());
-
-    // Check if job is already applied for seekers
+    console.log('User Type : ', this.userType());
     if (this.isSeeker() && this.job?.id) {
       console.log('Checking if job is applied for job ID:', this.job.id);
       this.checkIfJobApplied();
@@ -53,8 +50,6 @@ export class JobView implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['job'] && this.job) {
       this.updateSavedState();
-      
-      // Check if job is already applied when job changes
       if (this.isSeeker() && this.job?.id) {
         this.checkIfJobApplied();
       }
@@ -69,9 +64,7 @@ export class JobView implements OnInit, OnChanges {
 
   private checkIfJobApplied(): void {
     if (!this.job?.id) return;
-
     this.isCheckingApplied.set(true);
-    
     this.applicationService.isJobApplied(this.job.id).subscribe({
       next: (response) => {
         this.isJobApplied.set(response);
@@ -87,52 +80,49 @@ export class JobView implements OnInit, OnChanges {
 
   AddToSaved(): void {
     if (!this.job?.id) return;
-
     const jobId = this.job.id;
     const currentSavedState = this.isSavedFlag();
-
     if (currentSavedState) {
       this.jobService.removeFromSavedJobsByJobId(jobId).subscribe({
         next: () => {
           console.log(`Job ${jobId} removed from saved jobs`);
+          this.showSuccess('Job removed from saved');
         },
         error: (err) => {
           console.error('Error removing job from saved:', err);
           this.isSavedFlag.set(true);
+          this.showError('Failed to remove job from saved');
         }
       });
     } else {
       this.jobService.addToSavedJobs(jobId).subscribe({
         next: () => {
           console.log(`Job ${jobId} added to saved jobs`);
+          this.showSuccess('Job added to saved');
         },
         error: (err) => {
           console.error('Error adding job to saved:', err);
           this.isSavedFlag.set(false);
+          this.showError('Failed to add job to saved');
         }
       });
     }
   }
 
-  // Helper method to slice description text
   getSlicedDescription(): string {
     if (!this.job?.description) return '';
-    
     const limit = 120;
     if (this.job.description.length <= limit) {
       return this.job.description;
     }
-    
     return this.job.description.substring(0, limit).trim() + '...';
   }
 
-  getUserType(): string | null{
-    if(this.authService.getUserType() != null){
+  getUserType(): string | null {
+    if (this.authService.getUserType() != null) {
       return this.authService.getUserType();
     }
-    else{
-      return 'User'
-    }
+    return 'User';
   }
 
   isEmployer(): boolean {
@@ -143,8 +133,29 @@ export class JobView implements OnInit, OnChanges {
     return this.userType() === 'Seeker';
   }
 
-  isAdmin(): boolean{
+  isAdmin(): boolean {
     return this.userType() === 'Admin';
   }
 
-}
+  //#region Snackbar Methods
+  showSuccess(message: string = 'Operation successful!', duration: number = 4000, action: string = 'Undo'): void {
+    console.log('Showing success snackbar');
+    this.snackbarService.show({
+      message,
+      type: 'success',
+      duration,
+      action
+    });
+  }
+
+  showError(message: string = 'Something went wrong!', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'error',
+      duration
+    });
+  }
+
+  //#endregion
+
+} 

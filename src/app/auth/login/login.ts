@@ -168,10 +168,12 @@ export class Login implements AfterViewInit, OnDestroy {
       
       this.authService.login(loginPayload).subscribe({
         next: (response) => {
+          console.log(response);
+          
           this.authService.saveAuthData(
             response.token, 
             response.role,
-            response.userName || this.loginForm.get('email')?.value,
+            response.userName,
             response.email || this.loginForm.get('email')?.value,
             response.userId
           );

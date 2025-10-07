@@ -7,7 +7,6 @@ import { ResetPassword } from './auth/reset-password/reset-password';
 import { Signup } from './auth/signup/signup';
 import { ChatButton } from './features/AIChat/chat-button/chat-button';
 import { AdminDashboardAnalytics } from './features/app-admin-dashboard/admin-dashboard-analytics/admin-dashboard-analytics';
-import { ApplicationForm } from './features/Application/application-form/application-form';
 import { Layout } from './features/Application/seeker-application/layout/layout';
 import { Documents } from './features/Application/seeker-application/steps/documents/documents';
 import { PersonalInfo } from './features/Application/seeker-application/steps/personal-info/personal-info';
@@ -37,6 +36,7 @@ import { AppViewJob } from './features/Application/app-view-job/app-view-job';
 import { AuthGuard } from './auth/auth-guard';
 import { Unauthorized } from './Pages/unauthorized/unauthorized';
 import { AppViewSeeker } from './features/Application/app-view-seeker/app-view-seeker';
+import { RoleBasedRedirectGuard } from './auth/role-based-redirect-guard';
 
 
 export type UserType = 'Admin' | 'Seeker' | 'Employer';
@@ -44,13 +44,26 @@ export type UserType = 'Admin' | 'Seeker' | 'Employer';
 
 export const routes: Routes = [
 
-    {path: '', redirectTo: 'home', pathMatch: 'full'},
-    
+    {
+        path: '', 
+        canActivate: [RoleBasedRedirectGuard],
+        component: Home, 
+        pathMatch: 'full'
+    },
+
     {
         path:'',
         component: Navbar,
         children: [
-            { path: 'home', component: Home},
+            { 
+                path: 'home', 
+                component: Home,
+                canActivate: [AuthGuard],
+                data: { 
+                    allowedUserTypes: ['Seeker'] as UserType[],
+                    allowUnauthenticated: true 
+                }
+            },
         ]
     },
 
@@ -156,7 +169,6 @@ export const routes: Routes = [
 
     /*---------------- AI Chat ----------------*/
     { path: 'chatBtn', component: ChatButton},
-    { path: 'appForm', component: ApplicationForm},
     { path: 'notification', component: NotificationComponent},
  
  

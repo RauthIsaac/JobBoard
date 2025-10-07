@@ -113,6 +113,7 @@
 .application-card:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     transform: translateY(-2px) scale(1.01);
+    cursor: pointer;
 }
 
 .application-card.new { border-left-color: #007bff; }
