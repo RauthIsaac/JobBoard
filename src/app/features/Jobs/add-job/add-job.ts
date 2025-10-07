@@ -347,7 +347,7 @@ export class AddJob implements OnInit {
         this.submitSuccess = true;
         // Navigate to job details page or employer profile
         setTimeout(() => {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/empDashboard']);
         }, 2000);
       },
       error: (error:any) => {

@@ -27,7 +27,10 @@ export class Home implements OnInit {
     totalEmployers: 0,
     totalJobs: 0,
     approvedJobs: 0,
-    activeJobs: 0
+    activeJobs: 0,
+    jobsGrowth: 0,
+    approvalGrowth: 0,
+    activeJobsGrowth: 0
   });
 
   // Form controls for search

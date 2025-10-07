@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { RouterModule, Router, RouterOutlet, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { IJob } from '../../../../shared/models/ijob'; 
@@ -8,7 +8,7 @@ import { ApplicationService } from '../../application-service';
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule, RouterOutlet],
+  imports: [CommonModule, RouterModule, RouterOutlet, NgIf],
   templateUrl: './layout.html',
   styleUrl: './layout.css'
 })
