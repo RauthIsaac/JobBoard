@@ -3,6 +3,7 @@ import { Component, Input, OnInit, signal, effect, OnChanges, SimpleChanges, Out
 import { RouterLink } from '@angular/router';
 import { JobsService } from '../jobs-service';
 import { ApplicationService } from '../../Application/application-service';
+import { SnackbarService } from '../../../shared/components/snackbar/snackbar-service';
 
 @Component({
   selector: 'app-job-explore-view',
@@ -21,7 +22,8 @@ export class JobExploreView implements OnInit, OnChanges {
 
   constructor(
     private jobService: JobsService,
-    private applicationService : ApplicationService
+    private applicationService : ApplicationService,
+    private snackbarService: SnackbarService
   ) {
     // Listen to changes in savedJobsState for real-time updates
     effect(() => {
@@ -75,20 +77,24 @@ export class JobExploreView implements OnInit, OnChanges {
         next: () => {
           console.log(`Job ${jobId} removed from saved jobs`);
           this.jobRemoved.emit(jobId);
+          this.showSuccess('Job removed from saved jobs');
         },
         error: (err) => {
           console.error('Error removing job from saved:', err);
           this.isSavedFlag.set(true);
+          this.showError('Failed to remove job from saved jobs');
         }
       });
     } else {
       this.jobService.addToSavedJobs(jobId).subscribe({
         next: () => {
           console.log(`Job ${jobId} added to saved jobs`);
+          this.showSuccess('Job added to saved jobs');
         },
         error: (err) => {
           console.error('Error adding job to saved:', err);
           this.isSavedFlag.set(false);
+          this.showError('Failed to add job to saved jobs');
         }
       });
     }
@@ -124,4 +130,25 @@ export class JobExploreView implements OnInit, OnChanges {
     });
   }
 
+
+  //#region Snackbar Methods
+  showSuccess(message: string = 'Operation successful!', duration: number = 4000, action: string = 'Undo'): void {
+    console.log('Showing success snackbar');
+    this.snackbarService.show({
+      message,
+      type: 'success',
+      duration,
+      action
+    });
+  }
+
+  showError(message: string = 'Something went wrong!', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'error',
+      duration
+    });
+  }
+
+  //#endregion
 }

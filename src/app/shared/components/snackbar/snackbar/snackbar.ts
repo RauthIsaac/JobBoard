@@ -1,5 +1,4 @@
-// snackbar.component.ts
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { SnackbarConfig, SnackbarService } from '../snackbar-service';
 import { CommonModule } from '@angular/common';
@@ -16,10 +15,14 @@ export class Snackbar implements OnInit, OnDestroy {
   type: string = 'info';
   duration: number = 3000;
   action?: string;
+  @Output() actionClicked = new EventEmitter<void>();
   private snackbarSubscription: Subscription = new Subscription();
   private timeoutId: any;
 
-  constructor(private snackbarService: SnackbarService) {}
+  constructor(
+    private snackbarService: SnackbarService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.snackbarSubscription = this.snackbarService.snackbarState.subscribe(
@@ -40,20 +43,28 @@ export class Snackbar implements OnInit, OnDestroy {
     this.type = config.type || 'info';
     this.duration = config.duration || 3000;
     this.action = config.action;
+    
+    setTimeout(() => {
+      this.show = true;
+      this.cdr.detectChanges(); 
 
-    this.show = true;
-
-    if (this.duration > 0) {
-      this.timeoutId = setTimeout(() => {
-        this.hideSnackbar();
-      }, this.duration);
-    }
+      if (this.duration > 0) {
+        this.timeoutId = setTimeout(() => {
+          this.hideSnackbar();
+        }, this.duration);
+      }
+    }, 0);
   }
 
   hideSnackbar(): void {
     this.show = false;
+    this.cdr.detectChanges();
   }
 
+  onActionClick(): void {
+    this.actionClicked.emit();
+    this.hideSnackbar();
+  }
 
   ngOnDestroy(): void {
     this.snackbarSubscription.unsubscribe();

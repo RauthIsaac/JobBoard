@@ -6,18 +6,18 @@ import { JobsService } from '../jobs-service';
 import { IJob } from '../../../shared/models/ijob';
 import { ISkill } from '../../../shared/models/iskill';
 import { ICategory } from '../../../shared/models/icategory';
+import { SnackbarService } from '../../../shared/components/snackbar/snackbar-service';
 
 @Component({
   selector: 'app-add-job',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule,NgIf,NgIf, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink],
   templateUrl: './add-job.html',
   styleUrl: './add-job.css'
 })
 export class AddJob implements OnInit {
   jobForm!: FormGroup;
   isSubmitting = false;
-  submitError: string | null = null;
   submitSuccess = false;
   skills = signal<ISkill[]>([]);
   categories = signal<ICategory[]>([]);
@@ -116,7 +116,8 @@ export class AddJob implements OnInit {
   constructor(
     private fb: FormBuilder,
     private jobsService: JobsService,
-    private router: Router
+    private router: Router,
+    private snackbarService: SnackbarService
   ) {}
 
   ngOnInit(): void {
@@ -194,7 +195,7 @@ export class AddJob implements OnInit {
       },
       error: (error: any) => {
         console.error('Error fetching skills:', error);
-        this.submitError = 'Failed to load skills. Please try again.';
+        this.showError('Failed to load skills. Please try again.');
       }
     });
   }
@@ -245,7 +246,7 @@ export class AddJob implements OnInit {
       },
       error: (error: any) => {
         console.error('Error fetching categories:', error);
-        this.submitError = 'Failed to load categories. Please try again.';
+        this.showError('Failed to load categories. Please try again.');
       }
     });
   }
@@ -306,11 +307,11 @@ export class AddJob implements OnInit {
       // Mark all fields as touched to trigger validation messages
       console.log('Form is invalid');
       this.markFormGroupTouched(this.jobForm);
+      this.showError('Please fix the errors in the form.');
       return;
     }
 
     this.isSubmitting = true;
-    this.submitError = null;
     this.submitSuccess = false;
 
     // Prepare the job data
@@ -345,16 +346,17 @@ export class AddJob implements OnInit {
       next: () => {
         this.isSubmitting = false;
         this.submitSuccess = true;
+
+        this.showInfo('Job is under review now , Admin will approve it soon!');
         // Navigate to job details page or employer profile
+        
         setTimeout(() => {
           this.router.navigate(['/empDashboard']);
         }, 2000);
       },
       error: (error:any) => {
-
         this.isSubmitting = false;
-        this.submitError = 'Failed to create job. Please try again.';
-        console.error('Error creating job:', error);
+        this.showError('Failed to create job. Please try again.');
       }
     });
   }
@@ -371,5 +373,34 @@ export class AddJob implements OnInit {
   }
 
 
+
+  //#region Snackbar Methods
+  showSuccess(message: string = 'Operation successful!', duration: number = 4000, action: string = 'Undo'): void {
+    console.log('Showing success snackbar');
+    this.snackbarService.show({
+      message,
+      type: 'success',
+      duration,
+      action
+    });
+  }
+
+  showInfo(message: string = 'Information message', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'info',
+      duration
+    });
+  }
+
+  showError(message: string = 'Something went wrong!', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'error',
+      duration
+    });
+  }
+
+  //#endregion  
 
 }

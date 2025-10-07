@@ -1,22 +1,25 @@
+/* snackbar.css */
 .snackbar {
   position: fixed;
-  bottom: 60px; /* Slightly higher for better visibility */
-  right: 60px; /* Adjusted for better alignment */
-  min-width: 320px; /* Slightly wider for better content fit */
+  bottom: 60px;
+  right: 60px;
+  min-width: 320px;
   max-width: 90%;
-  padding: 20px 24px; /* Increased padding for a spacious feel */
-  border-radius: 8px; /* Softer, modern corners */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* Deeper shadow for elevation */
-  color: #ffffff; /* Explicit white for consistency */
-  z-index: 1200; /* Higher z-index to ensure visibility */
+  padding: 20px 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  color: #ffffff;
+  z-index: 1200;
   display: flex;
   align-items: center;
-  font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif; /* Modern font stack */
-  font-size: 1.1rem; /* Slightly larger for readability */
-  font-weight: 500; /* Medium weight for clarity */
-  opacity: 0; /* Start hidden for animation */
-  transform: translateY(20px); /* Start position for slide-in */
-  animation: slideIn 0.4s ease-out forwards; /* New slide-in animation */
+  font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 500;
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.snackbar[aria-hidden="true"] {
+  animation: slideOut 0.4s ease-out forwards; /* Fade-out animation */
 }
 
 .snackbar__content {
@@ -26,32 +29,39 @@
 }
 
 .snackbar__icon {
-  margin-right: 16px; /* More spacing for icon */
-  font-size: 1.5rem; /* Larger icon for emphasis */
-  line-height: 1; /* Ensure proper alignment */
+  margin-right: 16px;
+  font-size: 1.5rem;
+  line-height: 1;
 }
 
 .snackbar__message {
   flex: 1;
-  margin-right: 16px; /* More spacing for message */
+  margin-right: 16px;
 }
 
 .snackbar__action {
   background: transparent;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.5); /* Subtle border for visibility */
   color: #ffffff;
   cursor: pointer;
-  font-weight: 600; /* Bolder for emphasis */
+  font-weight: 600;
   margin-right: 12px;
   text-transform: uppercase;
-  padding: 6px 12px; /* Slightly larger padding */
+  padding: 6px 12px;
   border-radius: 4px;
-  transition: background-color 0.2s ease, transform 0.2s ease; /* Smooth hover transition */
+  transition: background-color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
 }
 
-.snackbar__action:hover {
-  background: rgba(255, 255, 255, 0.25); /* Slightly darker hover effect */
-  transform: scale(1.05); /* Subtle scale on hover */
+.snackbar__action:hover,
+.snackbar__action:focus {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+  outline: none; /* Remove default outline */
+}
+
+.snackbar__action:focus-visible {
+  outline: 2px solid #ffffff; /* Accessible focus indicator */
+  outline-offset: 2px;
 }
 
 .snackbar__close {
@@ -59,38 +69,79 @@
   border: none;
   color: #ffffff;
   cursor: pointer;
-  font-size: 1.2rem; /* Slightly larger close icon */
+  font-size: 1.2rem;
   padding: 0;
-  width: 28px; /* Larger hit area */
+  width: 28px;
   height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease, transform 0.2s ease; /* Smooth hover transition */
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-.snackbar__close:hover {
+.snackbar__close:hover,
+.snackbar__close:focus {
   background: rgba(255, 255, 255, 0.25);
   border-radius: 50%;
-  transform: scale(1.1); /* Subtle scale on hover */
+  transform: scale(1.1);
 }
 
+.snackbar__close:focus-visible {
+  outline: 2px solid #ffffff; /* Accessible focus indicator */
+  outline-offset: 2px;
+}
+
+/* Type-specific backgrounds with improved contrast */
 .snackbar--success {
-  background: linear-gradient(135deg, #54cb57 0%, #46a049 100%); /* Gradient for modern look */
+  background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
 }
 
 .snackbar--error {
-  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+  background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
 }
 
 .snackbar--warning {
-  background: linear-gradient(135deg, #ff9800 0%, #e68a00 100%);
+  background: linear-gradient(135deg, #fb8c00 0%, #ef6c00 100%);
 }
 
 .snackbar--info {
-  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+  background: linear-gradient(135deg, #0288d1 0%, #0277bd 100%);
 }
 
+/* Theme support */
+:root {
+  --snackbar-text-color: #ffffff;
+  --snackbar-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+@media (prefers-color-scheme: dark) {
+  .snackbar {
+    --snackbar-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .snackbar--success,
+  .snackbar--error,
+  .snackbar--warning,
+  .snackbar--info {
+    color: #1a1a1a; /* Darker text for light theme */
+  }
+  .snackbar__action,
+  .snackbar__close {
+    color: #1a1a1a;
+  }
+  .snackbar__action:hover,
+  .snackbar__close:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+  .snackbar__action:focus-visible,
+  .snackbar__close:focus-visible {
+    outline: 2px solid #1a1a1a;
+  }
+}
+
+/* Animations */
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -113,19 +164,20 @@
   }
 }
 
+/* Mobile adjustments */
 @media (max-width: 600px) {
   .snackbar {
-    bottom: 20px; /* Closer to bottom on small screens */
-    left: 10px; /* Adjust for smaller screens */
+    bottom: 20px;
+    left: 10px;
     right: 10px;
-    min-width: 280px; /* Slightly smaller for mobile */
-    padding: 16px 20px; /* Reduced padding */
-    font-size: 1rem; /* Smaller font for mobile */
-    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1); /* Softer shadow */
+    min-width: 280px;
+    padding: 16px 20px;
+    font-size: 1rem;
+    box-shadow: var(--snackbar-shadow);
   }
 
   .snackbar__icon {
-    font-size: 1.3rem; /* Slightly smaller icon */
+    font-size: 1.3rem;
     margin-right: 12px;
   }
 
@@ -135,11 +187,26 @@
 
   .snackbar__action {
     padding: 4px 10px;
+    touch-action: manipulation; /* Optimize for touch */
   }
 
   .snackbar__close {
     width: 24px;
     height: 24px;
     font-size: 1rem;
+    touch-action: manipulation;
+  }
+}
+
+/* Accessibility: Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .snackbar {
+    animation: none;
+    transform: none;
+    opacity: 1;
+  }
+  .snackbar[aria-hidden="true"] {
+    animation: none;
+    opacity: 0;
   }
 }

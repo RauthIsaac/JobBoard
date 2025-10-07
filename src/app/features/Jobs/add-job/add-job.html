@@ -15,9 +15,7 @@
                     <div *ngIf="submitSuccess" class="alert alert-success">
                         Job posted successfully! Redirecting to your profile...
                     </div>
-                    <div *ngIf="submitError" class="alert alert-danger">
-                        {{ submitError }}
-                    </div>
+
 
                     <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
                         <!-- Basic Job Information -->

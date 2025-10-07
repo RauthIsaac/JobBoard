@@ -6,6 +6,7 @@ import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { AuthService } from '../../../auth/auth-service';
 import { ApplicationService } from '../../Application/application-service';
+import { SnackbarService } from '../../../shared/components/snackbar/snackbar-service';
 
 
 @Component({
@@ -65,7 +66,8 @@ export class JobDetails implements OnInit {
     private jobService: JobsService, 
     private route: ActivatedRoute,
     private authService: AuthService,
-    private applicationService : ApplicationService
+    private applicationService : ApplicationService,
+    private snackbarService: SnackbarService
   ) {
     // Listen to changes in savedJobsState
     effect(() => {
@@ -138,13 +140,14 @@ export class JobDetails implements OnInit {
 
       this.jobService.removeFromSavedJobsByJobId(currentJobId).subscribe({
         next: () => {
-
           console.log(`Job ${currentJobId} removed from saved jobs`);
+          this.isSavedFlag.set(false);
+          this.showSuccess('Job removed from saved jobs');
         },
         error: (err) => {
           console.error('Error removing job from saved:', err);
-
           this.isSavedFlag.set(true);
+          this.showError('Failed to remove job from saved jobs');
         }
       });
     } else {
@@ -152,10 +155,12 @@ export class JobDetails implements OnInit {
       this.jobService.addToSavedJobs(currentJobId).subscribe({
         next: () => {
           console.log(`Job ${currentJobId} added to saved jobs`);
+          this.showSuccess('Job added to saved jobs');
         },
         error: (err) => {
           console.error('Error adding job to saved:', err);
           this.isSavedFlag.set(false);
+          this.showError('Failed to add job to saved jobs');
         }
       });
     }
@@ -202,5 +207,27 @@ export class JobDetails implements OnInit {
       }
     });
   }
+
+
+  //#region Snackbar Methods
+  showSuccess(message: string = 'Operation successful!', duration: number = 4000, action: string = 'Undo'): void {
+    console.log('Showing success snackbar');
+    this.snackbarService.show({
+      message,
+      type: 'success',
+      duration,
+      action
+    });
+  }
+
+  showError(message: string = 'Something went wrong!', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'error',
+      duration
+    });
+  }
+
+  //#endregion
 
 }

@@ -1,29 +1,19 @@
-<ng-container *ngIf="show">
-  <div class="snackbar" [ngClass]="{
-    'snackbar--success': type === 'success',
-    'snackbar--error': type === 'error',
-    'snackbar--warning': type === 'warning',
-    'snackbar--info': type === 'info'
-  }">
+@if (show) {
+  <div class="snackbar" 
+       [ngClass]="type ? 'snackbar--' + type : ''"
+       role="alert"
+       aria-live="polite">
     <div class="snackbar__content">
-      <ng-container *ngIf="type === 'success'">
-        <i class="bi bi-check-circle snackbar__icon"></i>
-      </ng-container>
-      <ng-container *ngIf="type === 'error'">
-        <i class="bi bi-x-circle snackbar__icon"></i>
-      </ng-container>
-      <ng-container *ngIf="type === 'warning'">
-        <i class="bi bi-exclamation-triangle snackbar__icon"></i>
-      </ng-container>
-      <ng-container *ngIf="type === 'info'">
-        <i class="bi bi-info-circle snackbar__icon"></i>
-      </ng-container>
-
+      <span class="snackbar__icon" *ngIf="type">
+        <ng-container [ngSwitch]="type">
+          <span *ngSwitchCase="'success'">✅</span>
+          <span *ngSwitchCase="'error'">❌</span>
+          <span *ngSwitchCase="'warning'">⚠️</span>
+          <span *ngSwitchCase="'info'">ℹ️</span>
+        </ng-container>
+      </span>
       <span class="snackbar__message">{{ message }}</span>
-
-      <button class="snackbar__close" (click)="hideSnackbar()">
-        <i class="bi bi-x"></i>
-      </button>
+      <button class="snackbar__close" (click)="hideSnackbar()" aria-label="Close snackbar">✕</button>
     </div>
   </div>
-</ng-container>
+}

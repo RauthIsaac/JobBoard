@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { JobsService } from '../jobs-service';
 import { ISkill } from '../../../shared/models/iskill';
 import { ICategory } from '../../../shared/models/icategory';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackbarService } from '../../../shared/components/snackbar/snackbar-service';
 
 @Component({
   selector: 'app-edit-job',
@@ -119,7 +119,7 @@ export class EditJob implements OnInit {
     private jobsService: JobsService,
     private route: ActivatedRoute,
     private router: Router,
-    private snackBar : MatSnackBar
+    private snackbarService : SnackbarService
   ) {}
 
   ngOnInit(): void {
@@ -452,12 +452,9 @@ export class EditJob implements OnInit {
         console.log('Job updated successfully:', response);
         this.submitSuccess.set(true);
         this.isSubmitting.set(false);
+
+        this.showSuccess('Job is under review now , Admin will approve it soon!');
         
-        this.snackBar.open('Job is under review now , Admin will approve it soon.', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
         // Redirect after showing success message
         setTimeout(() => {
           this.router.navigate(['/empPostedJobs']);
@@ -499,4 +496,36 @@ export class EditJob implements OnInit {
     // Reload the original job data
     this.loadJobData();
   }
+
+
+
+    //#region Snackbar Methods
+  showSuccess(message: string = 'Operation successful!', duration: number = 4000, action: string = 'Undo'): void {
+    console.log('Showing success snackbar');
+    this.snackbarService.show({
+      message,
+      type: 'success',
+      duration,
+      action
+    });
+  }
+
+  showInfo(message: string = 'Information message', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'info',
+      duration
+    });
+  }
+
+  showError(message: string = 'Something went wrong!', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'error',
+      duration
+    });
+  }
+
+  //#endregion  
+
 }
