@@ -96,11 +96,8 @@
   </div>
 
   <!-- Loading Indicator -->
-  <div class="text-center my-4" *ngIf="isLoading()">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-    <p class="mt-2 text-muted">Loading jobs...</p>
+  <div *ngIf="isLoading()">
+    <app-loading-page></app-loading-page>
   </div>
 
   <!-- No Results Message -->

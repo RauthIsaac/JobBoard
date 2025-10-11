@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NotificationDto, NotificationService } from '../../../features/Notifications/notification-services';
 import { Subscription } from 'rxjs';
+import { SnackbarService } from '../snackbar/snackbar-service';
 
 @Component({
   selector: 'app-navbar-emp',
@@ -18,7 +19,7 @@ export class NavbarEmp implements OnInit, OnDestroy{
   isMobileView = false;
   
   constructor(private authService: AuthService, 
-    private snackBar: MatSnackBar, 
+    private snackbarService: SnackbarService, 
     private router: Router,
     private notificationService: NotificationService,
     private elementRef: ElementRef) {
@@ -212,11 +213,7 @@ export class NavbarEmp implements OnInit, OnDestroy{
   logout(): void {
     this.authService.clearAuthData();
     
-    this.snackBar.open('Logged out successfully', 'Close', {
-      duration: 3000,
-      horizontalPosition: 'center',
-      verticalPosition: 'top'
-    });
+    this.showSuccess('Logged out successfully', 3000);
     
     this.router.navigate(['/login']);
   }
@@ -229,5 +226,39 @@ export class NavbarEmp implements OnInit, OnDestroy{
   private checkMobileView() {
     this.isMobileView = window.innerWidth < 576;
   }
+
+
+
+
+   //#region Snackbar Methods
+  showSuccess(message: string = 'Operation successful!', duration: number = 4000, action: string = 'Undo'): void {
+    console.log('Showing success snackbar');
+    this.snackbarService.show({
+      message,
+      type: 'success',
+      duration,
+      action
+    });
+  }
+
+  showInfo(message: string = 'Information message', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'info',
+      duration
+    });
+  }
+
+  showError(message: string = 'Something went wrong!', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'error',
+      duration
+    });
+  }
+
+  //#endregion  
+
+
 
 }

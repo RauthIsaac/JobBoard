@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../auth-service';
+import { SnackbarService } from '../../shared/components/snackbar/snackbar-service';
 
 @Component({
   selector: 'app-reset-password',
@@ -26,7 +27,8 @@ export class ResetPassword implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackbarService: SnackbarService
   ) {
     this.resetForm = this.fb.group({
       password: ['', [ 
@@ -89,7 +91,7 @@ export class ResetPassword implements OnInit {
 
     const resetData = {
       email: this.email,
-      newPassword: this.resetForm.get('password')?.value, // Changed from 'password' to 'newPassword'
+      newPassword: this.resetForm.get('password')?.value, 
       token: this.token
     };
 
@@ -100,8 +102,9 @@ export class ResetPassword implements OnInit {
         console.log('Password reset successful', response);
         this.isLoading = false;
         this.isSuccess = true;
-        this.message = '✅ Password reset successfully! Redirecting to login...';
-        
+        this.message = 'Password reset successfully! Redirecting to login...';
+        this.showSuccess(this.message);
+
         // Redirect to login after 3 seconds
         setTimeout(() => {
           this.router.navigate(['/login']);
@@ -111,8 +114,44 @@ export class ResetPassword implements OnInit {
         console.error('Password reset failed', error);
         this.isLoading = false;
         this.isError = true;
-        this.message = '❌ Password reset failed. The link may be expired or invalid.';
+        this.message = 'Password reset failed. The link may be expired or invalid.';
+        this.showError(this.message);
       }
     });
   }
+
+
+  //#region Snackbar Methods
+  showSuccess(message: string = 'Operation successful!', duration: number = 4000, action: string = 'Undo'): void {
+    console.log('Showing success snackbar');
+    this.snackbarService.show({
+      message,
+      type: 'success',
+      duration,
+      action
+    });
+  }
+
+  showInfo(message: string = 'Information message', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'info',
+      duration
+    });
+  }
+
+  showError(message: string = 'Something went wrong!', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'error',
+      duration
+    });
+  }
+
+  //#endregion  
+
+
+
+
+
 }

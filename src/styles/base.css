@@ -25,4 +25,12 @@ body {
     --basic-gray-hover : rgb(218, 217, 217);
 
     --basic-green:  rgb(24, 177, 77);
+
+
+    --primary-blue: #1335b1;
+    --secondary-blue: #4A73FF;
+    --light-blue: #5A8CFF;
+    --loading-overlay-bg: rgba(255, 255, 255, 0.95);
+    --text-secondary: #4F5E64;
+    --shadow-color: rgba(60, 101, 245, 0.15);
 }

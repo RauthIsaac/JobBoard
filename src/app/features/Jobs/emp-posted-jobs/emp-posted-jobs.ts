@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { IpostedJob } from '../../../shared/models/iposted-job';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { SnackbarService } from '../../../shared/components/snackbar/snackbar-service';
+import { LoadingPage } from "../../../shared/components/loading-page/loading-page";
 
 export interface EmployerJobFilterParams {
   status?: 'Active' | 'Filled' | 'Expired';
@@ -13,7 +15,7 @@ export interface EmployerJobFilterParams {
 
 @Component({
   selector: 'app-emp-posted-jobs',
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, LoadingPage],
   templateUrl: './emp-posted-jobs.html',
   styleUrl: './emp-posted-jobs.css'
 })
@@ -28,7 +30,7 @@ export class EmpPostedJobs implements OnInit {
   selectedStatus = signal<string>('All Status');
   selectedSort = signal<string>('PostedDateDesc');
 
-  constructor(private jobService: JobsService) {}
+  constructor(private jobService: JobsService, private snackbarService:SnackbarService) {}
 
   ngOnInit(): void {
     this.loadEmployerJobs();
@@ -139,7 +141,7 @@ export class EmpPostedJobs implements OnInit {
           this.isLoading.set(false);
           
           // Show success message (you might want to use a toast notification instead)
-          alert(`Job "${jobTitle}" has been deleted successfully.`);
+          this.showSuccess(`Job "${jobTitle}" has been deleted successfully.`);
         },
         error: (error) => {
           console.error('Error deleting job:', error);
@@ -160,7 +162,7 @@ export class EmpPostedJobs implements OnInit {
             errorMessage = error.error.message;
           }
           
-          alert(errorMessage);
+          this.showError(errorMessage);
         }
       });
     }
@@ -241,12 +243,43 @@ export class EmpPostedJobs implements OnInit {
 
   private showSuccessMessage(message: string) {
     // Implement with your preferred notification system
-    // For now, using alert, but consider using a toast library
-    alert(message);
+    this.showSuccess(message);
   }
 
   private showErrorMessage(message: string) {
     // Implement with your preferred notification system
-    alert(message);
+    this.showError(message);
   }
+
+
+  //#region Snackbar Methods
+  showSuccess(message: string = 'Operation successful!', duration: number = 4000, action: string = 'Undo'): void {
+    console.log('Showing success snackbar');
+    this.snackbarService.show({
+      message,
+      type: 'success',
+      duration,
+      action
+    });
   }
+
+  showInfo(message: string = 'Information message', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'info',
+      duration
+    });
+  }
+
+  showError(message: string = 'Something went wrong!', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'error',
+      duration
+    });
+  }
+
+  //#endregion  
+
+
+}

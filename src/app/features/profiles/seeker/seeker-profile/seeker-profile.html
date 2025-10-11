@@ -44,8 +44,7 @@
 
           <!-- Upload Progress Indicator for Image -->
           <div *ngIf="isUploadingImage()" class="upload-progress">
-            <mat-spinner diameter="40"></mat-spinner>
-            <p>Processing...</p>
+            <app-loading-page></app-loading-page>
           </div>
         </div>
 
@@ -84,7 +83,7 @@
                   *ngIf="!seekerData().cV_Url">
             <mat-icon>cloud_upload</mat-icon>
             <span *ngIf="!isUploadingResume()">Upload Resume</span>
-            <mat-spinner diameter="20" *ngIf="isUploadingResume()"></mat-spinner>
+            <app-loading-page *ngIf="isUploadingResume()"></app-loading-page>
           </button>
 
           <!-- Resume Management Buttons (when resume exists) -->
@@ -107,7 +106,7 @@
                     title="Delete Resume">
               <mat-icon>delete</mat-icon> 
               <span *ngIf="!isUploadingResume()">Delete</span>
-              <mat-spinner diameter="16" *ngIf="isUploadingResume()"></mat-spinner>
+              <app-loading-page *ngIf="isUploadingResume()"></app-loading-page>
             </button>
           </div>
         </div>

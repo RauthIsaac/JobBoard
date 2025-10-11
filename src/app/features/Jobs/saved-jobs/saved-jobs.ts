@@ -5,10 +5,11 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { IJob } from '../../../shared/models/ijob';
 import { JobSavedView } from '../job-saved-view/job-saved-view';
+import { LoadingPage } from "../../../shared/components/loading-page/loading-page";
 
 @Component({
   selector: 'app-saved-jobs',
-  imports: [CommonModule, JobSavedView, FormsModule, RouterLink],
+  imports: [CommonModule, JobSavedView, FormsModule, RouterLink, LoadingPage],
   templateUrl: './saved-jobs.html',
   styleUrl: './saved-jobs.css'
 })

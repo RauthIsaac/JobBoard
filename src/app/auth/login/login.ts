@@ -12,6 +12,7 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../auth-service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { timeout, catchError, of } from 'rxjs';
+import { SnackbarService } from '../../shared/components/snackbar/snackbar-service';
 
 declare const google: any;
 
@@ -66,7 +67,7 @@ export class Login implements AfterViewInit, OnDestroy {
     private fb: FormBuilder, 
     private router: Router, 
     private authService: AuthService,
-    private snackBar: MatSnackBar,
+    private snackbarService: SnackbarService,
     private http: HttpClient,
     private ngZone: NgZone,
     private cdr: ChangeDetectorRef
@@ -179,11 +180,7 @@ export class Login implements AfterViewInit, OnDestroy {
           );
 
           this.isLoading = false;
-          this.snackBar.open('Login successful', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
+          this.showSuccess('Login successful! Redirecting...');
 
           const userType = response.role?.toLowerCase();
           if (userType === 'employer') {
@@ -196,21 +193,13 @@ export class Login implements AfterViewInit, OnDestroy {
         },
         error: () => {
           this.isLoading = false;
-          this.snackBar.open('Login failed. Please check your credentials.', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
+          this.showError('Login failed. Please check your credentials.');
         }
       });
 
     } else {
       this.loginForm.markAllAsTouched();
-      this.snackBar.open('Please fill all fields correctly', 'Close', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-      });
+      this.showError('Please fill all fields correctly');
     }
   }
 
@@ -393,4 +382,37 @@ export class Login implements AfterViewInit, OnDestroy {
         this.router.navigate(['/dashboard']);
     }
   }
+
+
+  //#region Snackbar Methods
+  showSuccess(message: string = 'Operation successful!', duration: number = 4000, action: string = 'Undo'): void {
+    console.log('Showing success snackbar');
+    this.snackbarService.show({
+      message,
+      type: 'success',
+      duration,
+      action
+    });
+  }
+
+  showInfo(message: string = 'Information message', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'info',
+      duration
+    });
+  }
+
+  showError(message: string = 'Something went wrong!', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'error',
+      duration
+    });
+  }
+
+  //#endregion  
+
+
+
 }

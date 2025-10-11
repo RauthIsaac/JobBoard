@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ApplicationForm } from './application-form';
+import { LoadingPage } from './loading-page';
 
-describe('ApplicationForm', () => {
-  let component: ApplicationForm;
-  let fixture: ComponentFixture<ApplicationForm>;
+describe('LoadingPage', () => {
+  let component: LoadingPage;
+  let fixture: ComponentFixture<LoadingPage>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ApplicationForm]
+      imports: [LoadingPage]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ApplicationForm);
+    fixture = TestBed.createComponent(LoadingPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

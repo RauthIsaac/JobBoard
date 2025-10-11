@@ -3,6 +3,7 @@ import { CommonModule, NgIf } from '@angular/common';
 import { ApplicationService } from '../application-service';
 import { IemployerApplications } from '../../../shared/models/iemployer-applications';
 import { ActivatedRoute,  RouterLink } from '@angular/router';
+import { LoadingPage } from "../../../shared/components/loading-page/loading-page";
 
 
 export enum ApplicationStatus {
@@ -16,7 +17,7 @@ export enum ApplicationStatus {
 @Component({
   selector: 'app-app-view-emp',
   standalone: true,
-  imports: [CommonModule, RouterLink, NgIf],
+  imports: [CommonModule, RouterLink, NgIf, LoadingPage],
   templateUrl: './app-view-job.html',
   styleUrls: ['./app-view-job.css']
 })

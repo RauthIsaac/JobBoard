@@ -5,6 +5,7 @@ import { ApplicationService } from '../application-service';
 import { IemployerApplications } from '../../../shared/models/iemployer-applications';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { RouterLink, ActivatedRoute } from '@angular/router';
+import { LoadingPage } from "../../../shared/components/loading-page/loading-page";
 
 export enum ApplicationStatus {
   Pending = 0,
@@ -17,7 +18,7 @@ export enum ApplicationStatus {
 @Component({
   selector: 'app-app-view-emp',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, LoadingPage],
   templateUrl: './app-view-emp.html',
   styleUrls: ['./app-view-emp.css']
 })

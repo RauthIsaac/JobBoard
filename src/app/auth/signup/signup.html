@@ -109,7 +109,7 @@
         <div class="my-3" [formGroup]="signupForm">
           <!-- Loading Overlay for Google -->
           <div *ngIf="isGoogleLoading" class="google-loading-overlay">
-            <div class="spinner"></div>
+            <app-loading-page></app-loading-page>
             <p>Creating your account...</p>
           </div>
           

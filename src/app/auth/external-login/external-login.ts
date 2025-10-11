@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { timeout, catchError, of } from 'rxjs';
+import { SnackbarService } from '../../shared/components/snackbar/snackbar-service';
+import { LoadingPage } from "../../shared/components/loading-page/loading-page";
 
 declare const google: any;
 
@@ -21,7 +23,7 @@ interface LoginResponse {
 
 @Component({
   selector: 'app-external-login',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, LoadingPage],
   templateUrl: './external-login.html',
   styleUrls: ['./external-login.css']
 })
@@ -39,7 +41,8 @@ export class ExternalLogin implements OnInit, AfterViewInit, OnDestroy {
     private fb: FormBuilder,
     private http: HttpClient,
     private ngZone: NgZone,
-    private router: Router
+    private router: Router,
+    private snackbarService: SnackbarService
   ) {}
 
   ngOnInit(): void {
@@ -141,6 +144,7 @@ export class ExternalLogin implements OnInit, AfterViewInit, OnDestroy {
     script.onerror = (error) => {
       console.error('Failed to load Google GSI script:', error);
       this.errorMessage = 'Failed to load Google Sign-in. Please refresh the page.';
+      this.showError(this.errorMessage);
     };
     
     document.head.appendChild(script);
@@ -227,6 +231,7 @@ export class ExternalLogin implements OnInit, AfterViewInit, OnDestroy {
   handleLogin(response: GoogleResponse): void {
     if (this.isLoading) {
       console.log('Login already in progress, ignoring duplicate request');
+      this.showInfo('Login is already in progress. Please wait.');
       return;
     }
 
@@ -260,6 +265,7 @@ export class ExternalLogin implements OnInit, AfterViewInit, OnDestroy {
         catchError(error => {
           // Handle timeout errors
           if (error.name === 'TimeoutError') {
+            this.showError('Request timed out. Please check your connection and try again.')
             return of({
               succeeded: false,
               message: 'Request timed out. Please check your connection and try again.'
@@ -304,89 +310,64 @@ export class ExternalLogin implements OnInit, AfterViewInit, OnDestroy {
     return true;
   }
 
-private handleLoginSuccess(response: LoginResponse, role: string): void {
-  if (response.succeeded && response.token) {
-    // استخدام الـ role من الـ server response أولاً
-    const finalRole = response.role || role;
-    
-    // Store token using the same keys as AuthService expects
-    localStorage.setItem('auth_token', response.token);
-    localStorage.setItem('user_type', finalRole); // استخدام finalRole
-    
-    if (response.expiration) {
-      localStorage.setItem('tokenExpiration', response.expiration);
-    }
-
-    // Also store user email from JWT token if available
-    try {
-      const tokenPayload = JSON.parse(atob(response.token.split('.')[1]));
-      if (tokenPayload.email) {
-        localStorage.setItem('user_email', tokenPayload.email);
-      }
-      if (tokenPayload.name || tokenPayload.given_name) {
-        localStorage.setItem('user_name', tokenPayload.name || tokenPayload.given_name);
-      }
+  private handleLoginSuccess(response: LoginResponse, role: string): void {
+    if (response.succeeded && response.token) {
+      const finalRole = response.role || role;
       
-      // استخراج الـ role من الـ JWT token أيضاً للتأكد
-      if (tokenPayload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']) {
-        const jwtRole = tokenPayload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-        localStorage.setItem('user_type', jwtRole);
-        console.log('Role from JWT token:', jwtRole);
-      }
+      // Store token using the same keys as AuthService expects
+      localStorage.setItem('auth_token', response.token);
+      localStorage.setItem('user_type', finalRole);
       
-    } catch (error) {
-      console.log('Could not parse token payload:', error);
-    }
-
-    this.successMessage = `Successfully logged in as ${finalRole}!`;
-    
-    console.log('✅ Login Success:', {
-      serverRole: response.role,
-      clientRole: role,
-      finalRole: finalRole,
-      expiration: response.expiration,
-      storedKeys: {
-        auth_token: 'auth_token',
-        user_type: finalRole
+      if (response.expiration) {
+        localStorage.setItem('tokenExpiration', response.expiration);
       }
-    });
 
-    // استخدام finalRole في التوجيه
-    setTimeout(() => {
-      this.redirectUser(finalRole);
-    }, 1000);
-  } else {
-    this.errorMessage = response.message || 'Login failed. Please try again.';
+      // Also store user email from JWT token if available
+      try {
+        const tokenPayload = JSON.parse(atob(response.token.split('.')[1]));
+        if (tokenPayload.email) {
+          localStorage.setItem('user_email', tokenPayload.email);
+        }
+        if (tokenPayload.name || tokenPayload.given_name) {
+          localStorage.setItem('user_name', tokenPayload.name || tokenPayload.given_name);
+        }
+        
+        if (tokenPayload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']) {
+          const jwtRole = tokenPayload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+          localStorage.setItem('user_type', jwtRole);
+          console.log('Role from JWT token:', jwtRole);
+        }
+        
+      } catch (error) {
+        console.log('Could not parse token payload:', error);
+      }
+
+      this.successMessage = `Successfully logged in as ${finalRole}!`;
+      
+      console.log('✅ Login Success:', {
+        serverRole: response.role,
+        clientRole: role,
+        finalRole: finalRole,
+        expiration: response.expiration,
+        storedKeys: {
+          auth_token: 'auth_token',
+          user_type: finalRole
+        }
+      });
+      this.showSuccess(this.successMessage);
+
+      setTimeout(() => {
+        this.redirectUser(finalRole);
+      }, 1000);
+    } else {
+      this.errorMessage = response.message || 'Login failed. Please try again.';
+      this.showError(this.errorMessage);
+    }
   }
-}
 
-private getStoredUserRole(): string | null {
-  return localStorage.getItem('user_type');
-}
-
-// إضافة method لتنظيف localStorage عند الحاجة
-private clearStoredAuth(): void {
-  localStorage.removeItem('auth_token');
-  localStorage.removeItem('user_type');
-  localStorage.removeItem('tokenExpiration');
-  localStorage.removeItem('user_email');
-  localStorage.removeItem('user_name');
-}
-
-// إضافة debugging method
-private debugStoredData(): void {
-  console.log('Stored auth data:', {
-    token: localStorage.getItem('auth_token') ? 'exists' : 'missing',
-    userType: localStorage.getItem('user_type'),
-    expiration: localStorage.getItem('tokenExpiration'),
-    email: localStorage.getItem('user_email'),
-    name: localStorage.getItem('user_name')
-  });
-}
 
   private handleLoginError(error: HttpErrorResponse): void {
     console.error('❌ Login Failed:', error);
-    
     let errorMsg = 'Login failed. Please try again.';
     
     if (error.status === 0) {
@@ -408,28 +389,30 @@ private debugStoredData(): void {
     }
 
     this.errorMessage = errorMsg;
+    this.showError(this.errorMessage);
+    this.isLoading = false;
   }
-private redirectUser(role: string): void {
-  // استخدام الـ role من الـ response بدلاً من الـ form value
-  const actualRole = role || this.loginForm.value.role;
-  
-  console.log('Redirecting user with role:', actualRole);
-  
-  // التأكد من تطابق الـ role مع المتوقع
-  switch (actualRole.toLowerCase()) {
-    case 'employer':
-      console.log('Navigating to employer dashboard...');
-      this.router.navigate(['/empDashboard']);
-      break;
-    case 'seeker':
-      console.log('Navigating to seeker home...');
-      this.router.navigate(['/home']);
-      break;
-    default:
-      console.log('Unknown role, navigating to default dashboard:', actualRole);
-      this.router.navigate(['/dashboard']);
+
+
+  private redirectUser(role: string): void {
+    const actualRole = role || this.loginForm.value.role;
+    
+    console.log('Redirecting user with role:', actualRole);
+    
+    switch (actualRole.toLowerCase()) {
+      case 'employer':
+        console.log('Navigating to employer dashboard...');
+        this.router.navigate(['/empDashboard']);
+        break;
+      case 'seeker':
+        console.log('Navigating to seeker home...');
+        this.router.navigate(['/home']);
+        break;
+      default:
+        console.log('Unknown role, navigating to default dashboard:', actualRole);
+        this.router.navigate(['/dashboard']);
+    }
   }
-}
 
   private clearMessages(): void {
     this.errorMessage = '';
@@ -492,6 +475,39 @@ private redirectUser(role: string): void {
     }
     return '';
   }
+
+
+  //#region Snackbar Methods
+  showSuccess(message: string = 'Operation successful!', duration: number = 4000, action: string = 'Undo'): void {
+    console.log('Showing success snackbar');
+    this.snackbarService.show({
+      message,
+      type: 'success',
+      duration,
+      action
+    });
+  }
+
+  showInfo(message: string = 'Information message', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'info',
+      duration
+    });
+  }
+
+  showError(message: string = 'Something went wrong!', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'error',
+      duration
+    });
+  }
+
+  //#endregion  
+
+
+
 }
 
 // Add this interface if you don't have environment configuration
