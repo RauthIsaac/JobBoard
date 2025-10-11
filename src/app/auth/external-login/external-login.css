@@ -19,33 +19,7 @@
   color: #6c757d;
 }
 
-/* Loading Overlay */
-.loading-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.95);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  border-radius: 12px;
-}
 
-.loading-overlay .spinner-border {
-  color: #4285f4;
-  width: 3rem;
-  height: 3rem;
-}
-
-.loading-overlay p {
-  color: #6c757d;
-  font-weight: 500;
-  margin: 0;
-}
 
 /* Form Styling */
 .form-label {

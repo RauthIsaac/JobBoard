@@ -5,6 +5,7 @@ import { IpostedJob } from '../../../shared/models/iposted-job';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SnackbarService } from '../../../shared/components/snackbar/snackbar-service';
+import { LoadingPage } from "../../../shared/components/loading-page/loading-page";
 
 export interface EmployerJobFilterParams {
   status?: 'Active' | 'Filled' | 'Expired';
@@ -14,7 +15,7 @@ export interface EmployerJobFilterParams {
 
 @Component({
   selector: 'app-emp-posted-jobs',
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, LoadingPage],
   templateUrl: './emp-posted-jobs.html',
   styleUrl: './emp-posted-jobs.css'
 })

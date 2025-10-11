@@ -6,7 +6,7 @@
             <div class="mt-2">
                 <small class="text-muted">
                     @if (isLoading()) {
-                        Loading jobs...
+                        <app-loading-page></app-loading-page>
                     } @else {
                         Showing {{ (currentPage() - 1) * pageSize() + 1 }} - {{ Math.min(currentPage() * pageSize(), totalJobs()) }} of {{ totalJobs() }} jobs
                         @if (hasActiveFilters()) {

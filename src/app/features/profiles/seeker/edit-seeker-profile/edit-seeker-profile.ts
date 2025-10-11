@@ -14,6 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { SnackbarService } from '../../../../shared/components/snackbar/snackbar-service';
 
 @Component({
   selector: 'app-edit-seeker-profile',
@@ -52,7 +53,7 @@ export class EditSeekerProfile implements OnInit {
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
-    private snackBar: MatSnackBar,
+    private snackbarService: SnackbarService,
     private router: Router
   ) {
     this.profileForm = this.fb.group({
@@ -87,11 +88,7 @@ export class EditSeekerProfile implements OnInit {
       },
       error: (err: any) => {
         console.error('Error loading seeker profile:', err);
-        this.snackBar.open('Failed to load profile data', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
+        this.showError('Failed to load profile data');
       }
     });
   }
@@ -311,11 +308,7 @@ export class EditSeekerProfile implements OnInit {
       this.authService.updateSeekerProfile(payload).subscribe({
         next: (response) => {
           this.isLoading = false;
-          this.snackBar.open('Profile updated successfully!', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
+          this.showSuccess('Profile updated successfully!');
           this.loadSeekerProfile();
 
            this.router.navigate(['/seekerProfile']); 
@@ -336,20 +329,12 @@ export class EditSeekerProfile implements OnInit {
             errorMessage = 'Invalid data provided. Please check your input.';
           }
 
-          this.snackBar.open(errorMessage, 'Close', {
-            duration: 5000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
+          this.showError(errorMessage);
         }
       });
     } else {
       this.profileForm.markAllAsTouched();
-      this.snackBar.open('Please fill all required fields correctly', 'Close', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-      });
+      this.showError('Please fill all required fields correctly');
     }
   }
 
@@ -365,6 +350,36 @@ export class EditSeekerProfile implements OnInit {
     }
   }
 
+
+
+    //#region Snackbar Methods
+  showSuccess(message: string = 'Operation successful!', duration: number = 4000, action: string = 'Undo'): void {
+    console.log('Showing success snackbar');
+    this.snackbarService.show({
+      message,
+      type: 'success',
+      duration,
+      action
+    });
+  }
+
+  showInfo(message: string = 'Information message', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'info',
+      duration
+    });
+  }
+
+  showError(message: string = 'Something went wrong!', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'error',
+      duration
+    });
+  }
+
+  //#endregion  
 }
 
 

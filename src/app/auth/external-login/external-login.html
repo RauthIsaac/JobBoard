@@ -6,10 +6,7 @@
 
   <!-- Loading Overlay -->
   <div *ngIf="isLoading" class="loading-overlay">
-    <div class="spinner-border" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-    <p class="mt-2">Signing you in...</p>
+    <app-loading-page></app-loading-page>
   </div>
 
   <!-- Success Message -->

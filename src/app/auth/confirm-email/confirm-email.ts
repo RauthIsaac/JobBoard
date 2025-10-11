@@ -7,12 +7,13 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from "../../shared/material.module";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Subscription } from 'rxjs';
+import { LoadingPage } from "../../shared/components/loading-page/loading-page";
 
 @Component({
   selector: 'app-confirm-email',
   templateUrl: './confirm-email.html',
   styleUrls: ['./confirm-email.css'],
-  imports: [MatCard, CommonModule, MaterialModule, MatProgressSpinnerModule],
+  imports: [MatCard, CommonModule, MaterialModule, MatProgressSpinnerModule, LoadingPage],
   standalone: true
 })
 export class ConfirmEmail implements OnInit, OnDestroy {

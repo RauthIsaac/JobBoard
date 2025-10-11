@@ -11,6 +11,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService } from '../../../../auth/auth-service';
 import { RouterLink } from '@angular/router';
+import { LoadingPage } from "../../../../shared/components/loading-page/loading-page";
 
 @Component({
   selector: 'app-user-profile',
@@ -26,8 +27,9 @@ import { RouterLink } from '@angular/router';
     MatMenuModule,
     MatTooltipModule,
     RouterLink,
-    DatePipe
-  ],
+    DatePipe,
+    LoadingPage
+],
   templateUrl: './seeker-profile.html',
   styleUrl: './seeker-profile.css'
 })

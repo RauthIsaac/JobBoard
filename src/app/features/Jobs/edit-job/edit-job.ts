@@ -6,13 +6,14 @@ import { JobsService } from '../jobs-service';
 import { ISkill } from '../../../shared/models/iskill';
 import { ICategory } from '../../../shared/models/icategory';
 import { SnackbarService } from '../../../shared/components/snackbar/snackbar-service';
+import { LoadingPage } from "../../../shared/components/loading-page/loading-page";
 
 @Component({
   selector: 'app-edit-job',
   standalone: true,
   templateUrl: './edit-job.html',
   styleUrls: ['./edit-job.css'],
-  imports: [CommonModule, ReactiveFormsModule]
+  imports: [CommonModule, ReactiveFormsModule, LoadingPage]
 })
 export class EditJob implements OnInit {
   jobForm!: FormGroup;

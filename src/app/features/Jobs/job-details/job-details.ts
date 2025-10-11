@@ -7,11 +7,12 @@ import { of } from 'rxjs';
 import { AuthService } from '../../../auth/auth-service';
 import { ApplicationService } from '../../Application/application-service';
 import { SnackbarService } from '../../../shared/components/snackbar/snackbar-service';
+import { LoadingPage } from "../../../shared/components/loading-page/loading-page";
 
 
 @Component({
   selector: 'app-job-details',
-  imports: [CurrencyPipe, RouterLink, CommonModule, NgIf],
+  imports: [CurrencyPipe, RouterLink, CommonModule, NgIf, LoadingPage],
   templateUrl: './job-details.html',
   styleUrl: './job-details.css'
 })

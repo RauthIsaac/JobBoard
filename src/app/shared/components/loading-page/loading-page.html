@@ -1,1 +1,375 @@
-<p>loading-page works!</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HireSmart Loading</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #F8F9FA;
+    }
+
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+    }
+
+    .loader-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+
+    .logo-icon{
+    font-size: 20px;
+    color: white;
+    background: var(--basic-color);
+    padding:5px 10px;
+    border-radius: 30%;
+    margin-right: 10px;
+}
+
+    .logo-text {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary-blue);
+    }
+
+
+    .loader {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .briefcase-container {
+      position: relative;
+      animation: float 3s ease-in-out infinite;
+      font-size: 60px;
+      color: var(--primary-blue);
+    }
+
+    .briefcase {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(0 4px 12px var(--shadow-color));
+      animation: briefcasePulse 3s ease-in-out infinite;
+    }
+
+    .document-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 50px;
+      pointer-events: none;
+    }
+
+    .document {
+      position: absolute;
+      width: 20px;
+      height: 26px;
+      background: white;
+      border-radius: 2px;
+      box-shadow: 0 2px 6px rgba(60, 101, 245, 0.2);
+      opacity: 0;
+    }
+
+    .document::before {
+      content: '';
+      position: absolute;
+      top: 6px;
+      left: 4px;
+      width: 12px;
+      height: 2px;
+      background: var(--primary-blue);
+      border-radius: 1px;
+    }
+
+    .document::after {
+      content: '';
+      position: absolute;
+      top: 11px;
+      left: 4px;
+      width: 8px;
+      height: 2px;
+      background: var(--light-blue);
+      border-radius: 1px;
+    }
+
+    .document-1 {
+      animation: documentFloat1 3s ease-in-out infinite;
+    }
+
+    .document-2 {
+      animation: documentFloat2 3s ease-in-out infinite 0.3s;
+    }
+
+    .document-3 {
+      animation: documentFloat3 3s ease-in-out infinite 0.6s;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    @keyframes briefcasePulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    @keyframes documentFloat1 {
+      0%, 20% {
+        opacity: 0;
+        transform: translate(-30px, 0) scale(0.5);
+      }
+      30% {
+        opacity: 1;
+        transform: translate(-30px, -20px) scale(1);
+      }
+      60% {
+        opacity: 1;
+        transform: translate(-30px, -30px) scale(1);
+      }
+      70%, 100% {
+        opacity: 0;
+        transform: translate(-30px, -40px) scale(0.5);
+      }
+    }
+
+    @keyframes documentFloat2 {
+      0%, 20% {
+        opacity: 0;
+        transform: translate(0, 0) scale(0.5);
+      }
+      30% {
+        opacity: 1;
+        transform: translate(0, -20px) scale(1);
+      }
+      60% {
+        opacity: 1;
+        transform: translate(0, -30px) scale(1);
+      }
+      70%, 100% {
+        opacity: 0;
+        transform: translate(0, -40px) scale(0.5);
+      }
+    }
+
+    @keyframes documentFloat3 {
+      0%, 20% {
+        opacity: 0;
+        transform: translate(30px, 0) scale(0.5);
+      }
+      30% {
+        opacity: 1;
+        transform: translate(30px, -20px) scale(1);
+      }
+      60% {
+        opacity: 1;
+        transform: translate(30px, -30px) scale(1);
+      }
+      70%, 100% {
+        opacity: 0;
+        transform: translate(30px, -40px) scale(0.5);
+      }
+    }
+
+    .loader-shadow {
+      position: absolute;
+      bottom: -10px;
+      width: 60px;
+      height: 12px;
+      background: radial-gradient(ellipse 60px 12px, rgba(60, 101, 245, 0.2) 0%, rgba(60, 101, 245, 0.1) 40%, transparent 70%);
+      border-radius: 50%;
+      filter: blur(2px);
+      animation: shadowPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes shadowPulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.6;
+      }
+      50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+      }
+    }
+
+    .loading-text {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0.3px;
+    }
+
+    .loading-text span {
+      animation: textFade 2.5s ease-in-out infinite;
+    }
+
+    .loading-dots {
+      display: flex;
+      gap: 2px;
+    }
+
+    .loading-dots span {
+      animation: dotBounce 1.5s ease-in-out infinite;
+      font-weight: 700;
+      color: var(--primary-blue);
+    }
+
+    .loading-dots span:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .loading-dots span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .loading-dots span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes textFade {
+      0%, 100% {
+        opacity: 0.7;
+      }
+      50% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes dotBounce {
+      0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: 0.4;
+      }
+      30% {
+        transform: translateY(-8px);
+        opacity: 1;
+      }
+    }
+
+    .loading-subtitle {
+      font-size: 14px;
+      color: #6C757D;
+      font-weight: 400;
+      margin-top: -8px;
+    }
+
+    @media (max-width: 480px) {
+      .loader {
+        width: 80px;
+        height: 80px;
+      }
+
+      .briefcase-container {
+        font-size: 50px;
+      }
+
+      .loading-text {
+        font-size: 14px;
+      }
+
+      .loader-container {
+        gap: 24px;
+      }
+
+      .logo {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+      }
+
+      .logo-text {
+        font-size: 24px;
+      }
+
+      .loading-subtitle {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-overlay">
+    <div class="loader-container">
+      <div class="logo-container">
+        <div class="logo-icon me-2">
+            <i class="bi bi-suitcase-lg"></i>
+        </div>
+        <div class="logo-text">HireSmart</div>
+      </div>
+      
+      <div class="loader">
+        <div class="briefcase-container">
+          <div class="briefcase">
+            <i class="bi bi-suitcase-lg"></i>
+          </div>
+        </div>
+        <div class="document-container">
+          <div class="document document-1"></div>
+          <div class="document document-2"></div>
+          <div class="document document-3"></div>
+        </div>
+        <div class="loader-shadow"></div>
+      </div>
+      
+      <div class="loading-text">
+        <span>Loading your opportunities</span>
+        <div class="loading-dots">
+          <span>.</span>
+          <span>.</span>
+          <span>.</span>
+        </div>
+      </div>
+      <div class="loading-subtitle">Please wait while we prepare everything</div>
+    </div>
+  </div>
+</body>
+</html>

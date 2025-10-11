@@ -7,10 +7,11 @@ import { FormsModule, ReactiveFormsModule, FormGroup, FormControl } from '@angul
 import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
 import { JobFilterParams, SortingOptions } from '../../shared/models/job-filter-params';
 import { JobExploreView } from '../Jobs/job-explore-view/job-explore-view';
+import { LoadingPage } from '../../shared/components/loading-page/loading-page';
 
 @Component({
   selector: 'app-explore',
-  imports: [JobExploreView, FormsModule, ReactiveFormsModule],
+  imports: [JobExploreView, FormsModule, ReactiveFormsModule, LoadingPage],
   templateUrl: './explore.html',
   styleUrl: './explore.css'
 })

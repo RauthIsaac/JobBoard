@@ -9,6 +9,7 @@ import { Router, RouterModule } from '@angular/router';
 import { of, timeout, catchError } from 'rxjs';
 import { AuthService } from '../auth-service';
 import { SnackbarService } from '../../shared/components/snackbar/snackbar-service';
+import { LoadingPage } from "../../shared/components/loading-page/loading-page";
 
 declare const google: any;
  
@@ -34,7 +35,8 @@ interface LoginResponse {
     FormsModule,
     RouterModule,
     MatRadioModule,
-  ],
+    LoadingPage
+],
   templateUrl: './signup.html',
   styleUrls: ['./signup.css']
 }) 

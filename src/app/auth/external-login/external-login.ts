@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { timeout, catchError, of } from 'rxjs';
 import { SnackbarService } from '../../shared/components/snackbar/snackbar-service';
+import { LoadingPage } from "../../shared/components/loading-page/loading-page";
 
 declare const google: any;
 
@@ -22,7 +23,7 @@ interface LoginResponse {
 
 @Component({
   selector: 'app-external-login',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, LoadingPage],
   templateUrl: './external-login.html',
   styleUrls: ['./external-login.css']
 })
