@@ -79,6 +79,7 @@ export const routes: Routes = [
             { path: 'editSeeker', component: EditSeekerProfile},
             { path: 'seekerProfile', component: SeekerProfile},
             { path: 'appViewSeeker', component: AppViewSeeker},
+            {path: 'jobDtl/:id', component: JobDetails},
         ]
     },
 
@@ -134,7 +135,6 @@ export const routes: Routes = [
 
 
     /*---------------- Jobs ----------------*/
-    {path: 'jobDtl/:id', component: JobDetails},
     {path: 'jobView', component: JobView},
 
     {
