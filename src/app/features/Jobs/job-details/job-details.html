@@ -15,28 +15,6 @@
         <!-- Job details content -->
         @if (!loading() && !error() && jobDetails()) {
 
-            <!-- Navigation based on user type -->
-            <div *ngIf="isSeeker()">
-                <div class="nav">
-                    <a routerLink="/home"><i class="bi bi-arrow-left me-3 fs-3"></i></a>
-                    <h5 class="mt-2">Back to Home</h5>
-                </div>
-            </div>
-
-            <div *ngIf="isEmployer()">
-                <div class="nav">
-                    <a routerLink="/empDashboard"><i class="bi bi-arrow-left me-3 fs-3"></i></a>
-                    <h5 class="mt-2">Back to Dashboard</h5>
-                </div>
-            </div>
-
-            <div *ngIf="isAdmin()">
-                <div class="nav">
-                    <a routerLink="/admin"><i class="bi bi-arrow-left me-3 fs-3"></i></a>
-                    <h5 class="mt-2">Back to Dashboard</h5>
-                </div>
-            </div>
-
             <div style="margin:50px 100px;">
                 <!-- --------------------------- Job Details Section ------------------------------ -->
                 <section class="job-details-section p-2">
