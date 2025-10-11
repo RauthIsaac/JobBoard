@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterModule } from '@angular/router';
 import { of, timeout, catchError } from 'rxjs';
 import { AuthService } from '../auth-service';
+import { SnackbarService } from '../../shared/components/snackbar/snackbar-service';
 
 declare const google: any;
  
@@ -52,7 +53,7 @@ export class Signup implements AfterViewInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private snackBar: MatSnackBar,
+    private snackbarService: SnackbarService,
     private http: HttpClient,
     private ngZone: NgZone,
     private router: Router,
@@ -531,11 +532,7 @@ export class Signup implements AfterViewInit, OnDestroy {
         this.errorMessage = null;
         this.signupForm.get('userName')?.setErrors(null);
         this.signupForm.get('email')?.setErrors(null);
-        this.snackBar.open(`Registration successful! ${res?.message || 'Account created.'}`, 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
+        this.showSuccess('Registration successful! Redirecting to login...');
       },
       error: (err: HttpErrorResponse) => {
         console.log('Error response:', err);
@@ -576,12 +573,7 @@ export class Signup implements AfterViewInit, OnDestroy {
 
         this.cdr.detectChanges();
         
-        this.snackBar.open(this.errorMessage, 'Close', {
-          duration: 5000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-          panelClass: ['error-snackbar']
-        });
+        this.showError(this.errorMessage);
       }
     });
   }
@@ -673,4 +665,37 @@ export class Signup implements AfterViewInit, OnDestroy {
       }
     });
   }
+
+
+
+  //#region Snackbar Methods
+  showSuccess(message: string = 'Operation successful!', duration: number = 4000, action: string = 'Undo'): void {
+    console.log('Showing success snackbar');
+    this.snackbarService.show({
+      message,
+      type: 'success',
+      duration,
+      action
+    });
+  }
+
+  showInfo(message: string = 'Information message', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'info',
+      duration
+    });
+  }
+
+  showError(message: string = 'Something went wrong!', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'error',
+      duration
+    });
+  }
+
+  //#endregion  
+
+
 }

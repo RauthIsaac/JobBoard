@@ -7,13 +7,13 @@ import { AuthService } from '../../../../auth/auth-service';
 import { ProfilesService } from '../../profiles-service';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { MatOptionModule } from '@angular/material/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { SnackbarService } from '../../../../shared/components/snackbar/snackbar-service';
 
 @Component({
   selector: 'app-edit-emp-profile',
-  imports: [ReactiveFormsModule, MatCardModule, MaterialModule, MatDividerModule, CommonModule, MatOptionModule, MatProgressSpinner],
+  imports: [ReactiveFormsModule, MatCardModule, MaterialModule, MatDividerModule, CommonModule, MatOptionModule, MatProgressSpinner, RouterLink],
   providers: [ProfilesService],
   templateUrl: './edit-emp-profile.html',
   styleUrl: './edit-emp-profile.css'
@@ -35,7 +35,7 @@ export class EditEmpProfile implements OnInit {
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
-    private snackBar: MatSnackBar,
+    private snackbarService: SnackbarService,
     private router: Router
   ) {
     this.profileForm = this.fb.group({
@@ -78,11 +78,7 @@ export class EditEmpProfile implements OnInit {
       },
       error: (err: any) => {
         console.error('Error loading employer profile:', err);
-        this.snackBar.open('Failed to load profile data', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
+        this.showError('Failed to load profile data');
       }
     });
   }
@@ -104,22 +100,14 @@ export class EditEmpProfile implements OnInit {
     if (file) {
       // Validate file type
       if (!file.type.startsWith('image/')) {
-        this.snackBar.open('Please select a valid image file', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
+        this.showInfo('Please select a valid image file', 3000);
         return;
       }
 
       // Validate file size (max 5MB)
       const maxSize = 5 * 1024 * 1024; // 5MB
       if (file.size > maxSize) {
-        this.snackBar.open('Image size should be less than 5MB', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
+        this.showError('Image size should be less than 5MB', 3000);
         return;
       }
 
@@ -141,12 +129,9 @@ export class EditEmpProfile implements OnInit {
     this.imagePreview = '/default.jpg';
     this.shouldRemoveImage = true;
     this.fileInput.nativeElement.value = '';
-    
-    this.snackBar.open('Company logo will be set to default', 'Close', {
-      duration: 2000,
-      horizontalPosition: 'center',
-      verticalPosition: 'top'
-    });
+
+    this.showSuccess('Image will be removed on save', 3000);
+    console.log('Image removed, will use default on save');
   }
 
   // Handle image error (fallback to default)
@@ -181,12 +166,8 @@ export class EditEmpProfile implements OnInit {
           console.log('Profile updated successfully');
           
           this.isLoading = false;
-          
-          this.snackBar.open('Profile updated successfully!', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
+
+          this.showSuccess('Profile updated successfully!', 3000);
 
           // Reset flags
           this.selectedImageFile = null;
@@ -208,24 +189,48 @@ export class EditEmpProfile implements OnInit {
             errorMessage = 'Invalid data provided';
           }
 
-          this.snackBar.open(errorMessage, 'Close', {
-            duration: 5000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
+          this.showError(errorMessage, 5000);
         }
       });
     } else {
       this.profileForm.markAllAsTouched();
-      this.snackBar.open('Please fill all required fields correctly', 'Close', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-      });
+      this.showError('Please fill all required fields correctly', 5000);
     }
   }
 
   get f() {
     return this.profileForm.controls;
   }
+
+
+  //#region Snackbar Methods
+  showSuccess(message: string = 'Operation successful!', duration: number = 4000, action: string = 'Undo'): void {
+    console.log('Showing success snackbar');
+    this.snackbarService.show({
+      message,
+      type: 'success',
+      duration,
+      action
+    });
+  }
+
+  showInfo(message: string = 'Information message', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'info',
+      duration
+    });
+  }
+
+  showError(message: string = 'Something went wrong!', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'error',
+      duration
+    });
+  }
+
+  //#endregion  
+
+
 }

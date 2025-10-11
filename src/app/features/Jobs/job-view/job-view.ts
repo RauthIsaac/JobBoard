@@ -148,6 +148,14 @@ export class JobView implements OnInit, OnChanges {
     });
   }
 
+  showInfo(message: string = 'Information message', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'info',
+      duration
+    });
+  }
+
   showError(message: string = 'Something went wrong!', duration: number = 5000): void {
     this.snackbarService.show({
       message,
@@ -156,6 +164,7 @@ export class JobView implements OnInit, OnChanges {
     });
   }
 
-  //#endregion
+  //#endregion  
+
 
 } 

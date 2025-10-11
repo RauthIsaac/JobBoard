@@ -4,6 +4,7 @@ import { ApplicationService } from '../../../application-service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackbarService } from '../../../../../shared/components/snackbar/snackbar-service';
 
 @Component({
   selector: 'app-review',
@@ -20,7 +21,7 @@ export class Review implements OnInit {
     private appService: ApplicationService,
     private http: HttpClient,
     private router: Router,
-    private snackbar : MatSnackBar
+    private snackbarService: SnackbarService
   ) {}
 
   ngOnInit(): void {
@@ -78,21 +79,13 @@ export class Review implements OnInit {
       this.http.post('http://localhost:5007/api/Application', formData).subscribe({
         next: (response) => {
           console.log('✅ Application submitted successfully:', response);
-          this.snackbar.open('✅ Application submitted successfully', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
+          this.showSuccess('Application submitted successfully!', 5000);
           this.appService.clearData();
           this.router.navigate(['/']); 
         },
         error: (error: HttpErrorResponse) => {
           console.error('❌ Submit error:', error);
-          this.snackbar.open('❌ Submit error', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
+          this.showError('Failed to submit application. Please try again.');
           this.handleSubmissionError(error);
         },
         complete: () => {
@@ -102,11 +95,7 @@ export class Review implements OnInit {
 
     } catch (error) {
       console.error('❌ Error preparing form data:', error);
-      this.snackbar.open('❌ Error preparing application data', 'Close', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-      });
+      this.showError('Error preparing application data');
       this.isSubmitting = false;
     }
   }
@@ -129,11 +118,7 @@ export class Review implements OnInit {
       errorMessage += `Server returned error ${error.status}.`;
     }
     
-    this.snackbar.open('❌ ' + errorMessage, 'Close', {
-      duration: 3000,
-      horizontalPosition: 'center',
-      verticalPosition: 'top'
-    });
+    this.showError(errorMessage);
     console.log('Form data that was sent:', this.getFormDataEntries(error));
   }
 
@@ -156,4 +141,38 @@ export class Review implements OnInit {
       ResumeFileName: data.cvFile?.name
     };
   }
+
+
+
+  //#region Snackbar Methods
+  showSuccess(message: string = 'Operation successful!', duration: number = 4000, action: string = 'Undo'): void {
+    console.log('Showing success snackbar');
+    this.snackbarService.show({
+      message,
+      type: 'success',
+      duration,
+      action
+    });
+  }
+
+  showInfo(message: string = 'Information message', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'info',
+      duration
+    });
+  }
+
+  showError(message: string = 'Something went wrong!', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'error',
+      duration
+    });
+  }
+
+  //#endregion  
+
+
+
 }
