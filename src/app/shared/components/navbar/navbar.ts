@@ -7,6 +7,7 @@ import { ChatButton } from "../../../features/AIChat/chat-button/chat-button";
 import { NotificationDto, NotificationService } from '../../../features/Notifications/notification-services';
 import { Subscription } from 'rxjs';
 import { CommonModule, NgIf } from '@angular/common';
+import { SnackbarService } from '../snackbar/snackbar-service';
 
 @Component({
   selector: 'app-navbar',
@@ -31,7 +32,7 @@ export class Navbar implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService, 
     private router: Router,
-    private snackBar: MatSnackBar,
+    private snackbarService: SnackbarService,
     private notificationService: NotificationService,
     private elementRef: ElementRef
   ) {
@@ -220,11 +221,7 @@ export class Navbar implements OnInit, OnDestroy {
     this.authService.clearAuthData();
     this.isLoggedIn = false;
     
-    this.snackBar.open('Logged out successfully', 'Close', {
-      duration: 3000,
-      horizontalPosition: 'center',
-      verticalPosition: 'top'
-    });
+    this.showSuccess('Logged out successfully', 3000);
     
     this.router.navigate(['/login']);
   }
@@ -255,4 +252,38 @@ export class Navbar implements OnInit, OnDestroy {
   isloggedIn(): boolean{
     return this.authService.isLoggedIn();
   }
+
+
+
+   //#region Snackbar Methods
+  showSuccess(message: string = 'Operation successful!', duration: number = 4000, action: string = 'Undo'): void {
+    console.log('Showing success snackbar');
+    this.snackbarService.show({
+      message,
+      type: 'success',
+      duration,
+      action
+    });
+  }
+
+  showInfo(message: string = 'Information message', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'info',
+      duration
+    });
+  }
+
+  showError(message: string = 'Something went wrong!', duration: number = 5000): void {
+    this.snackbarService.show({
+      message,
+      type: 'error',
+      duration
+    });
+  }
+
+  //#endregion  
+
+
+
 }
