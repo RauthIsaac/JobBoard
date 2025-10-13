@@ -3,6 +3,7 @@
     background: var(--basic-color);
     color:white;
     width:100%;
+    animation: fadeInUp 0.8s ease-out forwards;
 }
 
 .hero-container{
@@ -22,7 +23,8 @@
     padding: 5px 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: fit-content;
-    
+    animation: fadeInUp 0.8s ease-out 0.2s forwards;
+    opacity: 0;
 }
 
 /* ------------------------------------ */
@@ -34,6 +36,8 @@
     text-align: center;
     width:40%;
     margin-top: 20px;
+    animation: fadeInUp 0.8s ease-out 0.4s forwards;
+    opacity: 0;
 }
 
 .hero-third-div{
@@ -42,6 +46,8 @@
     justify-content: center;
     text-align: center;
     width: 100%;
+    animation: fadeInUp 0.8s ease-out 0.6s forwards;
+    opacity: 0;
 }
 
 .hero-third-div div{
@@ -56,7 +62,9 @@
     justify-content: center;
     align-items: center;
     border-radius: 15px;
-    color:rgb(153, 151, 151)
+    color:rgb(153, 151, 151);
+    animation: fadeInUp 0.8s ease-out 0.8s forwards;
+    opacity: 0;
 }
 .hero-fourth-div div{
     display: flex;
@@ -85,7 +93,6 @@
     cursor: pointer;
 }
 
-
 /* ------------------------------------ */
 .hero-fifth-div{
     display: flex;
@@ -94,6 +101,8 @@
     margin-top: 10px;
     padding: 20px;
     border-radius: 15px;
+    animation: fadeInUp 0.8s ease-out 1s forwards;
+    opacity: 0;
 }
 
 .filter-btn{
@@ -111,13 +120,14 @@
     color: white;
 }
 
-
 /* ------------------------------------ */
 .hero-sixth-div{
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: 50px;
+    animation: fadeInUp 0.8s ease-out 1.2s forwards;
+    opacity: 0;
 }
 
 .hero-sixth-div div{
@@ -128,6 +138,7 @@
     margin: 0px 10px;
 }
 
+
 .icon{
     font-size: 20px;
     background-color: rgb(38, 38, 138);
@@ -136,12 +147,16 @@
     color: white;
 }
 
-
 /*---------------------------Main Section-------------------------*/
 /*---------------------------Info Section-------------------------*/
 .Info-section{
     margin: 90px auto;
     justify-content: center;
+    opacity: 0;
+}
+
+.Info-section.animate-on-scroll.is-visible {
+    animation: fadeInUp 0.8s ease-out forwards;
 }
 
 .info-box{
@@ -151,7 +166,20 @@
     padding: 30px;
     border-radius: 15px;
     transition: all 0.3s ease;
+    opacity: 0;
+    cursor: pointer;
 }
+
+.info-box.animate-on-scroll:nth-child(1).is-visible {
+    animation: fadeInUp 0.8s ease-out 0.2s forwards;
+}
+.info-box.animate-on-scroll:nth-child(2).is-visible {
+    animation: fadeInUp 0.8s ease-out 0.4s forwards;
+}
+.info-box.animate-on-scroll:nth-child(3).is-visible {
+    animation: fadeInUp 0.8s ease-out 0.6s forwards;
+}
+
 .info-box h3{
     font-weight: 700;
 }
@@ -171,6 +199,11 @@
 /*---------------------------Trending Jobs Section-------------------------*/
 .Trending-job-section{
     padding: 40px;
+    opacity: 0;
+}
+
+.Trending-job-section.animate-on-scroll.is-visible {
+    animation: fadeInUp 0.8s ease-out forwards;
 }
 
 .featured-opp{
@@ -184,13 +217,17 @@
     background: var(--basic-color-hover);
 }
 
-
 /*---------------------------Why HireSmart Section-------------------------*/
 .Why-hireSmart-section{
     margin: 90px auto;
     display: flex;
     flex-direction: column;
     align-items: center;
+    opacity: 0;
+}
+
+.Why-hireSmart-section.animate-on-scroll.is-visible {
+    animation: fadeInUp 0.8s ease-out forwards;
 }
 
 .why-hireSmart-box{
@@ -200,6 +237,27 @@
     margin: 15px;
     height:40vh;
     transition: all 0.3s ease;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.why-hireSmart-box.animate-on-scroll:nth-child(1).is-visible {
+    animation: fadeInUp 0.8s ease-out 0.2s forwards;
+}
+.why-hireSmart-box.animate-on-scroll:nth-child(2).is-visible {
+    animation: fadeInUp 0.8s ease-out 0.4s forwards;
+}
+.why-hireSmart-box.animate-on-scroll:nth-child(3).is-visible {
+    animation: fadeInUp 0.8s ease-out 0.6s forwards;
+}
+.why-hireSmart-box.animate-on-scroll:nth-child(4).is-visible {
+    animation: fadeInUp 0.8s ease-out 0.8s forwards;
+}
+.why-hireSmart-box.animate-on-scroll:nth-child(5).is-visible {
+    animation: fadeInUp 0.8s ease-out 1s forwards;
+}
+.why-hireSmart-box.animate-on-scroll:nth-child(6).is-visible {
+    animation: fadeInUp 0.8s ease-out 1.2s forwards;
 }
 
 .why-hireSmart-box:hover{
@@ -266,8 +324,30 @@
     margin-bottom: 30px;
 }
 
-
 /*---------------------------End Section-------------------------*/
+.End-section{
+    opacity: 0;
+}
+
+.End-section.animate-on-scroll.is-visible {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.for-job-seeker{
+    opacity: 0;
+}
+
+.for-job-seeker.animate-on-scroll.is-visible {
+    animation: fadeInUp 0.8s ease-out 0.2s forwards;
+}
+
+.for-employer{
+    opacity: 0;
+}
+
+.for-employer.animate-on-scroll.is-visible {
+    animation: fadeInUp 0.8s ease-out 0.4s forwards;
+}
 
 .for-job-seeker-icon{
     font-size: 25px;
@@ -278,7 +358,6 @@
     width: fit-content;
     margin-bottom: 30px;
     margin-right: 20px;
-
 }
 
 .for-job-seeker-btn{
@@ -309,7 +388,6 @@
     cursor: pointer;
 }
 
-
 .explore-btn{
     border:none;
     background: var(--basic-color);
@@ -322,4 +400,16 @@
 
 .explore-btn:hover{
     background: var(--basic-color-hover);
+}
+
+/* Animation Keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

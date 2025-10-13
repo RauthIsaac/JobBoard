@@ -1,6 +1,7 @@
 /* ------------- Hero -------------- */
 .hero{
-    padding: 20px 70px
+    padding: 20px 70px;
+    animation: fadeInUp 0.8s ease-out forwards;
 }
 
 .search-div{
@@ -11,6 +12,8 @@
     border-radius: 0.25rem;
     outline: none;
     box-shadow: 0 0 0 0.09rem rgba(135, 133, 133, 0.25);
+    animation: fadeInUp 0.8s ease-out 0.2s forwards;
+    opacity: 0;
 }
 
 .search-div input[type="text"] {
@@ -32,6 +35,8 @@
     align-items: center;
     margin-top: 10px;
     border-radius: 15px;
+    animation: fadeInUp 0.8s ease-out 0.4s forwards;
+    opacity: 0;
 }
 
 .filter-btn{
@@ -53,6 +58,11 @@
 .content{
     background: var(--basic-gray);
     padding:30px;
+    opacity: 0;
+}
+
+.content.animate-on-scroll.is-visible {
+    animation: fadeInUp 0.8s ease-out forwards;
 }
 
 /* ------------------------Sidebar------------------------- */
@@ -61,6 +71,11 @@
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    opacity: 0;
+}
+
+.side-bar.animate-on-scroll.is-visible {
+    animation: fadeInUp 0.8s ease-out 0.2s forwards;
 }
 
 /* Job Type Radio Buttons Styles */
@@ -95,6 +110,11 @@
     padding: 20px 40px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    opacity: 0;
+}
+
+.main-content.animate-on-scroll.is-visible {
+    animation: fadeInUp 0.8s ease-out 0.4s forwards;
 }
 
 /* Active filter indicator */
@@ -193,5 +213,17 @@
     .pagination .page-link {
         padding: 0.375rem 0.5rem;
         font-size: 0.8rem;
+    }
+}
+
+/* Animation Keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
