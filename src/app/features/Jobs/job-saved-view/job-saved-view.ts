@@ -56,6 +56,20 @@ export class JobSavedView implements OnInit, OnChanges {
     setTimeout(() => {
       this.updateSavedState();
     }, 1000);
+
+
+    
+
+    // ✅ Dynamic stagger animation
+    setTimeout(() => {
+      const lines = document.querySelectorAll<HTMLElement>('.fade-line');
+      lines.forEach((line, index) => {
+        line.style.animationDelay = `${index * 0.15}s`;
+        line.classList.add('visible');
+      });
+    }, 600);
+
+    
   }
 
   ngOnChanges(changes: SimpleChanges): void {

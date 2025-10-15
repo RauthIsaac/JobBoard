@@ -1,36 +1,36 @@
-<div class="job-container h-100 " >
+<div class="job-container h-100 fade-line" >
     <div class="row">
         <div class="col-lg-9">
             <div class="row">
                 <div class="col-1">
-                    <div class="comp-logo">
+                    <div class="comp-logo fade-line">
                         <i class="bi bi-buildings"></i>
                     </div>
                 </div>
 
                 <div class="job-data col-lg-9">
-                    <h3>{{job.title}}</h3>
-                    <span>{{job.companyName}}</span>
+                    <h3 class="fade-line">{{job.title}}</h3>
+                    <span class="fade-line">{{job.companyName}}</span>
                     <div class="my-1">
                     <div class="d-flex">
-                        <div class="d-flex my-1 me-4">
+                        <div class="d-flex my-1 me-4 fade-line">
                             <i class="bi bi-geo-alt me-2"></i>
                             <span>{{job.location}}</span>
                         </div>
-                        <div class="d-flex my-1">
+                        <div class="d-flex my-1 fade-line">
                             <i class="bi bi-clock me-2"></i>
                             <span>Posted At : {{job.postedDate | date:'MMM dd, yyyy'}}</span>
                         </div>
                     </div>
-                    <div class="my-1">
+                    <div class="my-1 fade-line">
                         <span><i class="bi bi-currency-dollar me-2"></i>{{ job.salary | currency:'USD':'symbol' }}</span>
                     </div>
 
                     <div class="row my-2">
-                        <div class="workplace-type">
+                        <div class="workplace-type fade-line">
                             <span> {{job.workplaceType}} </span>
                         </div>
-                        <div class="job-type col-lg-3">
+                        <div class="job-type col-lg-3 fade-line">
                             <span> {{job.jobType}} </span>
                         </div>
                     </div>
@@ -39,13 +39,13 @@
             </div>
 
 
-            <div class="my-1">
+            <div class="my-1 fade-line">
                 {{getSlicedDescription()}}
             </div>
 
             <div class="row my-1">
                 @for(skill of job.skills; track $index){
-                    <div class="skill">{{skill}}</div>
+                    <div class="skill fade-line">{{skill}}</div>
                 }  
             </div>
 
@@ -53,12 +53,12 @@
         </div>
 
         <div class="col-3 d-flex flex-column justify-content-between">
-            <div class="d-flex justify-content-end">
+            <div class="d-flex justify-content-end fade-line">
                 <button class="save-job-btn" (click)="AddToSaved()" [class.saved]="isSavedFlag()">
                     <i class="bi" [class.bi-bookmark-check]="isSavedFlag()" [class.bi-bookmark]="!isSavedFlag()"></i>
                 </button>
             </div>
-            <div class="d-flex justify-content-end flex-column">
+            <div class="d-flex justify-content-end flex-column fade-line">
                 <!-- Show Apply Now button if not applied -->
                 <button 
                     class="apply-now-btn my-2" 
@@ -85,7 +85,7 @@
                     Checking...
                 </button>
 
-                <button class="view-dtl-btn" [routerLink]="['/jobDtl',job.id]">
+                <button class="view-dtl-btn fade-line" [routerLink]="['/jobDtl',job.id]">
                     <i class="bi bi-box-arrow-up-right me-2"></i> View Details
                 </button>
             </div>

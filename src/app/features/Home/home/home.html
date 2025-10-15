@@ -1,6 +1,6 @@
 <div class="home-container">
     <!-----------------------------Hero Section--------------------------->
-    <section class="hero-section">
+    <section class="hero-section ">
         <div class="hero-container p-5">
 
             <div class="hero-first-div">
@@ -116,49 +116,49 @@
     <!-----------------------------Main Section--------------------------->
     <article>
         <section class="Info-section row animate-on-scroll">
-            <div class="info-container col-lg-3 col-md-6 col-sm-5">
+            <div class="info-container col-lg-3 col-md-6 col-sm-5 fade-line">
                 <div class="info-box shadow animate-on-scroll">
-                    <div class="d-flex flex-column">
-                        <span>Active Jobs</span>
-                        <div class="d-flex align-items-center">
+                    <div class="d-flex flex-column fade-line">
+                        <span class="fade-line">Active Jobs</span>
+                        <div class="d-flex align-items-center fade-line">
                             <h3>{{ formatNumber(stats().activeJobs) }}</h3>
                             <span style="color: green;"> +{{ formatNumber(stats().activeJobsGrowth) }}%</span>
                         </div>
-                        <span>New Opportunities Daily</span>
+                        <span class="fade-line">New Opportunities Daily</span>
                     </div>
-                    <div class="info-icon">
+                    <div class="info-icon fade-line">
                         <i class="bi bi-suitcase-lg"></i>
                     </div>
                 </div>
             </div> 
             
-            <div class="info-container col-lg-3 col-md-6 col-sm-5">
+            <div class="info-container col-lg-3 col-md-6 col-sm-5 fade-line">
                 <div class="info-box shadow animate-on-scroll">
                     <div class="d-flex flex-column">
-                        <span>Companies</span>
-                        <div class="d-flex align-items-center">
+                        <span class="fade-line">Companies</span>
+                        <div class="d-flex align-items-center fade-line">
                             <h3>{{ formatNumber(stats().totalEmployers) }}</h3>
                             <span style="color: green;"> +{{ formatNumber(stats().jobsGrowth) }}%</span>
                         </div>
-                        <span>Top Opportunities Worldwide</span>
+                        <span class="fade-line">Top Opportunities Worldwide</span>
                     </div>
-                    <div class="info-icon">
+                    <div class="info-icon fade-line">
                         <i class="bi bi-buildings"></i>
                     </div>
                 </div>
             </div> 
             
-            <div class="info-container col-lg-3 col-md-6 col-sm-5">
+            <div class="info-container col-lg-3 col-md-6 col-sm-5 fade-line">
                 <div class="info-box shadow animate-on-scroll">
                     <div class="d-flex flex-column">
-                        <span>Success Rate</span>
-                        <div class="d-flex align-items-center">
+                        <span class="fade-line">Success Rate</span>
+                        <div class="d-flex align-items-center fade-line">
                             <h3>{{ calculateSuccessRate() }}</h3>
                             <span style="color: green;"> +{{ formatNumber(stats().approvalGrowth) }}%</span>
                         </div>
-                        <span>Job Placement Success</span>
+                        <span class="fade-line">Job Placement Success</span>
                     </div>
-                    <div class="info-icon">
+                    <div class="info-icon fade-line">
                         <i class="bi bi-graph-up-arrow"></i>
                     </div>
                 </div>
@@ -203,49 +203,49 @@
             <div class="row p-5">
                 <div class="col-lg-4 col-md-10 col-sm-9">
                     <div class="why-hireSmart-box shadow animate-on-scroll">
-                        <div class="ai-powered-icon"><i class="bi bi-openai"></i></div>
-                        <h3 class="mb-3">AI-Powered Job Matching</h3>
-                        <p>Our advanced algorithms match you with the best job opportunities based on your skills and preferences.</p>
+                        <div class="ai-powered-icon fade-line"><i class="bi bi-openai"></i></div>
+                        <h3 class="mb-3 fade-line">AI-Powered Job Matching</h3>
+                        <p class="fade-line">Our advanced algorithms match you with the best job opportunities based on your skills and preferences.</p>
                     </div>
                 </div>
 
                 <div class="col-lg-4 col-md-10 col-sm-9">
                     <div class="why-hireSmart-box shadow animate-on-scroll">
-                        <div class="adv-search-icon"><i class="bi bi-search"></i></div>
-                        <h3 class="mb-3">Advanced Search</h3>
-                        <p>Find exactly what you're looking for with powerful filters, location-based search, and semantic matching.</p>
+                        <div class="adv-search-icon fade-line"><i class="bi bi-search"></i></div>
+                        <h3 class="mb-3 fade-line">Advanced Search</h3>
+                        <p class="fade-line">Find exactly what you're looking for with powerful filters, location-based search, and semantic matching.</p>
                     </div>
                 </div>
 
                 <div class="col-lg-4 col-md-10 col-sm-9">
                     <div class="why-hireSmart-box shadow animate-on-scroll">
-                        <div class="real-time-icon"><i class="bi bi-bell"></i></div>
-                        <h3 class="mb-3">Real-time Notifications</h3>
-                        <p>Stay updated with instant alerts for new job matches, application updates, and important messages.</p>
+                        <div class="real-time-icon fade-line"><i class="bi bi-bell"></i></div>
+                        <h3 class="mb-3 fade-line">Real-time Notifications</h3>
+                        <p class="fade-line">Stay updated with instant alerts for new job matches, application updates, and important messages.</p>
                     </div>
                 </div>
 
                 <div class="col-lg-4 col-md-10 col-sm-9">
                     <div class="why-hireSmart-box shadow animate-on-scroll">
-                        <div class="prof-people-icon"><i class="bi bi-people"></i></div>
-                        <h3 class="mb-3">Professional Networking</h3>
-                        <p>Connect with industry professionals, build your network, and discover hidden opportunities.</p>
+                        <div class="prof-people-icon fade-line"><i class="bi bi-people"></i></div>
+                        <h3 class="mb-3 fade-line">Professional Networking</h3>
+                        <p class="fade-line">Connect with industry professionals, build your network, and discover hidden opportunities.</p>
                     </div>
                 </div>
 
                 <div class="col-lg-4 col-md-10 col-sm-9">
                     <div class="why-hireSmart-box shadow animate-on-scroll">
-                        <div class="ver-com-icon"><i class="bi bi-shield-check"></i></div>
-                        <h3 class="mb-3">Verified Companies</h3>
-                        <p>All employers are verified for authenticity and credibility, ensuring safe and legitimate opportunities.</p>
+                        <div class="ver-com-icon fade-line"><i class="bi bi-shield-check"></i></div>
+                        <h3 class="mb-3 fade-line">Verified Companies</h3>
+                        <p class="fade-line">All employers are verified for authenticity and credibility, ensuring safe and legitimate opportunities.</p>
                     </div>
                 </div>
 
                 <div class="col-lg-4 col-md-10 col-sm-9">
                     <div class="why-hireSmart-box shadow animate-on-scroll">
-                        <div class="ana-dash-icon"><i class="bi bi-graph-up"></i></div>
-                        <h3 class="mb-3">Analystics Dashboard</h3>
-                        <p>Track your job search progress, application performance, and get insights to improve your success rate.</p>
+                        <div class="ana-dash-icon fade-line"><i class="bi bi-graph-up"></i></div>
+                        <h3 class="mb-3 fade-line">Analystics Dashboard</h3>
+                        <p class="fade-line">Track your job search progress, application performance, and get insights to improve your success rate.</p>
                     </div>
                 </div>
 

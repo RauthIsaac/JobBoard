@@ -1,11 +1,11 @@
-<div class="nav">
+<div class="nav fade-line">
     <a routerLink="/empDashboard"><i class="bi bi-arrow-left me-3 fs-3"></i> </a>
     <h5 class="mt-2">Back to Dashboard</h5>
 </div>
 
 <mat-card class="seeker-profile-card">
     <mat-card-header>
-        <mat-card-title class="text-center">
+        <mat-card-title class="text-center fade-line">
             <h2 class="mat-headline">Edit Employer Profile</h2>
         </mat-card-title>
     </mat-card-header>    
@@ -14,15 +14,16 @@
         <mat-card-content class="space-y-6">
             <!-- Company Logo Upload Section -->
             <div class="info-section text-center">
-                <div class="profile-avatar mx-auto" (click)="triggerFileInput()" 
+                <div class="profile-avatar fade-line mx-auto " (click)="triggerFileInput()" 
                      style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; cursor: pointer; position: relative; border: 3px solid #ddd;">
                     
                     <img [src]="imagePreview" 
                          alt="Company Logo" 
                          (error)="onImageError($event)"
+                         class="fade-line"
                          style="width: 100%; height: 100%; object-fit: cover;">
                     
-                    <div class="upload-overlay" 
+                    <div class="upload-overlay fade-line" 
                          style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); 
                                 display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;"
                          onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0'">
@@ -38,13 +39,14 @@
                 
                 <div class="text-center mt-3">
                     <p class="text-sm text-gray-600 mb-2">
-                        <span *ngIf="!hasCustomImage()">Click to upload company logo</span>
-                        <span *ngIf="hasCustomImage()">Click to change company logo</span>
+                        <span class="fade-line" *ngIf="!hasCustomImage()">Click to upload company logo</span>
+                        <span class="fade-line" *ngIf="hasCustomImage()">Click to change company logo</span>
                     </p>
                     
                     <button mat-button 
                             color="warn" 
                             type="button"
+                            class="fade-line"
                             *ngIf="hasCustomImage() && !shouldRemoveImage"
                             (click)="removeImage()">
                         <mat-icon>delete</mat-icon> Remove Logo
@@ -64,7 +66,7 @@
             <div class="info-section">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Company Name -->
-                    <mat-form-field appearance="outline">
+                    <mat-form-field appearance="outline" class="fade-line">
                         <mat-label>Company Name</mat-label>
                         <input matInput formControlName="companyName" placeholder="Company Name" />
                         <mat-error *ngIf="f['companyName'].hasError('required')">
@@ -76,7 +78,7 @@
                     </mat-form-field>
 
                     <!-- Company Location -->
-                    <mat-form-field appearance="outline" class="w-full">
+                    <mat-form-field appearance="outline" class="w-full fade-line">
                         <mat-label>Company Location</mat-label>
                         <input matInput formControlName="companyLocation" placeholder="Company Location" />
                         <mat-error *ngIf="f['companyLocation'].hasError('required')">
@@ -85,7 +87,7 @@
                     </mat-form-field>
 
                     <!-- Industry -->
-                    <mat-form-field appearance="outline" class="w-full">
+                    <mat-form-field appearance="outline" class="w-full fade-line">
                         <mat-label>Industry</mat-label>
                         <input matInput formControlName="industry" placeholder="Industry" />
                         <mat-error *ngIf="f['industry'].hasError('required')">
@@ -94,7 +96,7 @@
                     </mat-form-field>
 
                     <!-- Employee Range -->
-                    <mat-form-field appearance="outline" class="w-full">
+                    <mat-form-field appearance="outline" class="w-full fade-line">
                         <mat-label>Company Range Size</mat-label>
                         <input matInput formControlName="employeeRange" placeholder="Company Range Size" />
                         <mat-error *ngIf="f['employeeRange'].hasError('required')">
@@ -103,7 +105,7 @@
                     </mat-form-field>
 
                     <!-- Website -->
-                    <mat-form-field appearance="outline" class="w-full">
+                    <mat-form-field appearance="outline" class="w-full fade-line">
                         <mat-label>Company Website</mat-label>
                         <input matInput formControlName="website" placeholder="Company Website" />
                         <mat-error *ngIf="f['website'].hasError('pattern')">
@@ -112,7 +114,7 @@
                     </mat-form-field>
 
                     <!-- Email -->
-                    <mat-form-field appearance="outline" class="w-full">
+                    <mat-form-field appearance="outline" class="w-full fade-line">
                         <mat-label>Company Email</mat-label>
                         <input matInput formControlName="email" placeholder="Company Email" />
                         <mat-error *ngIf="f['email'].hasError('required')">
@@ -124,7 +126,7 @@
                     </mat-form-field>
 
                     <!-- Phone -->
-                    <mat-form-field appearance="outline" class="w-full">
+                    <mat-form-field appearance="outline" class="w-full fade-line">
                         <mat-label>Company Phone</mat-label>
                         <input matInput formControlName="phone" placeholder="Company Phone" />
                         <mat-error *ngIf="f['phone'].hasError('pattern')">
@@ -133,7 +135,7 @@
                     </mat-form-field>
 
                     <!-- Founded At -->
-                    <mat-form-field appearance="outline" class="w-full">
+                    <mat-form-field appearance="outline" class="w-full fade-line">
                         <mat-label>Founded At</mat-label>
                         <input matInput type="number" formControlName="establishedYear" 
                                placeholder="Enter year (e.g. 1999)" 
@@ -152,7 +154,7 @@
             </div>
 
             <!-- Company Mission -->
-            <mat-form-field appearance="outline" class="w-full mt-4">
+            <mat-form-field appearance="outline" class="w-full mt-4 fade-line">
                 <mat-label>Company Mission</mat-label>
                 <textarea matInput formControlName="companyMission" 
                           placeholder="Company Mission" 
@@ -164,7 +166,7 @@
             </mat-form-field>
 
             <!-- Company Description -->
-            <mat-form-field appearance="outline" class="w-full">
+            <mat-form-field appearance="outline" class="w-full fade-line">
                 <mat-label>Company Description</mat-label>
                 <textarea matInput formControlName="companyDescription" 
                           placeholder="Company Description" 
@@ -179,7 +181,7 @@
             </mat-form-field>
         </mat-card-content>
 
-        <mat-card-actions class="flex justify-center mt-6">
+        <mat-card-actions class="flex justify-center mt-6 fade-line">
             <button mat-raised-button 
                     color="primary" 
                     class="w-full md:w-auto" 

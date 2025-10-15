@@ -26,6 +26,52 @@ empData = signal<any>({});
   ngOnInit(): void {
     window.scrollTo(0, 0);
     this.loadEmployerProfile();
+
+    // Initialize Intersection Observer for scroll animations
+    const sections = document.querySelectorAll('.animate-on-scroll');
+
+    const observer = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const fadeLines = entry.target.querySelectorAll<HTMLElement>('.fade-line');
+            
+            fadeLines.forEach((line, index) => {
+              setTimeout(() => {
+                line.classList.add('visible');
+              }, index * 150); 
+            });
+
+            observer.unobserve(entry.target); 
+          }
+        });
+      },
+      {
+        threshold: 0.2, 
+      }
+    );
+
+    sections.forEach(section => observer.observe(section));
+
+
+
+    // ✅ Dynamic stagger animation
+    setTimeout(() => {
+      const lines = document.querySelectorAll<HTMLElement>('.fade-line');
+      lines.forEach((line, index) => {
+        line.style.animationDelay = `${index * 0.15}s`;
+        line.classList.add('visible');
+      });
+    }, 600);
+
+
+    setTimeout(() => {
+        const blocks = document.querySelectorAll<HTMLElement>('.fade-block');
+        blocks.forEach((block, index) => {
+          block.style.animationDelay = `${index * 0.25}s`;
+          block.classList.add('visible');
+        });
+      }, 400);
   }
 
   loadEmployerProfile(): void {

@@ -41,6 +41,16 @@ export class AppViewJob implements OnInit {
         this.loadEmployerApplications();
       }
     });
+
+
+    setTimeout(() => {
+      const lines = document.querySelectorAll<HTMLElement>('.fade-line');
+      lines.forEach((line, index) => {
+        line.style.animationDelay = `${index * 0.1}s`;
+        line.classList.add('visible');
+      });
+    }, 300);
+
   }
 
   private loadEmployerApplications(): void {

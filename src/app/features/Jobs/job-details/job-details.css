@@ -1,4 +1,3 @@
-
 .nav{
     background: var(--basic-color);
     color: white;
@@ -118,4 +117,54 @@
     color: white;
     cursor: not-allowed;
     opacity: 0.6;
+}
+
+
+.job-details-section {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+
+.main-section.animate-on-scroll.is-visible {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.main-side-bar {
+    opacity: 0;
+}
+
+.main-side-bar.animate-on-scroll.is-visible {
+    animation: fadeInUp 0.8s ease-out 0.2s forwards;
+}
+
+/* Animation Keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* === Staggered Fade-in Animation === */
+@keyframes fadeInLine {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.fade-line {
+  opacity: 0;
+}
+
+.fade-line.visible {
+  animation: fadeInLine 0.6s ease-out forwards;
 }

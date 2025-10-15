@@ -24,6 +24,16 @@ export class EmployerAnalyticsSection implements OnInit{
     this.loadTopPerformingJobs();
     this.loadEmployerAnalytics();
     this.loadEmployerHiringOverview();
+
+
+    // ✅ Dynamic stagger animation
+    setTimeout(() => {
+      const lines = document.querySelectorAll<HTMLElement>('.fade-line');
+      lines.forEach((line, index) => {
+        line.style.animationDelay = `${index * 0.15}s`;
+        line.classList.add('visible');
+      });
+    }, 600);
   }
 
   loadTopPerformingJobs(){

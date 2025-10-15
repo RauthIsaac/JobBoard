@@ -1,17 +1,17 @@
 <div>
-    <div class="nav">
-        <a routerLink="/empDashboard"><i class="bi bi-arrow-left me-3 fs-3"></i> </a>
-        <h5 class="mt-2">Back to Dashboard</h5>
+    <div class="nav fade-block">
+        <a routerLink="/empDashboard"><i class="bi bi-arrow-left me-3 fs-3 fade-line"></i> </a>
+        <h5 class="mt-2 fade-line">Back to Dashboard</h5>
     </div>
-    <div class="header-section">
-        <div class="title-container">
+    <div class="header-section fade-block">
+        <div class="title-container fade-line">
             <div class="d-flex">
-                <div class="icon">
+                <div class="icon fade-line">
                     <i class="bi bi-buildings"></i>
                 </div>
                 <div>
-                    <h1>Application Inbox</h1>
-                    <p>Manage and review all your job applications in one place</p>
+                    <h1 class="fade-line">Application Inbox</h1>
+                    <p class="fade-line">Manage and review all your job applications in one place</p>
                 </div>
             </div>
         </div>
@@ -19,8 +19,8 @@
 
     <div class="container">
 
-        <div class="filter-section">
-            <div class="search-container">
+        <div class="filter-section fade-block">
+            <div class="search-container fade-line">
                 <input type="text" 
                     class="form-control"
                     placeholder="Search by job title..."
@@ -28,7 +28,7 @@
                     [value]="searchTerm()" />
             </div>
 
-            <div class="clear-filter">
+            <div class="clear-filter fade-line">
                 <button class="clear-filter-btn" 
                         (click)="clearFilters()" 
                         [disabled]="!hasActiveFilters()">
@@ -37,33 +37,33 @@
             </div>
         </div>
 
-        <div class="status-filter-section">
-            <button class="status-btn" 
+        <div class="status-filter-section fade-block">
+            <button class="status-btn fade-line " 
                     [class.active]="isStatusActive('')" 
                     (click)="onStatusFilterClick('')">
                 All Status
             </button>
-            <button class="status-btn" 
+            <button class="status-btn fade-line" 
                     [class.active]="isStatusActive('Pending')" 
                     (click)="onStatusFilterClick('Pending')">
                 New
             </button>
-            <button class="status-btn" 
+            <button class="status-btn fade-line" 
                     [class.active]="isStatusActive('UnderReview')" 
                     (click)="onStatusFilterClick('UnderReview')">
                 Under Review
             </button>
-            <button class="status-btn" 
+            <button class="status-btn fade-line" 
                     [class.active]="isStatusActive('Interviewed')" 
                     (click)="onStatusFilterClick('Interviewed')">
                 Interview
             </button>
-            <button class="status-btn" 
+            <button class="status-btn fade-line" 
                     [class.active]="isStatusActive('Accepted')" 
                     (click)="onStatusFilterClick('Accepted')">
                 Hired
             </button>
-            <button class="status-btn" 
+            <button class="status-btn fade-line" 
                     [class.active]="isStatusActive('Rejected')" 
                     (click)="onStatusFilterClick('Rejected')">
                 Rejected
@@ -73,16 +73,16 @@
         <div class="applications-section my-3">
             <div *ngIf="isLoading()"><app-loading-page></app-loading-page></div>
 
-            <div *ngIf="!isLoading()" class="results-container">
-                <div class="results-info">
+            <div *ngIf="!isLoading()" class="results-container fade-line is-visible fade-block">
+                <div class="results-info fade-line">
                     <h5>{{applicationsList().length}} Application{{applicationsList().length !== 1 ? 's' : ''}} found</h5>
                 </div>
 
                 <div *ngIf="applicationsList().length === 0" class="no-results">
-                    <h3>No applications found</h3>
-                    <p *ngIf="hasActiveFilters()">Try adjusting your search criteria or filters.</p>
-                    <p *ngIf="!hasActiveFilters()">No applications have been received yet.</p>
-                    <button class="clear-all-filters-btn" 
+                    <h3 class="fade-line">No applications found</h3>
+                    <p class="fade-line" *ngIf="hasActiveFilters()">Try adjusting your search criteria or filters.</p>
+                    <p class="fade-line" *ngIf="!hasActiveFilters()">No applications have been received yet.</p>
+                    <button class="clear-all-filters-btn fade-line" 
                             (click)="clearFilters()" 
                             *ngIf="hasActiveFilters()">
                         <i class="bi bi-x-lg me-2"></i> Clear Filters
@@ -91,24 +91,24 @@
 
                 <div *ngIf="applicationsList().length > 0" class="application-list">
                     <div *ngFor="let app of applicationsList(); trackBy: trackByApplicationId" 
-                        class="application-card" 
+                        class="application-card fade-line is-visible" 
                         [ngClass]="getCardClass(app.status)">
                         <div class="card-left">
-                            <div class="initials" [ngClass]="getInitialsClass(app.applicantName)">
+                            <div class="initials fade-line" [ngClass]="getInitialsClass(app.applicantName)">
                                 {{getInitials(app.applicantName)}}
                             </div>
                             <div class="applicant-info">
-                                <h3>{{app.applicantName}}</h3>
-                                <div class="d-flex">
+                                <h3 class="fade-line">{{app.applicantName}}</h3>
+                                <div class="d-flex fade-line">
                                     <span class="text-muted me-1">Applied for</span> 
                                     <h6 style="padding-top: 2px;">{{app.jobTitle}}</h6>
                                 </div>
-                                <div class="d-flex mt-2">
-                                    <i class="bi bi-calendar-check me-2 mt-1"></i><p class="me-4">{{app.appliedDate}}</p>
-                                    <p> {{app.experience}}</p>
+                                <div class="d-flex mt-2 ">
+                                    <i class="bi bi-calendar-check me-2 mt-1 fade-line"></i><p class="me-4">{{app.appliedDate}}</p>
+                                    <p class="fade-line"> {{app.experience}}</p>
                                 </div>
 
-                                <div class="d-flex mt-2">
+                                <div class="d-flex mt-2 fade-line">
                                     
                                     <!-- Resume download link - always available -->
                                     <a class="open-cv-btn" 
@@ -127,7 +127,7 @@
                         </div>
                         <div class="card-right">
 
-                            <span class="status" [ngClass]="getStatusClass(app.statusDisplay)">
+                            <span class="status fade-line" [ngClass]="getStatusClass(app.statusDisplay)">
                                 {{app.statusDisplay}}
                             </span>
                             

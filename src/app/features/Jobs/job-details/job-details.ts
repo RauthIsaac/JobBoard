@@ -9,7 +9,6 @@ import { ApplicationService } from '../../Application/application-service';
 import { SnackbarService } from '../../../shared/components/snackbar/snackbar-service';
 import { LoadingPage } from "../../../shared/components/loading-page/loading-page";
 
-
 @Component({
   selector: 'app-job-details',
   imports: [CurrencyPipe, RouterLink, CommonModule, NgIf, LoadingPage],
@@ -102,6 +101,46 @@ export class JobDetails implements OnInit {
     } else {
       console.log('Not checking applied status - User type:', this.userType(), 'Job ID:', this.jobId());
     }
+
+
+    // Initialize Intersection Observer for scroll animations
+    const sections = document.querySelectorAll('.animate-on-scroll');
+
+    const observer = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const fadeLines = entry.target.querySelectorAll<HTMLElement>('.fade-line');
+            
+            fadeLines.forEach((line, index) => {
+              setTimeout(() => {
+                line.classList.add('visible');
+              }, index * 150); 
+            });
+
+            observer.unobserve(entry.target); 
+          }
+        });
+      },
+      {
+        threshold: 0.2, 
+      }
+    );
+
+    sections.forEach(section => observer.observe(section));
+
+
+
+    // ✅ Dynamic stagger animation
+    setTimeout(() => {
+      const lines = document.querySelectorAll<HTMLElement>('.fade-line');
+      lines.forEach((line, index) => {
+        line.style.animationDelay = `${index * 0.15}s`;
+        line.classList.add('visible');
+      });
+    }, 600);
+
+
   }
 
   private loadJobDetails(): void {

@@ -17,40 +17,40 @@
 
             <div style="margin:50px 100px;">
                 <!-- --------------------------- Job Details Section ------------------------------ -->
-                <section class="job-details-section p-2">
+                <section class="job-details-section p-2 animate-on-scroll fade-line is-visible">
                     <div class="job-details row shadow rounded">
                         <div class="col-lg-9">
-                            <div class="d-flex">
+                            <div class="d-flex fade-line is-visible">
                                 <i class="bi bi-buildings me-2"></i>
                                 <span>{{jobDetails().companyName}}</span>
                             </div>
-                            <h1 class="my-3">{{jobDetails().title}}</h1>
+                            <h1 class="my-3 fade-line is-visible">{{jobDetails().title}}</h1>
                             <div class="d-flex ">
-                                <div class="d-flex me-4">
+                                <div class="d-flex me-4 fade-line is-visible">
                                     <i class="bi bi-geo-alt me-2"></i>
                                     <span>{{jobDetails().companyLocation}}</span>
                                 </div>
-                                <div class="d-flex me-4">
+                                <div class="d-flex me-4 fade-line is-visible">
                                     <i class="bi bi-clock me-2"></i>
                                     <span>Posted At : {{jobDetails().postedDate | date:'MMM dd, yyyy'}}</span>
                                 </div>
-                                <div class="d-flex me-4">
+                                <div class="d-flex me-4 fade-line is-visible">
                                     <i class="bi bi-calendar2 me-2"></i>
                                     <span>Apply By: {{jobDetails().expireDate | date:'MMM dd, yyyy'}}</span>
                                 </div>
                             </div>
                             <div class="d-flex mt-3">
-                                <div class="job-time me-3">
+                                <div class="job-time me-3 fade-line is-visible">
                                     <span>{{jobDetails().jobType}}</span>
                                 </div>
-                                <div style="margin-top: 5px; color:green">
+                                <div class="fade-line is-visible" style="margin-top: 5px; color:green">
                                     <span>{{ jobDetails().salary | currency:'USD':'symbol' }}</span>
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Apply and Save buttons - only for seekers -->
-                        <div class="col-lg-3" *ngIf="isSeeker()">
+                        <div class="col-lg-3 fade-line is-visible" *ngIf="isSeeker()">
                             <!-- Show Apply Now button if not applied -->
                             <button 
                                 class="apply-now-btn my-2 form-control" 
@@ -86,67 +86,67 @@
                 </section>
                 
                 <!-- --------------------------- Main Section ------------------------------ -->
-                <section class="main-section">
+                <section class="main-section animate-on-scroll is-visible">
                     <div class="row mt-5">
-                        <div class="col-lg-8 col-md-12 col-sm-12 ">
+                        <div class="col-lg-8 col-md-12 col-sm-12 fade-line is-visible">
                             
                             <div class="job-overview shadow rounded p-5 mb-4 ">
-                                <h2 class="mb-4">Job Overview</h2>
+                                <h2 class="mb-4 fade-line is-visible">Job Overview</h2>
 
                                 <div class="row">
-                                    <div class="col-lg-3 col-md-5 col-sm-10 mb-md-2 mb-sm-2">
+                                    <div class="col-lg-3 col-md-5 col-sm-10 mb-md-2 mb-sm-2 fade-line is-visible">
                                         <div class="d-flex pe-md-3" style="background-color: rgb(244, 244, 244); border-radius: 15px; width: fit-content;">
-                                            <i class="bi bi-mortarboard m-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
+                                            <i class="bi bi-mortarboard m-3 fade-line is-visible" style="color:rgb(58, 111, 245); font-size: large;"></i>
                                             <div class="d-flex flex-column">
-                                                <span style="color: rgb(117, 117, 117);">Experience</span>
-                                                <span style="font-weight: 500;">{{jobDetails().experienceLevel}}</span>
+                                                <span class="fade-line is-visible" style="color: rgb(117, 117, 117);">Experience</span>
+                                                <span class="fade-line is-visible" style="font-weight: 500;">{{jobDetails().experienceLevel}}</span>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-3 col-md-5 col-sm-10 mb-md-2 mb-sm-2" >
+                                    <div class="col-lg-3 col-md-5 col-sm-10 mb-md-2 mb-sm-2 fade-line is-visible" >
                                         <div class="d-flex pe-md-3" style="background-color: rgb(244, 244, 244); border-radius: 15px; width: fit-content;">
-                                            <i class="bi bi-clock m-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
+                                            <i class="bi bi-clock m-3 fade-line is-visible" style="color:rgb(58, 111, 245); font-size: large;"></i>
                                             <div class="d-flex flex-column">
-                                                <span style="color: rgb(162, 162, 162);">Type</span>
-                                                <span style="font-weight: 500;">{{jobDetails().jobType}}</span>
+                                                <span class="fade-line is-visible" style="color: rgb(162, 162, 162);">Type</span>
+                                                <span class="fade-line is-visible" style="font-weight: 500;">{{jobDetails().jobType}}</span>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-3 col-md-5 col-sm-10 mb-md-2 mb-sm-2">
+                                    <div class="col-lg-3 col-md-5 col-sm-10 mb-md-2 mb-sm-2 fade-line is-visible">
                                         <div class="d-flex pe-md-3" style="background-color: rgb(244, 244, 244); border-radius: 15px; width: fit-content;">
-                                            <i class="bi bi-people m-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
+                                            <i class="bi bi-people m-3 fade-line is-visible" style="color:rgb(58, 111, 245); font-size: large;"></i>
                                             <div class="d-flex flex-column">
-                                                <span style="color: rgb(162, 162, 162);">Team Size</span>
-                                                <span style="font-weight: 500;">{{jobDetails().minTeamSize}}-{{jobDetails().maxTeamSize}}</span>
+                                                <span class="fade-line is-visible" style="color: rgb(162, 162, 162);">Team Size</span>
+                                                <span class="fade-line is-visible" style="font-weight: 500;">{{jobDetails().minTeamSize}}-{{jobDetails().maxTeamSize}}</span>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-3 col-md-5 col-sm-10 mb-md-2 mb-sm-2">
+                                    <div class="col-lg-3 col-md-5 col-sm-10 mb-md-2 mb-sm-2 fade-line is-visible">
                                         <div class="d-flex pe-md-3" style="background-color:rgb(244, 244, 244); border-radius: 15px; width: fit-content;">
-                                            <i class="bi bi-geo-alt m-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
+                                            <i class="bi bi-geo-alt m-3 fade-line is-visible" style="color:rgb(58, 111, 245); font-size: large;"></i>
                                             <div class="d-flex flex-column">
-                                                <span style="color: rgb(162, 162, 162);">Location</span>
-                                                <span style="font-weight: 500;">{{jobDetails().workplaceType}}</span>
+                                                <span class="fade-line is-visible" style="color: rgb(162, 162, 162);">Location</span>
+                                                <span class="fade-line is-visible" style="font-weight: 500;">{{jobDetails().workplaceType}}</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Job Description -->
-                                <div class="mt-4">
-                                    <h5>Job Description</h5>
-                                    <span class="mt-1">{{jobDetails().description}}</span>
+                                <div class="mt-4 animate-on-scroll">
+                                    <h5 class="fade-line">Job Description</h5>
+                                    <span class="mt-1 fade-line">{{jobDetails().description}}</span>
                                 </div>
 
                                 <!-- Key Requirements -->
-                                <div>
-                                    <h5 class="mt-4">Key Requirements</h5>
+                                <div class="animate-on-scroll">
+                                    <h5 class="mt-4 fade-line">Key Requirements</h5>
                                     <ul style="list-style-type: none; padding-left: 0px;">
                                         @for(req of requirementsList(); track $index) {
-                                            <div class="d-flex mb-3">
+                                            <div class="d-flex mb-3 fade-line">
                                                 <i class="bi bi-star me-2" style="color:rgb(27, 193, 27)"></i>
                                                 <li>{{req}}</li>
                                             </div>
@@ -155,11 +155,11 @@
                                 </div>
                                 
                                 <!-- Job Responsibilities -->
-                                <div>
-                                    <h5 class="mt-lg-5">Job Responsibilities</h5>
+                                <div class="animate-on-scroll">
+                                    <h5 class="mt-lg-5 fade-line">Job Responsibilities</h5>
                                     <ul style="list-style-type: none; padding-left: 0;">
                                         @for(responsibility of responsibilitiesList(); track $index) {
-                                            <div class="d-flex mb-3">
+                                            <div class="d-flex mb-3 fade-line">
                                                 <span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span>
                                                 <li>{{responsibility}}</li>
                                             </div>
@@ -168,11 +168,11 @@
                                 </div>
 
                                 <!-- What We Offer / Benefits -->
-                                <div>
-                                    <h5 class="mt-5">What We Offer</h5>
+                                <div class="animate-on-scroll">
+                                    <h5 class="mt-5 fade-line">What We Offer</h5>
                                     <ul style="list-style-type: none; padding-left: 0;">
                                         @for(benefit of benefitsList(); track $index) {
-                                            <div class="d-flex mb-3">
+                                            <div class="d-flex mb-3 fade-line">
                                                 <span style="color:rgb(27, 193, 27); margin-right: 15px;">✓</span>
                                                 <li>{{benefit}}</li>
                                             </div>
@@ -181,14 +181,14 @@
                                 </div>
 
                                 <!-- Ready To Apply - only for seekers -->
-                                <div class="mt-5 p-5" style="background-color: rgb(244, 244, 244); border-radius: 15px;" *ngIf="isSeeker() && !isJobApplied()">
+                                <div class="mt-5 p-5 animate-on-scroll" style="background-color: rgb(244, 244, 244); border-radius: 15px;" *ngIf="isSeeker() && !isJobApplied()">
                                     <div class="row">
                                         <div class="col-lg-8 col-md-7 col-sm-12">
-                                            <h5>Ready to Apply?</h5>
-                                            <p>Apply now and take the next step in your career.</p>
+                                            <h5 class="fade-line">Ready to Apply?</h5>
+                                            <p class="fade-line">Apply now and take the next step in your career.</p>
                                         </div>
                                         <div class="col-lg-4 col-md-5 col-sm-12">
-                                            <button class="apply-now-btn form-control" [routerLink]="['/seekerApp', jobId()]">
+                                            <button class="apply-now-btn form-control fade-line" [routerLink]="['/seekerApp', jobId()]">
                                                 Apply Now <i class="bi bi-arrow-right px-2"></i>
                                             </button>
                                         </div>
@@ -198,35 +198,35 @@
                         </div>
 
                         <!-- Side Bar -->
-                        <div class="main-side-bar col-lg-4 col-md-12 col-sm-12 ps-3">
+                        <div class="main-side-bar col-lg-4 col-md-12 col-sm-12 ps-3 animate-on-scroll is-visible fade-line">
                             <div class="shadow rounded p-4 mb-4">
                                 <!-- Company Logo(Image) -->
                                 <div class="text-center">
-                                    <img src="{{jobDetails().companyImage}}" alt="Company Logo" class="img-fluid">
+                                    <img src="{{jobDetails().companyImage}}" alt="Company Logo" class="img-fluid fade-line is-visible" style="max-height: 100px; max-width: 200px; object-fit: contain;">
                                 </div>
-                                <h3 class="d-flex my-3">
+                                <h3 class="d-flex my-3 fade-line is-visible">
                                     <i class="bi bi-buildings me-2"></i>
                                     <span>{{jobDetails().companyName}}</span>
                                 </h3>
-                                
-                                <p>{{jobDetails().companyDescription}}</p>
-                            
-                                <div class="d-flex mt-lg-2">
+
+                                <p class="fade-line is-visible">{{jobDetails().companyDescription}}</p>
+
+                                <div class="d-flex mt-lg-2 fade-line is-visible">
                                     <i class="bi bi-people me-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
                                     <span style="color: rgb(162, 162, 162); margin-right: 8px;">Company Size: </span>
                                     <span style="font-weight: 500;">{{jobDetails().employeeRange}} Employees</span>
                                 </div>
-                                <div class="d-flex mt-2">
+                                <div class="d-flex mt-2 fade-line is-visible">
                                     <i class="bi bi-buildings me-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
                                     <span style="color: rgb(162, 162, 162); margin-right: 8px;">Industry: </span>
                                     <span style="font-weight: 500;">{{jobDetails().industry}}</span>
                                 </div>
-                                <div class="d-flex mt-2">
+                                <div class="d-flex mt-2 fade-line is-visible">
                                     <i class="bi bi-geo-alt me-3" style="color:rgb(58, 111, 245); font-size: large;"></i>
                                     <span style="color: rgb(162, 162, 162); margin-right: 8px;">Location: </span>
                                     <span style="font-weight:500;">{{jobDetails().companyLocation}}</span>
                                 </div>
-                                <div class="d-flex mt-2">
+                                <div class="d-flex mt-2 fade-line is-visible">
                                     <i class="bi bi-link-45deg me-3" style="color:rgb(58, 111, 245); font-size:larger;"></i>
                                     <span style="color: rgb(162, 162, 162); margin-right: 8px;">Website: </span>
                                     <span>

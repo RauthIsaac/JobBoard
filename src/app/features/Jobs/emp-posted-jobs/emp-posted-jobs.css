@@ -1,78 +1,83 @@
-
 body {
-    background: #f9fbfd;
-    font-family: 'Segoe UI', sans-serif;
+  background: #f9fbfd;
+  font-family: 'Segoe UI', sans-serif;
+  overflow: hidden;
 }
 
-.nav{
-    color: black;
-    padding: 25px 50px;
+.nav {
+  color: black;
+  padding: 25px 50px;
 
-    a{
-        color: black;
-    }
+  a {
+    color: black;
+  }
 }
 
 .page-header {
-    margin-bottom: 2rem;
+  margin-bottom: 2rem;
 }
 
 .metrics-card {
-    border-radius: 12px;
-    padding: 1.2rem;
-    background: #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  border-radius: 12px;
+  padding: 1.2rem;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 .metrics-number {
-    font-size: 1.6rem;
-    font-weight: bold;
+  font-size: 1.6rem;
+  font-weight: bold;
 }
 
 .search-filters {
-    background: #fff;
-    padding: 1rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    margin-bottom: 1.5rem;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  margin-bottom: 1.5rem;
 }
 
 .job-card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 1.2rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    margin-bottom: 1.2rem;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.2rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  margin-bottom: 1.2rem;
 }
 
 .job-status {
-    font-size: 0.8rem;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-weight: 500;
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 500;
 }
 
-
-.status-active { background: #d4edda; color: #155724;  border-radius: 13px;}
-.status-filled { background: #d1ecf1; color: #0c5460;  border-radius: 13px;}
+.status-active { background: #d4edda; color: #155724; border-radius: 13px; }
+.status-filled { background: #d1ecf1; color: #0c5460; border-radius: 13px; }
 .status-expired { background: #f8d7da; color: #721c24; border-radius: 13px; }
 
-.delete{
-    background: #f8d7da; 
-    color: #721c24;
-    padding: 10px;
-    border-style: none;
-    border-radius: 10px;
+.delete {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-style: none;
+  border-radius: 10px;
 }
 
-.job-actions button {
-    font-size: 0.9rem;
-    margin-right: 0.5rem;
+/* === Fade Animations === */
+@keyframes fadeInLine {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
-.tag {
-    font-size: 0.75rem;
-    padding: 4px 8px;
-    background: #f1f3f5;
-    border-radius: 6px;
+@keyframes fadeInBlock {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
+
+.fade-line { opacity: 0; }
+.fade-line.visible { animation: fadeInLine 0.6s ease-out forwards; }
+
+.fade-block { opacity: 0; }
+.fade-block.visible { animation: fadeInBlock 0.8s ease-out forwards; }
+

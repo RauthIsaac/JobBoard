@@ -6,28 +6,28 @@
 
             <div class="row g-4">
                 <!-- Stats -->
-                <div class="col-6 col-sm-6">
+                <div class="col-6 col-sm-6 fade-line">
                     <div class="stat-card">
-                    <h4 class="fw-bold">{{expiringSoonJobs().totalActiveJobs}}</h4>
-                    <p class="text-muted mb-1">Active Jobs</p>
+                        <h4 class="fw-bold fade-line">{{expiringSoonJobs().totalActiveJobs}}</h4>
+                        <p class="text-muted mb-1 fade-line">Active Jobs</p>
                     </div>
                 </div>
-                <div class="col-6 col-sm-6">
+                <div class="col-6 col-sm-6 fade-line">
                     <div class="stat-card">
-                    <h4 class="fw-bold">{{expiringSoonJobs().applicationsThisMonth}}</h4>
-                    <p class="text-muted mb-1">Applications This Month</p>
+                        <h4 class="fw-bold fade-line">{{expiringSoonJobs().applicationsThisMonth}}</h4>
+                        <p class="text-muted mb-1 fade-line">Applications This Month</p>
                     </div>
                 </div>
             </div>
 
 
              <!-- Quick Actions -->
-            <div class="my-3">
+            <div class="my-3 fade-line">
                 <div class="card card-custom p-4 quick-actions">
-                    <h3 class="mb-3 fw-bold mb-4">⭐ Quick Actions</h3>
-                    <a class="btn btn-primary" routerLink="/addJob">+ Post New Job Opening</a>
-                    <a class="btn btn-outline-secondary" routerLink="/appViewEmp">📄 Review Applications</a>
-                    <a class="btn btn-outline-secondary" routerLink="/empAnalytics" >📊 View Analytics</a>
+                    <h3 class="mb-3 fw-bold mb-4 fade-line">⭐ Quick Actions</h3>
+                    <a class="fade-line btn btn-primary" routerLink="/addJob">+ Post New Job Opening</a>
+                    <a class="fade-line btn btn-outline-secondary" routerLink="/appViewEmp">📄 Review Applications</a>
+                    <a class="fade-line btn btn-outline-secondary" routerLink="/empAnalytics" >📊 View Analytics</a>
                 </div>
             </div>
 
@@ -38,47 +38,48 @@
            
                 <!-- Recent Activity -->
                 <div class="col-12">
-                    <div class="card card-custom p-4">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="card card-custom p-4 fade-line">
+                        <div class="d-flex justify-content-between align-items-center mb-2 fade-line">
                             <h3 >📌 Recent Activity</h3>
                         </div>
-                        <div *ngIf="recentActivity().length === 0">
+                        <div *ngIf="recentActivity().length === 0" class="fade-line">
                             <p>No recent activity available.</p>
                         </div>
+                        <div class="fade-line">
                             @for(activity of recentActivity(); track $index){
-                                <div class="activity-item" *ngIf="activity.link" (click)="viewNotification(activity.link)">
-                                    <p class="fs-5 fw-medium mb-0">{{ activity.message }}</p>
-                                    <small class="mt-0">{{ getTimeDifference(activity.createdAt) }}</small>
+                                <div class="activity-item fade-line" *ngIf="activity.link" (click)="viewNotification(activity.link)">
+                                    <p class="fs-5 fw-medium mb-0 fade-line">{{ activity.message }}</p>
+                                    <small class="mt-0 fade-line">{{ getTimeDifference(activity.createdAt) }}</small>
                                 </div>
                             }
                     </div>
                 </div>
 
                 <!-- Recent Job Postings -->
-                <div class="col-12 my-4">
-                    <div class="card card-custom p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h3>💼 Recent Job Postings</h3>
-                        <a routerLink="/empPostedJobs" class="text-primary fw-semibold"  style="text-decoration: none;">Manage Jobs →</a>
-                    </div>
-
-                    <div *ngFor="let job of recentJobs()" class="activity-item d-flex justify-content-between align-items-center mb-2 p-3 border rounded shadow-sm">
-                    <div>
-                        <strong class="fs-5">{{ job.title }}</strong>
-                        <div class="d-flex">
-                            <div class="text-muted small mt-1">{{ job.postedAgo}}</div>
-                            <div class="mx-1">|</div>
-                            <div class="text-muted small mt-1">Applications: {{ job.applicationsCount }}</div>
+                <div class="col-12 my-4 fade-line">
+                    <div class="card card-custom p-4 fade-line">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h3 class="fade-line">💼 Recent Job Postings</h3>
+                            <a routerLink="/empPostedJobs" class="fade-line text-primary fw-semibold"  style="text-decoration: none;">Manage Jobs →</a>
                         </div>
+
+                        <div *ngFor="let job of recentJobs()" class="activity-item d-flex justify-content-between align-items-center mb-2 p-3 border rounded shadow-sm fade-line">
+                        <div>
+                            <strong class="fs-5 fade-line">{{ job.title }}</strong>
+                            <div class="d-flex">
+                                <div class="fade-line text-muted small mt-1">{{ job.postedAgo}}</div>
+                                <div class="fade-line mx-1">|</div>
+                                <div class="fade-line text-muted small mt-1">Applications: {{ job.applicationsCount }}</div>
+                            </div>
+                        </div>
+                        <span class="job-status fade-line" [ngClass]="{
+                            'status-active': job.status === 'Active',
+                            'status-filled': job.status === 'Filled',
+                            'status-expired': job.status === 'Expired',
+                            }">
+                            {{ job.status }}
+                        </span>
                     </div>
-                    <span class="job-status" [ngClass]="{
-                        'status-active': job.status === 'Active',
-                        'status-filled': job.status === 'Filled',
-                        'status-expired': job.status === 'Expired',
-                        }">
-                        {{ job.status }}
-                    </span>
-                </div>
 
 
                     </div>
@@ -87,7 +88,7 @@
             </div>
 
         </div>
-
+        </div>
     </div>
   </div>
 </body>

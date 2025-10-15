@@ -1,5 +1,5 @@
 <mat-card class="seeker-profile-card">
-    <mat-card-header>
+    <mat-card-header class="fade-line">
         <mat-card-title class="text-center">
             <h2 class="mat-headline">Edit Seeker Profile</h2>
         </mat-card-title>
@@ -9,9 +9,9 @@
         <mat-card-content class="space-y-6">
             <!-- Basic Information Section -->
             <div class="info-section">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 fade-line">
                     <!-- Name -->
-                    <mat-form-field appearance="outline">
+                    <mat-form-field appearance="outline" class="fade-line">
                         <mat-label>Full Name</mat-label>
                         <input matInput formControlName="name" placeholder="Full Name" />
                         <mat-error *ngIf="profileForm.get('name')?.hasError('maxlength')">
@@ -20,7 +20,7 @@
                     </mat-form-field>
 
                     <!-- Title -->
-                    <mat-form-field appearance="outline">
+                    <mat-form-field appearance="outline" class="fade-line">
                         <mat-label>Professional Title</mat-label>
                         <input matInput formControlName="title" placeholder="e.g. Software Developer" />
                         <mat-error *ngIf="profileForm.get('title')?.hasError('maxlength')">
@@ -29,7 +29,7 @@
                     </mat-form-field>
 
                     <!-- Phone Number -->
-                    <mat-form-field appearance="outline">
+                    <mat-form-field appearance="outline" class="fade-line">
                         <mat-label>Phone Number</mat-label>
                         <input matInput formControlName="phoneNumber" placeholder="e.g. +1234567890" />
                         <mat-error *ngIf="profileForm.get('phoneNumber')?.hasError('pattern')">
@@ -38,13 +38,13 @@
                     </mat-form-field>
 
                     <!-- Date of Birth -->
-                    <mat-form-field appearance="outline">
+                    <mat-form-field appearance="outline" class="fade-line">
                         <mat-label>Date of Birth</mat-label>
                         <input matInput type="date" formControlName="dateOfBirth" />
                     </mat-form-field>
 
                     <!-- Gender -->
-                    <mat-form-field appearance="outline">
+                    <mat-form-field appearance="outline" class="fade-line">
                         <mat-label>Gender</mat-label>
                         <mat-select formControlName="gender">
                             <mat-option *ngFor="let gender of genderOptions" [value]="gender.value">
@@ -56,7 +56,7 @@
                 </div>
 
                 <!-- Address -->
-                <mat-form-field appearance="outline" class="w-full">
+                <mat-form-field appearance="outline" class="w-full fade-line">
                     <mat-label>Address</mat-label>
                     <input matInput formControlName="address" placeholder="Full Address" />
                     <mat-error *ngIf="profileForm.get('address')?.hasError('maxlength')">
@@ -66,7 +66,7 @@
 
 
                 <!-- Summary -->
-                <mat-form-field appearance="outline" class="w-full">
+                <mat-form-field appearance="outline" class="w-full fade-line">
                     <mat-label>Professional Summary</mat-label>
                     <textarea matInput formControlName="summary" 
                               placeholder="Brief professional summary..." 
@@ -78,35 +78,37 @@
                 </mat-form-field>
             </div>
 
-            <mat-divider class="my-3"></mat-divider>
+            <mat-divider class="my-3 fade-line"></mat-divider>
 
             <!-- Skills Section -->
-            <div class="dynamic-section mb-4">
+            <div class="dynamic-section mb-4 fade-line">
                 <div class="flex justify-between items-center ">
-                    <h3 class="mat-subheading-2">Skills</h3>
+                    <h3 class="mat-subheading-2 fade-line">Skills</h3>
                 </div>
                 
-                <mat-chip-grid aria-label="Skills" #skillsChipList>
+                <mat-chip-grid aria-label="Skills" #skillsChipList class="fade-line">
                     <mat-chip-row 
                         *ngFor="let skill of profileForm.get('skillName')?.value; let i = index" 
-                        (removed)="removeSkill(i)">
+                        (removed)="removeSkill(i)"
+                        class="fade-line">
                         {{ skill }}
-                        <button matChipRemove>
+                        <button matChipRemove class="fade-line">
                             <mat-icon>cancel</mat-icon>
                         </button>
                     </mat-chip-row>
                     <input placeholder="Add skill..." 
+                           class="fade-line"
                            [matChipInputFor]="skillsChipList"
                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                            (matChipInputTokenEnd)="addSkill($event)" />
                 </mat-chip-grid>
             </div>
 
-            <mat-divider class="my-3"></mat-divider>
+            <mat-divider class="my-3 fade-line"></mat-divider>
 
             <!-- Work Experience Section -->
-            <div class="dynamic-section">
-                <div class="flex justify-between items-center mb-4">
+            <div class="dynamic-section fade-line">
+                <div class="flex justify-between items-center mb-4 fade-line" >
                     <h3 class="mat-subheading-2">Work Experience</h3>
                     <button mat-icon-button color="primary" type="button" (click)="addExperience()">
                         <mat-icon>add_circle_outline</mat-icon>
@@ -121,7 +123,7 @@
                     </button>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline" class="fade-line">
                             <mat-label>Job Title</mat-label>
                             <input matInput formControlName="jobTitle" placeholder="Job Title" />
                             <mat-error *ngIf="experience.get('jobTitle')?.hasError('required')">
@@ -132,7 +134,7 @@
                             </mat-error>
                         </mat-form-field>
 
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline" class="fade-line">
                             <mat-label>Company Name</mat-label>
                             <input matInput formControlName="companyName" placeholder="Company Name" />
                             <mat-error *ngIf="experience.get('companyName')?.hasError('required')">
@@ -143,7 +145,7 @@
                             </mat-error>
                         </mat-form-field>
 
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline" class="fade-line">
                             <mat-label>Location</mat-label>
                             <input matInput formControlName="location" placeholder="Location" />
                             <mat-error *ngIf="experience.get('location')?.hasError('maxlength')">
@@ -151,7 +153,7 @@
                             </mat-error>
                         </mat-form-field>
 
-                        <div class="grid grid-cols-2 gap-2">
+                        <div class="grid grid-cols-2 gap-2 fade-line">
                             <mat-form-field appearance="outline">
                                 <mat-label>Start Date</mat-label>
                                 <input matInput type="date" formControlName="startDate" />
@@ -167,7 +169,7 @@
                         </div>
                     </div>
 
-                    <mat-form-field appearance="outline" class="w-full">
+                    <mat-form-field appearance="outline" class="w-full fade-line">
                         <mat-label>Job Description</mat-label>
                         <textarea matInput formControlName="description" 
                                   placeholder="Job description and responsibilities..." 
@@ -181,11 +183,11 @@
             
               </div>
 
-            <mat-divider class="my-3"></mat-divider>
+            <mat-divider class="my-3 fade-line"></mat-divider>
 
             <!-- Education Section -->
-            <div class="dynamic-section">
-                <div class="flex justify-between items-center mb-4">
+            <div class="dynamic-section fade-line">
+                <div class="flex justify-between items-center mb-4 fade-line">
                     <h3 class="mat-subheading-2">Education</h3>
                     <button mat-icon-button color="primary" type="button" (click)="addEducation()">
                         <mat-icon>add_circle_outline</mat-icon>
@@ -199,7 +201,7 @@
                     </button>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline" class="fade-line">
                             <mat-label>Major/Field of Study</mat-label>
                             <input matInput formControlName="major" placeholder="Major" />
                             <mat-error *ngIf="education.get('major')?.hasError('required')">
@@ -210,7 +212,7 @@
                             </mat-error>
                         </mat-form-field>
 
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline" class="fade-line">
                             <mat-label>Faculty/Department</mat-label>
                             <input matInput formControlName="faculty" placeholder="Faculty" />
                             <mat-error *ngIf="education.get('faculty')?.hasError('required')">
@@ -221,7 +223,7 @@
                             </mat-error>
                         </mat-form-field>
 
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline" class="fade-line">
                             <mat-label>University/Institution</mat-label>
                             <input matInput formControlName="university" placeholder="University" />
                             <mat-error *ngIf="education.get('university')?.hasError('required')">
@@ -232,7 +234,7 @@
                             </mat-error>
                         </mat-form-field>
 
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline" class="fade-line">
                             <mat-label>Education Level</mat-label>
                             <mat-select formControlName="educationLevel">
                                 <mat-option *ngFor="let level of educationLevelOptions" [value]="level.value">
@@ -244,7 +246,7 @@
                             </mat-error>
                         </mat-form-field>
 
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline" class="fade-line">
                             <mat-label>Graduation Date</mat-label>
                             <input matInput type="date" formControlName="date" />
                             <mat-error *ngIf="education.get('date')?.hasError('required')">
@@ -252,7 +254,7 @@
                             </mat-error>
                         </mat-form-field>
 
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline" class="fade-line">
                             <mat-label>Location</mat-label>
                             <input matInput formControlName="location" placeholder="Location" />
                             <mat-error *ngIf="education.get('location')?.hasError('maxlength')">
@@ -260,7 +262,7 @@
                             </mat-error>
                         </mat-form-field>
 
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline" class="fade-line">
                             <mat-label>GPA (Optional)</mat-label>
                             <input matInput type="number" formControlName="GPA" 
                                    placeholder="GPA" min="0" max="4" step="0.01" />
@@ -272,16 +274,17 @@
                 </div> 
             </div>
 
-            <mat-divider class="my-3"></mat-divider>
+            <mat-divider class="my-3 fade-line"></mat-divider>
 
             <!-- Certificates Section -->
             <div class="dynamic-section mb-4">
-                <div class="flex justify-between items-center ">
+                <div class="flex justify-between items-center fade-line">
                     <h3 class="mat-subheading-2">Certificates</h3>
                 </div>
                 
-                <mat-chip-grid aria-label="Certificates" #certificatesChipList>
+                <mat-chip-grid aria-label="Certificates" #certificatesChipList class="fade-line">
                     <mat-chip-row 
+                        class="fade-line"
                         *ngFor="let cert of profileForm.get('certificateName')?.value; let i = index" 
                         (removed)="removeCertificate(i)">
                         {{ cert }}
@@ -289,23 +292,25 @@
                             <mat-icon>cancel</mat-icon>
                         </button>
                     </mat-chip-row>
-                    <input placeholder="Add certificate..." 
+                    <input placeholder="Add certificate..."
+                            class="fade-line" 
                            [matChipInputFor]="certificatesChipList"
                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                            (matChipInputTokenEnd)="addCertificate($event)" />
                 </mat-chip-grid>
             </div>
 
-            <mat-divider class="my-3"></mat-divider>
+            <mat-divider class="my-3 fade-line"></mat-divider>
 
             <!-- Interests Section -->
             <div class="dynamic-section mb-4">
-                <div class="flex justify-between items-center ">
+                <div class="flex justify-between items-center fade-line">
                     <h3 class="mat-subheading-2">Interests</h3>
                 </div>
                 
-                <mat-chip-grid aria-label="Interests" #interestsChipList>
+                <mat-chip-grid aria-label="Interests" #interestsChipList class="fade-line">
                     <mat-chip-row 
+                        class="fade-line"
                         *ngFor="let interest of profileForm.get('interestName')?.value; let i = index" 
                         (removed)="removeInterest(i)">
                         {{ interest }}
@@ -320,16 +325,17 @@
                 </mat-chip-grid>
             </div>
 
-            <mat-divider class="my-3"></mat-divider>
+            <mat-divider class="my-3 fade-line"></mat-divider>
 
             <!-- Trainings Section -->
             <div class="dynamic-section mb-4">
-                <div class="flex justify-between items-center ">
+                <div class="flex justify-between items-center fade-line">
                     <h3 class="mat-subheading-2">Trainings</h3>
                 </div>
                 
-                <mat-chip-grid aria-label="Trainings" #trainingsChipList>
+                <mat-chip-grid aria-label="Trainings" #trainingsChipList class="fade-line">
                     <mat-chip-row 
+                        class="fade-line"
                         *ngFor="let training of profileForm.get('trainingName')?.value; let i = index" 
                         (removed)="removeTraining(i)">
                         {{ training }}
@@ -345,7 +351,7 @@
             </div>
         </mat-card-content>
 
-        <mat-card-actions class="flex justify-center mt-6">
+        <mat-card-actions class="flex justify-center mt-6 fade-line">
             <button mat-raised-button 
                     color="primary" 
                     class="w-full md:w-auto" 

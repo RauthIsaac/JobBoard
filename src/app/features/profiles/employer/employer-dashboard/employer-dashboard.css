@@ -158,3 +158,68 @@
     color: #fff !important;
     font-weight: 600;
 }
+
+
+app-navbar-emp {
+  position: relative;
+  z-index: 2000; 
+}
+
+
+.dropdown-menu {
+  position: absolute !important;
+  z-index: 3000 !important;
+}
+
+
+/* Animation Keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* === Staggered Fade-in Animation === */
+@keyframes fadeInLine {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.fade-line {
+  opacity: 0;
+}
+
+.fade-line.visible {
+  animation: fadeInLine 0.6s ease-out forwards;
+}
+
+/* === Animation for Cards/Sections (staggered) === */
+@keyframes fadeInBlock {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-block {
+  opacity: 0;
+}
+
+.fade-block.visible {
+  animation: fadeInBlock 0.8s ease-out forwards;
+}

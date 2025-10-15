@@ -45,6 +45,17 @@ export class JobView implements OnInit, OnChanges {
     } else {
       console.log('Not checking applied status - User type:', this.userType(), 'Job ID:', this.job?.id);
     }
+
+
+    // ✅ Dynamic stagger animation
+    setTimeout(() => {
+      const lines = document.querySelectorAll<HTMLElement>('.fade-line');
+      lines.forEach((line, index) => {
+        line.style.animationDelay = `${index * 0.15}s`;
+        line.classList.add('visible');
+      });
+    }, 600);
+    
   }
 
   ngOnChanges(changes: SimpleChanges): void {
