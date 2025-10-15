@@ -319,3 +319,24 @@ h6.text-muted i.text-success {
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
+
+
+/* === Staggered Fade-in Animation === */
+@keyframes fadeInLine {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.fade-line {
+  opacity: 0;
+}
+
+.fade-line.visible {
+  animation: fadeInLine 0.6s ease-out forwards;
+}

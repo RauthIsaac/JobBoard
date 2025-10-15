@@ -77,7 +77,16 @@ export class EditSeekerProfile implements OnInit {
   ngOnInit(): void {
     this.loadSeekerProfile();
 
-    window.scrollTo(0, 0);
+    // ✅ Dynamic stagger animation
+    setTimeout(() => {
+      const lines = document.querySelectorAll<HTMLElement>('.fade-line');
+      lines.forEach((line, index) => {
+        line.style.animationDelay = `${index * 0.15}s`;
+        line.classList.add('visible');
+      });
+    }, 600);
+
+    window.scrollTo(0, 0);  
   }
 
   loadSeekerProfile(): void {

@@ -52,6 +52,36 @@ export class Home implements OnInit {
     this.jobService.GetAllJobs();
     this.loadCategories();
     this.isUserloggin();
+
+    // Initialize Intersection Observer for scroll animations
+    const elements = document.querySelectorAll('.animate-on-scroll');
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target); // Unobserve to improve performance
+        }
+      });
+    }, {
+      threshold: 0.1, // Trigger when 10% of the element is visible
+      rootMargin: '0px 0px -50px 0px' // Trigger 50px before entering viewport
+    });
+
+    elements.forEach(element => {
+      observer.observe(element);
+    });
+
+        
+
+    // ✅ Dynamic stagger animation
+    setTimeout(() => {
+      const lines = document.querySelectorAll<HTMLElement>('.fade-line');
+      lines.forEach((line, index) => {
+        line.style.animationDelay = `${index * 0.15}s`;
+        line.classList.add('visible');
+      });
+    }, 600);
+    
   }
 
   private loadCategories(): void {

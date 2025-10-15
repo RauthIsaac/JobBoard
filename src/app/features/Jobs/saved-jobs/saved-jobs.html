@@ -3,11 +3,11 @@
   <div class="page-header my-5">
     <div class="row align-items-center">
       <div class="col-md-8">
-        <h2 class="page-title mb-0">
+        <h2 class="page-title mb-0 fade-line">
           <i class="bi bi-bookmark-check me-2"></i> Saved Jobs
           <span class="badge bg-primary ms-2" *ngIf="getTotalCount() > 0">{{ getTotalCount() }}</span>
         </h2>
-        <p class="text-muted mt-2" *ngIf="getTotalCount() > 0">
+        <p class="text-muted mt-2 fade-line" *ngIf="getTotalCount() > 0">
           You have {{ getTotalCount() }} saved job{{ getTotalCount() > 1 ? 's' : '' }}
         </p>
       </div>
@@ -15,7 +15,7 @@
   </div>
 
   <!-- Search and Filter Controls -->
-  <div class="filters-section mb-4" *ngIf="getTotalCount() > 0">
+  <div class="filters-section mb-4 fade-line" *ngIf="getTotalCount() > 0">
     <div class="row g-3">
       <label class="form-label text-muted large mb-1">Get your saved job</label>
       <!-- Search Input -->
@@ -84,10 +84,8 @@
   <div *ngIf="!isLoading() && !error() && filteredJobsList().length > 0" class="jobs-container my-3">
     <div class="row g-4">
       <div *ngFor="let job of filteredJobsList(); trackBy: trackByJobId" class="col-12">  
-        <div class="job-card-wrapper">
-           <app-job-saved-view
-             [job]="job" 
-             class="w-100"></app-job-saved-view> 
+        <div class="job-card-wrapper animate-on-scroll">
+          <app-job-saved-view [job]="job" class="w-100"></app-job-saved-view> 
         </div>
       </div>
     </div>

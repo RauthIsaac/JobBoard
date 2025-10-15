@@ -1,58 +1,58 @@
-<div class="job-container h-100" *ngIf="job">
+<div class="job-container h-100 fade-line" *ngIf="job">
     <div class="row">
-        <div class="comp-logo col-1">
+        <div class="comp-logo col-1 fade-line">
             <i class="bi bi-buildings"></i>
         </div>
         <div class="job-data col-10">
-            <h3>{{job.title}}</h3>
-            <span>{{job.companyName}}</span>
+            <h3 class="fade-line">{{job.title}}</h3>
+            <span class="fade-line">{{job.companyName}}</span>
             <div class="my-2">
                 <div>
-                    <div class="d-flex my-1">
+                    <div class="d-flex my-1 fade-line">
                         <i class="bi bi-geo-alt me-2"></i>
                         <span>{{job.location}}</span>
                     </div>
-                    <div class="d-flex my-1">
+                    <div class="d-flex my-1 fade-line">
                         <i class="bi bi-clock me-2"></i>
                         <span>Posted At : {{job.postedDate | date:'MMM dd, yyyy'}}</span>
                     </div>
                 </div>
-                <div class="my-2 ms-1">
+                <div class="my-2 ms-1 fade-line">
                     <span>{{ job.salary | currency:'USD':'symbol' }}</span>
                 </div>
 
                 <div class="row my-2">
-                    <div class="workplace-type">
+                    <div class="workplace-type fade-line">
                         <span> {{job.workplaceType}} </span>
                     </div>
-                    <div class="job-type col-lg-3">
+                    <div class="job-type col-lg-3 fade-line">
                         <span> {{job.jobType}} </span>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-1" *ngIf="!isAdmin() && !isEmployer()">
+        <div class="col-1 fade-line" *ngIf="!isAdmin() && !isEmployer()">
             <button class="save-job-btn" (click)="AddToSaved()" [class.saved]="isSavedFlag()">
                 <i class="bi" [class.bi-bookmark-check]="isSavedFlag()" [class.bi-bookmark]="!isSavedFlag()"></i>
             </button>
         </div>
     </div>
 
-    <div class="my-3">
+    <div class="my-3 fade-line">
         {{getSlicedDescription()}}
     </div>
 
     <div class="row my-3">
         @for(skill of job.skills; track $index){
-            <div class="skill">{{skill}}</div>
+            <div class="skill fade-line">{{skill}}</div>
         }  
         <!-- <div class="more">+1 more</div> -->
     </div>
 
-    <hr>
+    <hr class="fade-line">
 
     <div class="row">
-        <div class="col-lg-8 col-md-12 col-sm-12 mb-md-2 mb-sm-2">
+        <div class="col-lg-8 col-md-12 col-sm-12 mb-md-2 mb-sm-2 fade-line">
             <button class="view-dtl-btn" [routerLink]="['/jobDtl',job.id]">
                 <i class="bi bi-box-arrow-up-right me-2"></i> View Details
             </button>
@@ -61,7 +61,7 @@
             
             <!-- Show Apply Now button if not applied -->
             <button 
-                class="apply-now-btn my-2  form-control" 
+                class="apply-now-btn my-2 fade-line" 
                 [routerLink]="['/seekerApp', job.id, 'personal-info']"
                 *ngIf="!isJobApplied() && !isCheckingApplied()">
                 Apply Now
@@ -69,7 +69,7 @@
             
             <!-- Show Already Applied button if applied -->
             <button 
-                class="already-applied-btn my-2 form-control" 
+                class="already-applied-btn my-2 fade-line" 
                 disabled
                 *ngIf="isJobApplied() && !isCheckingApplied()">
                 <i class="bi bi-check-circle me-2"></i>
@@ -78,7 +78,7 @@
 
             <!-- Show loading state -->
             <button 
-                class="apply-now-btn my-2 form-control" 
+                class="apply-now-btn my-2 fade-line" 
                 disabled
                 *ngIf="isCheckingApplied()">
                 <i class="bi bi-arrow-clockwise me-2"></i>

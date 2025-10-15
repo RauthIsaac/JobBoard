@@ -28,24 +28,38 @@ export class AppView implements OnInit{
       const id = +params['id'];
       if (id && id > 0) {
         this.appId.set(id);
-        console.log(this.appId());
         this.loadAppDetails();
       }
     });
   }
 
-  loadAppDetails(){
+  loadAppDetails() {
     this.appSevice.getAppDetailsByAppbId(this.appId()).subscribe({
       next: (appDetails: any) => {
-        console.log('App Details From SQL', appDetails);
         this.appDetails.set(appDetails);
-        console.log('Job Details : ',this.appDetails());      
-      },
-      error: (err:any) => {
-        console.error('Error Fetching App Details : ',err);
-      }
 
-    })
+        // ✅ Animation for fade-line (inside cards)
+        setTimeout(() => {
+          const lines = document.querySelectorAll<HTMLElement>('.fade-line');
+          lines.forEach((line, index) => {
+            line.style.animationDelay = `${index * 0.1}s`;
+            line.classList.add('visible');
+          });
+        }, 200);
+
+        // ✅ Animation for fade-block (whole cards one by one)
+        setTimeout(() => {
+          const blocks = document.querySelectorAll<HTMLElement>('.fade-block');
+          blocks.forEach((block, index) => {
+            block.style.animationDelay = `${index * 0.25}s`;
+            block.classList.add('visible');
+          });
+        }, 400);
+      },
+      error: (err: any) => {
+        console.error('Error Fetching App Details : ', err);
+      }
+    });
   }
 
 

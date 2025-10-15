@@ -48,6 +48,17 @@ export class JobExploreView implements OnInit, OnChanges {
       console.log('Checking if job is applied for job ID:', this.job.id);
       this.checkIfJobApplied();
     } 
+  
+
+    // ✅ Dynamic stagger animation
+    setTimeout(() => {
+      const lines = document.querySelectorAll<HTMLElement>('.fade-line');
+      lines.forEach((line, index) => {
+        line.style.animationDelay = `${index * 0.15}s`;
+        line.classList.add('visible');
+      });
+    }, 600);
+    
   }
 
   ngOnChanges(changes: SimpleChanges): void {

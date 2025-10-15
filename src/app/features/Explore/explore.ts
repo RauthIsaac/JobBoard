@@ -178,6 +178,24 @@ export class Explore implements OnInit, OnDestroy {
     });
 
     this.subscriptions.push(searchSub, locationSearchSub, sortingSub, pageSizeSub, filterSub);
+
+    // Initialize Intersection Observer for scroll animations
+    const elements = document.querySelectorAll('.animate-on-scroll');
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target); // Unobserve to improve performance
+        }
+      });
+    }, {
+      threshold: 0.1, // Trigger when 10% of the element is visible
+      rootMargin: '0px 0px -50px 0px' // Trigger 50px before entering viewport
+    });
+
+    elements.forEach(element => {
+      observer.observe(element);
+    });
   }
 
   ngOnDestroy(): void {
@@ -242,17 +260,19 @@ export class Explore implements OnInit, OnDestroy {
       const locationValue = params['location'];
       this.locationSearchControl.setValue(locationValue, { emitEvent: false });
       this.locationSearchTerm.set(locationValue);
-      console.log('Setting location search term:', locationValue);
+      console.log('Setting location term:', locationValue);
     }
-
-    // Handle filter parameters
-    const filterUpdates: any = {};
     
+    // Handle categoryId parameter
     if (params['categoryId']) {
-      filterUpdates.categoryId = params['categoryId'];
-      console.log('Setting categoryId:', params['categoryId']);
+      const categoryIdValue = params['categoryId'];
+      this.filtersForm.patchValue({ categoryId: categoryIdValue }, { emitEvent: false });
+      console.log('Setting categoryId:', categoryIdValue);
     }
     
+    // Handle other filters
+    const filterUpdates: any = {};
+
     if (params['jobType']) {
       filterUpdates.jobType = params['jobType'];
       console.log('Setting jobType:', params['jobType']);

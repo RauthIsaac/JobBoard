@@ -3,7 +3,7 @@
     <div class="col-lg-10 mx-auto">
       <div class="card shadow">
         <div class="card-header">
-          <h3 class="mb-0">Edit Job</h3>
+          <h3 class="mb-0 fade-line">Edit Job</h3>
         </div>
         <div class="card-body">
           <!-- Loading State -->
@@ -23,13 +23,13 @@
 
           <form *ngIf="!isLoading()" [formGroup]="jobForm" (ngSubmit)="onSubmit()">
             <!-- Basic Job Information -->
-            <h4 class="mb-3">Basic Information</h4>
+            <h4 class="mb-3 fade-line">Basic Information</h4>
             <div class="row mb-3">
               <div class="col-md-6">
-                <label for="title" class="form-label">Job Title*</label>
+                <label for="title" class="form-label fade-line">Job Title*</label>
                 <input 
                   type="text" 
-                  class="form-control" 
+                  class="form-control fade-line" 
                   id="title" 
                   formControlName="title"
                   [class.is-invalid]="jobForm.get('title')?.invalid && jobForm.get('title')?.touched">
@@ -38,10 +38,10 @@
                 </div>
               </div>
               <div class="col-md-6">
-                <label for="salary" class="form-label">Salary*</label>
+                <label for="salary" class="form-label fade-line">Salary*</label>
                 <input 
                   type="number" 
-                  class="form-control" 
+                  class="form-control fade-line" 
                   id="salary" 
                   formControlName="salary"
                   [class.is-invalid]="jobForm.get('salary')?.invalid && jobForm.get('salary')?.touched">
@@ -53,9 +53,9 @@
 
             <div class="row mb-3">
               <div class="col-md-4">
-                <label for="jobType" class="form-label">Job Type*</label>
+                <label for="jobType" class="form-label fade-line">Job Type*</label>
                 <select 
-                  class="form-select" 
+                  class="form-select fade-line" 
                   id="jobType" 
                   formControlName="jobType"
                   [class.is-invalid]="jobForm.get('jobType')?.invalid && jobForm.get('jobType')?.touched">
@@ -67,9 +67,9 @@
                 </div>
               </div>
               <div class="col-md-4">
-                <label for="workplaceType" class="form-label">Workplace Type*</label>
+                <label for="workplaceType" class="form-label fade-line">Workplace Type*</label>
                 <select 
-                  class="form-select" 
+                  class="form-select fade-line" 
                   id="workplaceType" 
                   formControlName="workplaceType"
                   [class.is-invalid]="jobForm.get('workplaceType')?.invalid && jobForm.get('workplaceType')?.touched">
@@ -81,10 +81,10 @@
                 </div>
               </div>
               <div class="col-md-4">
-                <label for="expireDate" class="form-label">Application Deadline*</label>
+                <label for="expireDate" class="form-label fade-line">Application Deadline*</label>
                 <input 
                   type="date" 
-                  class="form-control" 
+                  class="form-control fade-line" 
                   id="expireDate" 
                   formControlName="expireDate"
                   [class.is-invalid]="jobForm.get('expireDate')?.invalid && jobForm.get('expireDate')?.touched">
@@ -95,9 +95,9 @@
             </div>
 
             <div class="mb-3">
-              <label for="description" class="form-label">Job Description*</label>
+              <label for="description" class="form-label fade-line">Job Description*</label>
               <textarea 
-                class="form-control" 
+                class="form-control fade-line" 
                 id="description" 
                 formControlName="description" 
                 rows="5"
@@ -108,12 +108,12 @@
             </div>
 
             <!-- Requirements Section -->
-            <h4 class="mb-3 mt-4">Requirements</h4>
+            <h4 class="mb-3 mt-4 fade-line">Requirements</h4>
             <div class="row mb-3">
               <div class="col-md-6">
-                <label for="experienceLevel" class="form-label">Experience Level*</label>
+                <label for="experienceLevel" class="form-label fade-line">Experience Level*</label>
                 <select 
-                  class="form-select" 
+                  class="form-select fade-line" 
                   id="experienceLevel" 
                   formControlName="experienceLevel"
                   [class.is-invalid]="jobForm.get('experienceLevel')?.invalid && jobForm.get('experienceLevel')?.touched">
@@ -125,9 +125,9 @@
                 </div>
               </div>
               <div class="col-md-6">
-                <label for="educationLevel" class="form-label">Education Level*</label>
+                <label for="educationLevel" class="form-label fade-line">Education Level*</label>
                 <select 
-                  class="form-select" 
+                  class="form-select fade-line" 
                   id="educationLevel" 
                   formControlName="educationLevel"
                   [class.is-invalid]="jobForm.get('educationLevel')?.invalid && jobForm.get('educationLevel')?.touched">
@@ -141,33 +141,33 @@
             </div>
 
             <div class="mb-3">
-              <label for="requirements" class="form-label">Key Requirements</label>
-              <textarea class="form-control" id="requirements" formControlName="requirements" rows="4"></textarea>
+              <label for="requirements" class="form-label fade-line">Key Requirements</label>
+              <textarea class="form-control fade-line" id="requirements" formControlName="requirements" rows="4"></textarea>
             </div>
 
             <div class="mb-3">
-              <label for="responsabilities" class="form-label">Key Responsibilities</label>
-              <textarea class="form-control" id="responsabilities" formControlName="responsabilities" rows="4"></textarea>
+              <label for="responsabilities" class="form-label fade-line">Key Responsibilities</label>
+              <textarea class="form-control fade-line" id="responsabilities" formControlName="responsabilities" rows="4"></textarea>
             </div>
 
             <div class="mb-3">
-              <label for="benefits" class="form-label">Benefits</label>
-              <textarea class="form-control" id="benefits" formControlName="benefits" rows="4"></textarea>
+              <label for="benefits" class="form-label fade-line">Benefits</label>
+              <textarea class="form-control fade-line" id="benefits" formControlName="benefits" rows="4"></textarea>
             </div>
 
             <!-- Skills Section -->
             <div class="d-flex justify-content-between align-items-center">
-              <h5 class="mb-3">Job Skills</h5>
+              <h5 class="mb-3 fade-line">Job Skills</h5>
             </div>
             @if (selectedSkills().length > 0) {
               <div class="mb-3">
-                <h6 class="text-muted mb-2">
+                <h6 class="text-muted mb-2 fade-line">
                   <i class="bi bi-check-circle-fill text-success me-1"></i>
                   Selected Skills ({{ selectedSkills().length }})
                 </h6>
                 <div class="selected-items">
                   @for(skill of selectedSkills(); track skill.id) {
-                    <div class="selected-item">
+                    <div class="selected-item fade-line">
                       <span>{{ skill.skillName }}</span>
                       <button type="button" class="btn-remove-item" (click)="removeSelectedSkill(skill.id)">
                         <i class="bi bi-x"></i>
@@ -178,7 +178,7 @@
               </div>
             }
             <div class="mb-3">
-              <div class="search-container position-relative">
+              <div class="search-container position-relative fade-line">
                 <input 
                   type="text" 
                   class="form-control search-input" 
@@ -211,17 +211,17 @@
 
             <!-- Categories Section -->
             <div class="d-flex justify-content-between align-items-center">
-              <h5 class="mb-3">Job Categories</h5>
+              <h5 class="mb-3 fade-line">Job Categories</h5>
             </div>
             @if (selectedCategories().length > 0) {
               <div class="mb-3">
-                <h6 class="text-muted mb-2">
+                <h6 class="text-muted mb-2 fade-line">
                   <i class="bi bi-check-circle-fill text-success me-1"></i>
                   Selected Categories ({{ selectedCategories().length }})
                 </h6>
                 <div class="selected-items">
                   @for(category of selectedCategories(); track category.id) {
-                    <div class="selected-item">
+                    <div class="selected-item fade-line">
                       <span>{{ category.categoryName }}</span>
                       <button type="button" class="btn-remove-item" (click)="removeSelectedCategory(category.id)">
                         <i class="bi bi-x"></i>
@@ -232,7 +232,7 @@
               </div>
             }
             <div class="mb-3">
-              <div class="search-container position-relative">
+              <div class="search-container position-relative fade-line">
                 <input 
                   type="text" 
                   class="form-control search-input" 
@@ -265,11 +265,11 @@
 
             <!-- Buttons -->
             <div class="d-flex justify-content-between mt-4">
-              <button type="button" class="btn btn-outline-secondary" (click)="onReset()" [disabled]="isSubmitting()">
+              <button type="button" class="btn btn-outline-secondary fade-line" (click)="onReset()" [disabled]="isSubmitting()">
                 <i class="bi bi-arrow-clockwise me-1"></i>
                 Reset
               </button>
-              <button type="submit" class="post-btn btn btn-primary" [disabled]="isSubmitting() || jobForm.invalid">
+              <button type="submit" class="post-btn btn btn-primary fade-line" [disabled]="isSubmitting() || jobForm.invalid">
                 <span *ngIf="isSubmitting()">
                   <span class="spinner-border spinner-border-sm me-2" role="status"></span>
                   Saving...

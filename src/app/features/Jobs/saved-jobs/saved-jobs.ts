@@ -49,6 +49,37 @@ export class SavedJobs implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadSavedJobs();
+
+
+  setTimeout(() => {
+      const elements = document.querySelectorAll('.animate-on-scroll');
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      });
+
+      elements.forEach(element => observer.observe(element));
+    }, 800);
+
+
+        
+
+    // ✅ Dynamic stagger animation
+    setTimeout(() => {
+      const lines = document.querySelectorAll<HTMLElement>('.fade-line');
+      lines.forEach((line, index) => {
+        line.style.animationDelay = `${index * 0.15}s`;
+        line.classList.add('visible');
+      });
+    }, 600);
+
   }
 
   ngOnDestroy(): void {

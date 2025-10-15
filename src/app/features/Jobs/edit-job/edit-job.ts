@@ -137,6 +137,17 @@ export class EditJob implements OnInit {
     this.loadSkillsAndCategories().then(() => {
       this.loadJobData();
     });
+
+
+    // ✅ Dynamic stagger animation
+    setTimeout(() => {
+      const lines = document.querySelectorAll<HTMLElement>('.fade-line');
+      lines.forEach((line, index) => {
+        line.style.animationDelay = `${index * 0.15}s`;
+        line.classList.add('visible');
+      });
+    }, 600);
+
   }
 
   /*------------------------- Initialize Form -------------------------*/

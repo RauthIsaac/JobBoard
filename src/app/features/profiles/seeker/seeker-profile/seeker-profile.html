@@ -1,5 +1,5 @@
 <div class="container">
-  <mat-card class="profile-card header-card">
+  <mat-card class="profile-card header-card animate-on-scroll fade-line">
     <div class="header-content row">
       <!-- Profile Image Section with Upload/Delete functionality -->
       <div class="profile-image-container col-lg-2 col-md-4 col-sm-12">
@@ -7,7 +7,7 @@
           <!-- Updated image src to use the proper method -->
           <img [src]="getProfileImageUrl()" 
                [alt]="seekerData().name" 
-               class="profile-pic mx-auto"
+               class="profile-pic mx-auto fade-line"
                (error)="onImageError($event)">
           
           <!-- Image overlay for actions -->
@@ -57,18 +57,18 @@
       </div>
 
       <div class="info-details col-lg-5 col-md-8 col-sm-12">
-        <h2>{{seekerData().name}}</h2>
-        <p class="role">{{seekerData().title}}</p>
-        <p class="contact-info"><i class="bi bi-geo-alt me-2"></i> {{seekerData().address}}</p>
-        <p class="contact-info"><i class="bi bi-envelope me-2"></i> {{seekerData().email}}</p>
-        <p class="contact-info"><i class="bi bi-telephone me-2"></i> {{seekerData().phoneNumber}}</p>
+        <h2 class="fade-line">{{seekerData().name}}</h2>
+        <p class="role fade-line fst-italic">{{seekerData().title}}</p>
+        <p class="contact-info fade-line"><i class="bi bi-geo-alt me-2"></i> {{seekerData().address}}</p>
+        <p class="contact-info fade-line"><i class="bi bi-envelope me-2"></i> {{seekerData().email}}</p>
+        <p class="contact-info fade-line"><i class="bi bi-telephone me-2"></i> {{seekerData().phoneNumber}}</p>
       </div>
 
       <div class="action-buttons col-lg-3 col-md-12 col-sm-12">
-        <button mat-button routerLink="/editSeeker" class="mt-2"><mat-icon class="mx-1">edit</mat-icon> Edit Profile</button>
+        <button mat-button routerLink="/editSeeker" class="mt-2 fade-line"><mat-icon class="mx-1">edit</mat-icon> Edit Profile</button>
         
         <!-- Resume Upload Section -->
-        <div class="resume-section">
+        <div class="resume-section fade-line">
           <!-- Hidden file input -->
           <input #resumeFileInput 
                  type="file" 
@@ -115,98 +115,98 @@
   </mat-card>
 
   <div class="row">
-    <div class="left-section col-lg-8 col-md-12 col-sm-12">
+    <div class="left-section col-lg-8 col-md-12 col-sm-12 animate-on-scroll fade-line">
       <mat-card class="profile-card summary-card">
-        <h3>Professional Summary</h3>
-        <p>{{seekerData().summary}}</p>
+        <h3 class="fade-line">Professional Summary</h3>
+        <p class="fade-line">{{seekerData().summary}}</p>
       </mat-card>
 
       <mat-card class="profile-card experience-card">
-        <h3>Work Experience</h3>
+        <h3 class="fade-line">Work Experience</h3>
         <div class="experience-item p-3 my-3" *ngFor="let exp of seekerData().seekerExperiences; trackBy: trackByIndex">
           <div class="job-header">
             <div>
-              <h4>{{exp.jobTitle}}</h4>
-              <p class="company">{{exp.companyName}}</p>
-              <p class="location" *ngIf="exp.location"><i class="bi bi-geo-alt me-2"></i> {{exp.location}}</p>
+              <h4 class="fade-line">{{exp.jobTitle}}</h4>
+              <p class="company fade-line">{{exp.companyName}}</p>
+              <p class="location fade-line" *ngIf="exp.location"><i class="bi bi-geo-alt me-2"></i> {{exp.location}}</p>
             </div>
-            <span class="dates">{{exp.startDate | date:'MMM yyyy'}} - {{exp.endDate ? (exp.endDate | date:'MMM yyyy') : 'Present'}}</span>
+            <span class="dates fade-line">{{exp.startDate | date:'MMM yyyy'}} - {{exp.endDate ? (exp.endDate | date:'MMM yyyy') : 'Present'}}</span>
           </div>
           <div class="job-description" *ngIf="exp.description">
-            <p>{{exp.description}}</p>
+            <p class="fade-line">{{exp.description}}</p>
           </div>
         </div>
         
         <!-- Show message if no experience -->
         <div *ngIf="!seekerData().seekerExperiences || seekerData().seekerExperiences.length === 0" class="no-data-message">
-          <p>No work experience added yet.</p>
+          <p class="fade-line">No work experience added yet.</p>
         </div>
       </mat-card>
 
       <mat-card class="profile-card skills-card">
-        <h3>Skills & Technologies</h3>
+        <h3 class="fade-line">Skills & Technologies</h3>
         <div class="tags-container my-3">
-          <span class="tech-chip" *ngFor="let skill of seekerData().skillName; trackBy: trackByIndex">{{skill}}</span>
+          <span class="tech-chip fade-line" *ngFor="let skill of seekerData().skillName; trackBy: trackByIndex">{{skill}}</span>
         </div>
         <div *ngIf="!seekerData().skillName || seekerData().skillName.length === 0" class="no-data-message">
-          <p>No skills added yet.</p>
+          <p class="fade-line">No skills added yet.</p>
         </div>
       </mat-card>
 
       <mat-card class="profile-card certifications-card">
-        <h3><mat-icon>school</mat-icon> Education</h3>
+        <h3 class="fade-line"><mat-icon>school</mat-icon> Education</h3>
         <div class="experience-item p-3 my-3" *ngFor="let edu of seekerData().seekerEducations; trackBy: trackByIndex">
           <div class="job-header">
             <div>
-              <h5>{{edu.educationLevel}} of {{edu.major}} in {{edu.faculty}}</h5>
-              <p>{{edu.university}}</p>
-              <p *ngIf="edu.gpa"><strong>GPA: </strong> {{edu.gpa}}/4.0 </p>
+              <h5 class="fade-line">{{edu.educationLevel}} of {{edu.major}} in {{edu.faculty}}</h5>
+              <p class="fade-line">{{edu.university}}</p>
+              <p *ngIf="edu.gpa"><strong class="fade-line">GPA: </strong> {{edu.gpa}}/4.0 </p>
             </div>
-            <p>{{edu.date | date:'MMM yyyy'}} - {{edu.location}}</p>
+            <p class="fade-line">{{edu.date | date:'MMM yyyy'}} - {{edu.location}}</p>
           </div>
         </div>
         
         <!-- Show message if no education -->
         <div *ngIf="!seekerData().seekerEducations || seekerData().seekerEducations.length === 0" class="no-data-message">
-          <p>No education added yet.</p>
+          <p class="fade-line">No education added yet.</p>
         </div>
 
-        <h3 class="my-4"><mat-icon>verified</mat-icon> Certifications</h3>
+        <h3 class="my-4 fade-line"><mat-icon>verified</mat-icon> Certifications</h3>
         <div class="certification-item">
           <div class="info">
-            <h5 *ngFor="let cert of seekerData().certificateName; trackBy: trackByIndex">{{cert}}</h5>
+            <h5 class="fade-line" *ngFor="let cert of seekerData().certificateName; trackBy: trackByIndex">{{cert}}</h5>
           </div>
         </div>
         <div *ngIf="!seekerData().certificateName || seekerData().certificateName.length === 0" class="no-data-message">
-          <p>No certificates added yet.</p>
+          <p class="fade-line">No certificates added yet.</p>
         </div>
         <mat-divider class="my-3"></mat-divider>
       </mat-card>
 
       <mat-card class="profile-card training-card">
-        <h3>Additional Training</h3>
+        <h3 class="fade-line">Additional Training</h3>
         <ul *ngIf="seekerData().trainingName && seekerData().trainingName.length > 0">
-          <li *ngFor="let training of seekerData().trainingName; trackBy: trackByIndex">{{training}}</li>
+          <li class="fade-line" *ngFor="let training of seekerData().trainingName; trackBy: trackByIndex">{{training}}</li>
         </ul>
         <div *ngIf="!seekerData().trainingName || seekerData().trainingName.length === 0" class="no-data-message">
-          <p>No training added yet.</p>
+          <p class="fade-line">No training added yet.</p>
         </div>
       </mat-card>
     </div>
 
-    <div class="right-section col-lg-4 col-md-12 col-sm-12">
+    <div class="right-section col-lg-4 col-md-12 col-sm-12 animate-on-scroll fade-line">
       <mat-card class="sidebar-card connect-card">
-        <h3>Connect</h3>
+        <h3 class="fade-line">Connect</h3>
         <div class=" p-2">
-          <div class="mt-2 d-flex">
+          <div class="mt-2 d-flex fade-line">
             <i class="bi bi-linkedin me-3 fs-4"></i>
             <a href="https://www.linkedin.com/" style="text-decoration: none; font-size: large; margin-top: 3px; color: black;">LinkedIn</a>
           </div>
-          <div class="mt-2 d-flex">
+          <div class="mt-2 d-flex fade-line">
             <i class="bi bi-github me-3 fs-4"></i> 
             <a href="https://github.com/" style="text-decoration: none; font-size: large; margin-top: 3px; color: black;">GitHub</a>
           </div>
-          <div class="mt-2 d-flex">
+          <div class="mt-2 d-flex fade-line">
             <i class="bi bi-link-45deg me-3 fs-4"></i> 
             <a routerLink="/seekerProfile" style="text-decoration: none; font-size: large; margin-top: 3px; color: black;">Portfolio</a>
           </div>
@@ -214,12 +214,12 @@
       </mat-card>
 
       <mat-card class="sidebar-card interests-card">
-        <h3>Professional Interests</h3>
+        <h3 class="fade-line">Professional Interests</h3>
         <div class="tags-container my-3">
-          <span class="tech-chip" *ngFor="let interest of seekerData().interestName; trackBy: trackByIndex">{{interest}}</span>
+          <span class="tech-chip fade-line" *ngFor="let interest of seekerData().interestName; trackBy: trackByIndex">{{interest}}</span>
         </div>
         <div *ngIf="!seekerData().interestName || seekerData().interestName.length === 0" class="no-data-message">
-          <p>No interests added yet.</p>
+          <p class="fade-line">No interests added yet.</p>
         </div>
       </mat-card>
     </div>

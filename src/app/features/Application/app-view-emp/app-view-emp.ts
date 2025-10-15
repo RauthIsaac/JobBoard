@@ -60,20 +60,20 @@ export class AppViewEmp implements OnInit {
         this.appId.set(id);
       }
     });
+
     this.loadEmployerApplications();
   }
 
+
   private loadEmployerApplications(): void {
     this.isLoading.set(true);
-    
+
     const params: any = {};
 
-    // Add search parameter
     if (this.searchTerm().trim()) {
       params.searchValue = this.searchTerm().trim();
     }
 
-    // Add status filter
     if (this.selectedStatus()) {
       params.status = this.selectedStatus();
     }
@@ -82,6 +82,22 @@ export class AppViewEmp implements OnInit {
       next: (apps: IemployerApplications[]) => {
         this.applicationsList.set(apps);
         this.isLoading.set(false);
+
+        setTimeout(() => {
+          const blocks = document.querySelectorAll<HTMLElement>('.fade-block');
+          blocks.forEach((block, index) => {
+            block.style.animationDelay = `${index * 0.25}s`;
+            block.classList.add('visible');
+          });
+        }, 200);
+
+        setTimeout(() => {
+          const lines = document.querySelectorAll<HTMLElement>('.fade-line');
+          lines.forEach((line, index) => {
+            line.style.animationDelay = `${index * 0.1}s`;
+            line.classList.add('visible');
+          });
+        }, 300);
       },
       error: (err) => {
         console.error('Error Fetching Data', err);
@@ -89,6 +105,7 @@ export class AppViewEmp implements OnInit {
       }
     });
   }
+
 
   onSearchInput(event: Event): void {
     const input = event.target as HTMLInputElement;

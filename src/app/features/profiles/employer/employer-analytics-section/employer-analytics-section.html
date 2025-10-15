@@ -6,77 +6,77 @@
       <div class="col-md-6">
         <!-- Metrics Row -->
         <div class="row g-4">
-          <div class="col-md-6">
+          <div class="col-md-6 fade-line">
             <div class="metric-card">
                 <div class="d-flex justify-content-between mb-3">
-                    <div class="d-flex ">
+                    <div class="d-flex fade-line">
                         <i class="bi bi-graph-up me-2"></i>
                         <h6>Application Rate</h6>
                     </div>
                     <div>
-                        <span class="badge bg-success ms-2">{{employerAnalytics().applicationRateChange}}%</span>
+                        <span class="badge bg-success ms-2 fade-line">{{employerAnalytics().applicationRateChange}}%</span>
                     </div>
                 </div>
-                <h2>{{employerAnalytics().applicationRate}} % <small>vs last month</small></h2>
+                <h2 class="fade-line">{{employerAnalytics().applicationRate}} % <small>vs last month</small></h2>
             </div>
           </div> 
 
-          <div class="col-md-6">
+          <div class="col-md-6 fade-line">
             <div class="metric-card">
                 <div class="d-flex justify-content-between mb-3">
-                    <div class="d-flex ">
+                    <div class="d-flex fade-line">
                         <i class="bi bi-eye me-2"></i>
                         <h6>Profile Views</h6>
                     </div>
                     <div>
-                        <span class="badge bg-success ms-2">{{employerAnalytics().profileViewsChange}}</span>
+                        <span class="badge bg-success ms-2 fade-line">{{employerAnalytics().profileViewsChange}}</span>
                     </div>
                 </div>
-                <h2>{{employerAnalytics().profileViews}} <small>this month</small></h2>
+                <h2 class="fade-line">{{employerAnalytics().profileViews}} <small>this month</small></h2>
             </div>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-6 fade-line">
             <div class="metric-card">
-                <div class="d-flex justify-content-between mb-3">
+                <div class="d-flex justify-content-between mb-3 fade-line">
                     <div class="d-flex ">
                         <i class="bi bi-clock-history me-2"></i>
                         <h6>Time to Hire</h6>
                     </div>
                 </div>
-                <h2>{{employerAnalytics().timeToHire}} days <small>average</small></h2>
+                <h2 class="fade-line">{{employerAnalytics().timeToHire}} days <small>average</small></h2>
             </div>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-6 fade-line">
             <div class="metric-card">
-                <div class="d-flex justify-content-between mb-3">
-                    <div class="d-flex ">
+                <div class="d-flex justify-content-between mb-3 fade-line">
+                    <div class="d-flex fade-line">
                         <i class="bi bi-check2-circle me-2"></i>
                         <h6>Hire Success Rate</h6>
                     </div>
                     <div>
-                        <span class="badge bg-success ms-2">{{employerAnalytics().hireSuccessRateChange}}%</span>
+                        <span class="badge bg-success ms-2 fade-line">{{employerAnalytics().hireSuccessRateChange}}%</span>
                     </div>
                 </div>
-                <h2>{{employerAnalytics().hireSuccessRate}}% <small>vs last quarter</small></h2>
+                <h2 class="fade-line">{{employerAnalytics().hireSuccessRate}}% <small>vs last quarter</small></h2>
             </div>
           </div>
         </div>
       </div>
       
       <div class="col-md-6">
-        <div class="card card-custom p-3 shadow">
-          <div class="card-header bg-white border-0">
+        <div class="card card-custom p-3 shadow fade-line">
+          <div class="card-header bg-white border-0 fade-line">
             <h3><i class="bi bi-people me-2"></i> Top Performing Jobs</h3>
           </div>
           <div class="card-body">
-            <div class="job-card" *ngFor="let job of topPerformingJobs()">
-                <div class="d-flex">
+            <div class="job-card fade-line" *ngFor="let job of topPerformingJobs()">
+                <div class="d-flex fade-line">
                     <h6>{{job.title}}</h6>
                 </div>
 
-                <span>{{job.applicationsCount}} applications</span>
+                <span class="fade-line">{{job.applicationsCount}} applications</span>
             </div>
           </div>
         </div>
@@ -86,34 +86,34 @@
     <!-- Pipeline -->
     <div class="row mt-4 mb-4">
       <div class="col-12">
-        <div class="card card-custom p-3">
-          <div class="card-header bg-white border-0">
+        <div class="card card-custom p-3 fade-line">
+          <div class="card-header bg-white border-0 fade-line">
             <h3><i class="bi bi-diagram-3-fill me-2"></i> Hiring Pipeline Overview</h3>
           </div>
           <div class="card-body">
             <div class="row g-4">
-              <div class="col-md-3">
+              <div class="col-md-3 fade-line">
                 <div class="total-application">
-                  <h2>{{employerHiringOverview().totalApplications}}</h2>
-                  <p>Total Applications</p>
+                  <h2 class="fade-line">{{employerHiringOverview().totalApplications}}</h2>
+                  <p class="fade-line">Total Applications</p>
                 </div>
               </div>
-              <div class="col-md-3">
+              <div class="col-md-3 fade-line">
                 <div class="under-review">
-                  <h2>{{employerHiringOverview().underReview}}</h2>
-                  <p>Under Review</p>
+                  <h2 class="fade-line">{{employerHiringOverview().underReview}}</h2>
+                  <p class="fade-line">Under Review</p>
                 </div>
               </div>
-              <div class="col-md-3">
+              <div class="col-md-3 fade-line">
                 <div class="accepted">
-                  <h2>{{employerHiringOverview().accepted}}</h2>
-                  <p>Accepted</p>
+                  <h2 class="fade-line">{{employerHiringOverview().accepted}}</h2>
+                  <p class="fade-line">Accepted</p>
                 </div>
               </div>
-              <div class="col-md-3">
+              <div class="col-md-3 fade-line">
                 <div class="pending">
-                  <h2>{{employerHiringOverview().pending}}</h2>
-                  <p>Pending</p>
+                  <h2 class="fade-line">{{employerHiringOverview().pending}}</h2>
+                  <p class="fade-line">Pending</p>
                 </div>
               </div>
             </div>
