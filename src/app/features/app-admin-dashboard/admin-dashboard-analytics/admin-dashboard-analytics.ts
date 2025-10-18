@@ -17,6 +17,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../../../auth/auth-service';
 import { AdminService, AdminStats, Employer, Job, Seeker } from '../admin-service';
 import { SnackbarService } from '../../../shared/components/snackbar/snackbar-service';
+import { LoadingPage } from '../../../shared/components/loading-page/loading-page';
 
 type DetailType = 'seeker' | 'employer' | 'job';
 
@@ -29,7 +30,7 @@ type DetailType = 'seeker' | 'employer' | 'job';
     CommonModule, DatePipe, CurrencyPipe, HttpClientModule,
     MatCardModule, MatButtonModule, MatIconModule, MatDividerModule,
     MatTabsModule, MatTableModule, MatSnackBarModule, MatProgressSpinnerModule,
-    MatChipsModule, MatTooltipModule
+    MatChipsModule, MatTooltipModule, LoadingPage
   ],
   providers: [AdminService],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -42,7 +43,7 @@ export class AdminDashboardAnalytics implements OnInit, AfterViewInit, OnDestroy
   private userChart?: Chart;
   private jobStatusChart?: Chart;
   private adminService = inject(AdminService);
-  private snackBar = inject(MatSnackBar);
+  // private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -77,7 +78,13 @@ export class AdminDashboardAnalytics implements OnInit, AfterViewInit, OnDestroy
   selectedJob = signal<Job | null>(null);
   isLoggedIn = signal(false);
 
-constructor(private snackbarService: SnackbarService) {
+  // Confirmation modal signals
+  showConfirmationModal = signal(false);
+  confirmationTitle = signal('');
+  confirmationMessage = signal('');
+  private pendingAction: (() => void) | null = null;
+
+  constructor(private snackbarService: SnackbarService) {
     Chart.register(...registerables);
   }
 
@@ -86,7 +93,7 @@ constructor(private snackbarService: SnackbarService) {
     console.log('Is Logged In ? :', this.isLoggedIn());
 
     if (!this.isLoggedIn()) {
-      this.showMessage('Authentication required. Please login first.');
+      this.showError('Authentication required. Please login first.');
       this.isLoadingStats.set(false);
       this.cdr.detectChanges();
       return;
@@ -111,11 +118,11 @@ constructor(private snackbarService: SnackbarService) {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (stats) => {
-          console.log('API stats response:', stats); // Debug log
+          console.log('API stats response:', stats);
           this.stats.set(stats);
           this.isLoadingStats.set(false);
-          setTimeout(() => this.createCharts(), 0); // Ensure DOM is ready
-          this.cdr.detectChanges(); // Force change detection
+          setTimeout(() => this.createCharts(), 0);
+          this.cdr.detectChanges();
         },
         error: (error) => this.handleError(error, 'Stats')
       });
@@ -152,20 +159,60 @@ constructor(private snackbarService: SnackbarService) {
       });
   }
 
-  deleteUser(userId: string): void {
-    if (!confirm('Are you sure you want to delete this user?')) return;
+  // Confirmation Modal Methods
+  confirmDeleteUser(userId: string): void {
+    this.confirmationTitle.set('Delete User');
+    this.confirmationMessage.set('Are you sure you want to delete this user? This action cannot be undone.');
+    this.pendingAction = () => this.deleteUser(userId);
+    this.showConfirmationModal.set(true);
+  }
 
+  confirmRejectJob(jobId: number): void {
+    this.confirmationTitle.set('Reject Job');
+    this.confirmationMessage.set('Are you sure you want to reject this job posting? This action cannot be undone.');
+    this.pendingAction = () => this.rejectJob(jobId);
+    this.showConfirmationModal.set(true);
+  }
+
+  confirmRejectJobAndClose(jobId: number | undefined): void {
+    if (!jobId) {
+      this.showError('No job selected');
+      return;
+    }
+    this.confirmationTitle.set('Reject Job');
+    this.confirmationMessage.set('Are you sure you want to reject this job posting? This action cannot be undone.');
+    this.pendingAction = () => {
+      this.rejectJob(jobId);
+      this.closeDetails();
+    };
+    this.showConfirmationModal.set(true);
+  }
+
+  confirmAction(): void {
+    if (this.pendingAction) {
+      this.pendingAction();
+      this.pendingAction = null;
+    }
+    this.showConfirmationModal.set(false);
+  }
+
+  cancelConfirmation(): void {
+    this.pendingAction = null;
+    this.showConfirmationModal.set(false);
+  }
+
+  deleteUser(userId: string): void {
     this.adminService.deleteUser(userId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
-          this.showMessage('User deleted successfully');
+          this.showSuccess('User deleted successfully');
           this.loadDashboardData();
           if (this.selectedSeeker()?.userId === userId || this.selectedEmployer()?.userId === userId) {
             this.closeDetails();
           }
         },
-        error: (error) => this.showMessage(`Delete Error: ${error.message}`)
+        error: (error) => this.showError(`Delete Error: ${error.message}`)
       });
   }
 
@@ -174,42 +221,31 @@ constructor(private snackbarService: SnackbarService) {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
-          this.showMessage('Job approved successfully');
+          this.showSuccess('Job approved successfully');
           this.loadDashboardData();
         },
-        error: (error) => this.showMessage(`Approve Error: ${error.message}`)
+        error: (error) => this.showError(`Approve Error: ${error.message}`)
       });
   }
 
   rejectJob(jobId: number): void {
-    if (!confirm('Are you sure you want to reject this job?')) return;
-
     this.adminService.rejectJob(jobId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
-          this.showMessage('Job rejected successfully');
+          this.showSuccess('Job rejected successfully');
           this.loadDashboardData();
         },
-        error: (error) => this.showMessage(`Reject Error: ${error.message}`)
+        error: (error) => this.showError(`Reject Error: ${error.message}`)
       });
   }
 
   approveJobAndClose(jobId: number | undefined): void {
     if (!jobId) {
-      this.showMessage('No job selected');
+      this.showError('No job selected');
       return;
     }
     this.approveJob(jobId);
-    this.closeDetails();
-  }
-
-  rejectJobAndClose(jobId: number | undefined): void {
-    if (!jobId) {
-      this.showMessage('No job selected');
-      return;
-    }
-    this.rejectJob(jobId);
     this.closeDetails();
   }
 
@@ -227,7 +263,7 @@ constructor(private snackbarService: SnackbarService) {
           this.isLoadingDetails.set(false);
         },
         error: (error) => {
-          this.showMessage(`Error loading details: ${error.message}`);
+          this.showError(`Error loading details: ${error.message}`);
           this.selectedSeeker.set(seeker);
           this.isLoadingDetails.set(false);
         }
@@ -248,7 +284,7 @@ constructor(private snackbarService: SnackbarService) {
           this.isLoadingDetails.set(false);
         },
         error: (error) => {
-          this.showMessage(`Error loading details: ${error.message}`);
+          this.showError(`Error loading details: ${error.message}`);
           this.selectedEmployer.set(employer);
           this.isLoadingDetails.set(false);
         }
@@ -280,9 +316,9 @@ constructor(private snackbarService: SnackbarService) {
     const ctxUser = this.userChartRef?.nativeElement?.getContext('2d');
     const ctxJob = this.jobStatusChartRef?.nativeElement?.getContext('2d');
 
-    console.log('Creating charts with stats:', this.stats()); // Debug log
-    console.log('User Chart Ref:', this.userChartRef); // Debug canvas reference
-    console.log('User Chart Context:', ctxUser); // Debug context
+    console.log('Creating charts with stats:', this.stats());
+    console.log('User Chart Ref:', this.userChartRef);
+    console.log('User Chart Context:', ctxUser);
 
     if (ctxUser && this.userChartRef.nativeElement && this.stats().totalSeekers >= 0 && this.stats().totalEmployers >= 0) {
       console.log('User Chart Data:', {
@@ -297,16 +333,53 @@ constructor(private snackbarService: SnackbarService) {
           datasets: [{
             label: 'Total Users',
             data: [this.stats().totalSeekers, this.stats().totalEmployers],
-            backgroundColor: ['rgba(108, 117, 125, 0.3)', 'rgba(40, 167, 69, 0.3)'],
-            borderColor: ['#6c757d', '#28a745'],
-            borderWidth: 2
+            backgroundColor: ['rgba(59, 130, 246, 0.7)', 'rgba(40, 167, 69, 0.7)'],
+            borderColor: ['#3b82f6', '#28a745'],
+            borderWidth: 2,
+            borderRadius: 8,
+            hoverBackgroundColor: ['rgba(59, 130, 246, 0.9)', 'rgba(40, 167, 69, 0.9)']
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { y: { beginAtZero: true } }
+          plugins: { 
+            legend: { 
+              display: false 
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              padding: 12,
+              cornerRadius: 8,
+              titleFont: { size: 14, weight: 'bold' },
+              bodyFont: { size: 13 }
+            }
+          },
+          scales: { 
+            y: { 
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              ticks: {
+                font: { size: 12, weight: 'bold' },
+                color: '#6c757d'
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              },
+              ticks: {
+                font: { size: 12, weight: 'bold' },
+                color: '#1e3a8a'
+              }
+            }
+          },
+          animation: {
+            duration: 1000,
+            easing: 'easeInOutQuart'
+          }
         }
       });
     } else {
@@ -325,16 +398,41 @@ constructor(private snackbarService: SnackbarService) {
           labels: ['Approved Jobs', 'Pending Jobs'],
           datasets: [{
             data: [this.approvedJobs(), this.stats().pendingJobs],
-            backgroundColor: ['#466bd1ff', '#6c757d'],
-            borderColor: ['#596b9cff', '#9ca2a7ff'],
-            borderWidth: 2,
-            hoverOffset: 4
+            backgroundColor: ['#3b82f6', '#6c757d'],
+            borderColor: ['#ffffff', '#ffffff'],
+            borderWidth: 3,
+            hoverOffset: 10,
+            hoverBorderWidth: 4
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: { legend: { position: 'bottom' } }
+          plugins: { 
+            legend: { 
+              position: 'bottom',
+              labels: {
+                padding: 20,
+                font: { size: 13, weight: 'bold' },
+                color: '#495057',
+                usePointStyle: true,
+                pointStyle: 'circle'
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              padding: 12,
+              cornerRadius: 8,
+              titleFont: { size: 14, weight: 'bold' },
+              bodyFont: { size: 13 }
+            }
+          },
+          animation: {
+            animateRotate: true,
+            animateScale: true,
+            duration: 1000,
+            easing: 'easeInOutQuart'
+          }
         }
       });
     } else {
@@ -363,16 +461,9 @@ constructor(private snackbarService: SnackbarService) {
     return Math.abs(((current - previous) / previous) * 100).toFixed(1);
   }
 
-  private showMessage(message: string): void {
-    this.snackBar.open(message, 'Close', {
-      duration: 3000,
-      horizontalPosition: 'end',
-      verticalPosition: 'top'
-    });
-  }
 
   private handleError(error: any, section: string): void {
-    this.showMessage(`Error loading ${section}: ${error.message}`);
+    this.showError(`Error loading ${section}: ${error.message}`);
     if (section === 'Stats') this.isLoadingStats.set(false);
     else if (section === 'Seekers') this.isLoadingSeekers.set(false);
     else if (section === 'Employers') this.isLoadingEmployers.set(false);
@@ -388,8 +479,7 @@ constructor(private snackbarService: SnackbarService) {
     this.router.navigate(['/login']);
   }
 
-
-   //#region Snackbar Methods
+  //#region Snackbar Methods
   showSuccess(message: string = 'Operation successful!', duration: number = 4000, action: string = 'Undo'): void {
     console.log('Showing success snackbar');
     this.snackbarService.show({
@@ -416,8 +506,5 @@ constructor(private snackbarService: SnackbarService) {
     });
   }
 
-  //#endregion  
-
-
-
+  //#endregion 
 }

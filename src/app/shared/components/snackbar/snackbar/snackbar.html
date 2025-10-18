@@ -6,10 +6,18 @@
     <div class="snackbar__content">
       <span class="snackbar__icon" *ngIf="type">
         <ng-container [ngSwitch]="type">
-          <span *ngSwitchCase="'success'">✅</span>
-          <span *ngSwitchCase="'error'">❌</span>
-          <span *ngSwitchCase="'warning'">⚠️</span>
-          <span *ngSwitchCase="'info'">ℹ️</span>
+          <span *ngSwitchCase="'success'">
+            <i class="bi bi-check-circle-fill"></i>
+          </span>
+          <span *ngSwitchCase="'error'">
+            <i class="bi bi-x-circle-fill"></i>
+          </span>
+          <span *ngSwitchCase="'warning'">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+          </span>
+          <span *ngSwitchCase="'info'">
+            <i class="bi bi-info-circle-fill"></i>
+          </span>
         </ng-container>
       </span>
       <span class="snackbar__message">{{ message }}</span>
