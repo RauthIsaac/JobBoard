@@ -303,15 +303,32 @@ export class AddJob implements OnInit {
     this.triggerFormUpdate();
   }
 
-  showSuccess(message: string = 'Operation successful!', duration: number = 4000): void {
-    this.snackbarService.show({ message, type: 'success', duration });
+  //#region Snackbar Methods
+  showSuccess(message: string = 'Operation successful!', duration: number = 4000, action: string = 'Undo'): void {
+    console.log('Showing success snackbar');
+    this.snackbarService.show({
+      message,
+      type: 'success',
+      duration,
+      action
+    });
   }
 
   showInfo(message: string = 'Information message', duration: number = 5000): void {
-    this.snackbarService.show({ message, type: 'info', duration });
+    this.snackbarService.show({
+      message,
+      type: 'info',
+      duration
+    });
   }
 
   showError(message: string = 'Something went wrong!', duration: number = 5000): void {
-    this.snackbarService.show({ message, type: 'error', duration });
+    this.snackbarService.show({
+      message,
+      type: 'error',
+      duration
+    });
   }
+
+  //#endregion 
 }
