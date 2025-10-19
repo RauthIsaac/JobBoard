@@ -12,12 +12,12 @@
         <div class="sidebar">
             <div>
                 <h6 class="fade-line">Main Navigation</h6>
-                <nav class="nav flex-column">
-                    <a class="nav-link fade-line" routerLink="/empDashboard"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
-                    <a class="nav-link fade-line" routerLink="/empProfile"><i class="bi bi-building"></i> Company Profile</a>
-                    <a class="nav-link fade-line" routerLink="/empPostedJobs"><i class="bi bi-briefcase"></i> Posted Jobs</a>
-                    <a class="nav-link fade-line" routerLink="/appViewEmp"><i class="bi bi-file-earmark-text"></i> Applications</a>
-                    <a class="nav-link fade-line" routerLink="/empAnalytics"><i class="bi bi-bar-chart"></i> Analytics</a>
+                <nav class="nav flex-column fade-line">
+                    <a class="nav-link " routerLink="/empDashboard"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+                    <a class="nav-link " routerLink="/empProfile"><i class="bi bi-building"></i> Company Profile</a>
+                    <a class="nav-link " routerLink="/empPostedJobs"><i class="bi bi-briefcase"></i> Posted Jobs</a>
+                    <a class="nav-link " routerLink="/appViewEmp"><i class="bi bi-file-earmark-text"></i> Applications</a>
+                    <a class="nav-link " routerLink="/empAnalytics"><i class="bi bi-bar-chart"></i> Analytics</a>
                 </nav>
             </div>
 
@@ -42,25 +42,25 @@
                         <div class="info row">
                             <img [src]="empData().companyImage ? empData().companyImage : '/default.jpg'" alt="Company Logo" class="image mb-3 fade-line">
 
-                            <div class="col-lg-6 col-md-4 col-sm-12">
-                                <div class="emp-name fade-line">
+                            <div class="col-lg-6 col-md-4 col-sm-12 fade-line">
+                                <div class="emp-name">
                                     <h2 style="font-weight: 700;">{{empData().companyName}}</h2>
                                 </div>
-                                <div class="emp-target fade-line">
+                                <div class="emp-target">
                                     <span>{{empData().industry ? empData().industry : 'No Industry Provided Yet!'}}</span>
                                 </div>
                                 <div class="my-3">
                                     <div class="d-flex">
-                                        <div class="me-4 fade-line">
+                                        <div class="me-4">
                                             <i class="bi bi-geo-alt me-2"></i>
                                             <span>{{empData().companyLocation ? empData().companyLocation : 'No Location Provided Yet!'}}</span>
                                         </div>
-                                        <div class="fade-line">
+                                        <div>
                                             <i class="bi bi-link-45deg me-2" style="font-size: larger;"></i>
                                             <span>{{empData().website ? empData().website : 'No Website Provided Yet!'}}</span>
                                         </div>
                                     </div>
-                                    <div class="mt-1 fade-line">
+                                    <div class="mt-1">
                                         <i class="bi bi-people me-2"></i>
                                         <span>{{empData().employeeRange ? empData().employeeRange : 'No Employee Range Provided Yet!'}} Employees </span>
                                     </div>

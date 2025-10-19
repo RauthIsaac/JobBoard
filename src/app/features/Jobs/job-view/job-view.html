@@ -3,29 +3,29 @@
         <div class="comp-logo col-1 fade-line">
             <i class="bi bi-buildings"></i>
         </div>
-        <div class="job-data col-10">
-            <h3 class="fade-line">{{job.title}}</h3>
-            <span class="fade-line">{{job.companyName}}</span>
+        <div class="job-data col-10 fade-line">
+            <h3>{{job.title}}</h3>
+            <span>{{job.companyName}}</span>
             <div class="my-2">
                 <div>
-                    <div class="d-flex my-1 fade-line">
+                    <div class="d-flex my-1">
                         <i class="bi bi-geo-alt me-2"></i>
                         <span>{{job.location}}</span>
                     </div>
-                    <div class="d-flex my-1 fade-line">
+                    <div class="d-flex my-1">
                         <i class="bi bi-clock me-2"></i>
                         <span>Posted At : {{job.postedDate | date:'MMM dd, yyyy'}}</span>
                     </div>
                 </div>
-                <div class="my-2 ms-1 fade-line">
+                <div class="my-2 ms-1">
                     <span>{{ job.salary | currency:'USD':'symbol' }}</span>
                 </div>
 
                 <div class="row my-2">
-                    <div class="workplace-type fade-line">
+                    <div class="workplace-type">
                         <span> {{job.workplaceType}} </span>
                     </div>
-                    <div class="job-type col-lg-3 fade-line">
+                    <div class="job-type col-lg-3">
                         <span> {{job.jobType}} </span>
                     </div>
                 </div>
@@ -51,8 +51,8 @@
 
     <hr class="fade-line">
 
-    <div class="row">
-        <div class="col-lg-8 col-md-12 col-sm-12 mb-md-2 mb-sm-2 fade-line">
+    <div class="row fade-line">
+        <div class="col-lg-8 col-md-12 col-sm-12 mb-md-2 mb-sm-2">
             <button class="view-dtl-btn" [routerLink]="['/jobDtl',job.id]">
                 <i class="bi bi-box-arrow-up-right me-2"></i> View Details
             </button>
@@ -61,7 +61,7 @@
             
             <!-- Show Apply Now button if not applied -->
             <button 
-                class="apply-now-btn my-2 fade-line" 
+                class="apply-now-btn my-2" 
                 [routerLink]="['/seekerApp', job.id, 'personal-info']"
                 *ngIf="!isJobApplied() && !isCheckingApplied()">
                 Apply Now
@@ -69,7 +69,7 @@
             
             <!-- Show Already Applied button if applied -->
             <button 
-                class="already-applied-btn my-2 fade-line" 
+                class="already-applied-btn my-2" 
                 disabled
                 *ngIf="isJobApplied() && !isCheckingApplied()">
                 <i class="bi bi-check-circle me-2"></i>
@@ -78,7 +78,7 @@
 
             <!-- Show loading state -->
             <button 
-                class="apply-now-btn my-2 fade-line" 
+                class="apply-now-btn my-2" 
                 disabled
                 *ngIf="isCheckingApplied()">
                 <i class="bi bi-arrow-clockwise me-2"></i>
