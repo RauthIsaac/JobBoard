@@ -1,3 +1,13 @@
+.nav{
+    background: var(--basic-color);
+    color: white;
+    padding: 25px 50px;
+
+    a{
+        color: white;
+    }
+}
+
 .card-header{
     background: var(--basic-color);
     color: white;
@@ -313,12 +323,17 @@ h6.text-muted i.text-success {
     transition: all 0.3s ease;
 }
 
-.post-btn:hover {
+.post-btn:hover:not(:disabled) {
     background: var(--basic-color-hover);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
+.post-btn:disabled {
+    cursor: not-allowed;
+    background: linear-gradient(to right, rgb(63, 89, 174), rgb(108, 148, 197));;
+    transform: none;
+}
 
 
 /* === Staggered Fade-in Animation === */

@@ -13,7 +13,13 @@
         <div class="card-body">
           <!-- Success and Error Messages -->
           <div *ngIf="submitSuccess" class="alert alert-success fade-line">
+            <i class="bi bi-check-circle-fill me-2"></i>
             Job posted successfully! Redirecting to your profile...
+          </div>
+
+          <div *ngIf="submitError" class="alert alert-danger fade-line">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            {{ submitError }}
           </div>
 
           <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
@@ -25,16 +31,24 @@
                 <input
                   type="text"
                   class="form-control"
+                  [class.is-invalid]="jobForm.get('title')?.invalid && jobForm.get('title')?.touched"
                   id="title"
                   formControlName="title"
                   placeholder="e.g. Senior Frontend Developer"
                 />
                 <div
                   *ngIf="jobForm.get('title')?.invalid && jobForm.get('title')?.touched"
-                  class="text-danger"
+                  class="text-danger mt-1"
                 >
-                  <small *ngIf="jobForm.get('title')?.errors?.['required']">Job title is required</small>
-                  <small *ngIf="jobForm.get('title')?.errors?.['minlength']">At least 5 characters</small>
+                  <small *ngIf="jobForm.get('title')?.errors?.['required']">
+                    <i class="bi bi-exclamation-circle"></i> Job title is required
+                  </small>
+                  <small *ngIf="jobForm.get('title')?.errors?.['minlength']">
+                    <i class="bi bi-exclamation-circle"></i> Job title must be at least 5 characters
+                  </small>
+                  <small *ngIf="jobForm.get('title')?.errors?.['maxlength']">
+                    <i class="bi bi-exclamation-circle"></i> Job title must not exceed 100 characters
+                  </small>
                 </div>
               </div>
 
@@ -43,15 +57,21 @@
                 <input
                   type="number"
                   class="form-control"
+                  [class.is-invalid]="jobForm.get('salary')?.invalid && jobForm.get('salary')?.touched"
                   id="salary"
                   formControlName="salary"
                   placeholder="e.g. 75000"
                 />
                 <div
                   *ngIf="jobForm.get('salary')?.invalid && jobForm.get('salary')?.touched"
-                  class="text-danger"
+                  class="text-danger mt-1"
                 >
-                  <small *ngIf="jobForm.get('salary')?.errors?.['required']">Salary is required</small>
+                  <small *ngIf="jobForm.get('salary')?.errors?.['required']">
+                    <i class="bi bi-exclamation-circle"></i> Salary is required
+                  </small>
+                  <small *ngIf="jobForm.get('salary')?.errors?.['min']">
+                    <i class="bi bi-exclamation-circle"></i> Salary must be a positive number
+                  </small>
                 </div>
               </div>
             </div>
@@ -59,21 +79,60 @@
             <div class="row mb-3 fade-line">
               <div class="col-md-4">
                 <label for="jobType" class="form-label">Job Type*</label>
-                <select class="form-select" id="jobType" formControlName="jobType">
-                  <option value="" disabled>Select job type</option>
+                <select 
+                  class="form-select" 
+                  [class.is-invalid]="jobForm.get('jobType')?.invalid && jobForm.get('jobType')?.touched"
+                  id="jobType" 
+                  formControlName="jobType"
+                >
+                  <option value="" disabled selected>Select job type</option>
                   <option *ngFor="let type of jobTypes" [value]="type.value">{{ type.label }}</option>
                 </select>
+                <div
+                  *ngIf="jobForm.get('jobType')?.invalid && jobForm.get('jobType')?.touched"
+                  class="text-danger mt-1"
+                >
+                  <small><i class="bi bi-exclamation-circle"></i> Job type is required</small>
+                </div>
               </div>
               <div class="col-md-4">
                 <label for="workplaceType" class="form-label">Workplace*</label>
-                <select class="form-select" id="workplaceType" formControlName="workplaceType">
-                  <option value="" disabled>Select workplace type</option>
+                <select 
+                  class="form-select" 
+                  [class.is-invalid]="jobForm.get('workplaceType')?.invalid && jobForm.get('workplaceType')?.touched"
+                  id="workplaceType" 
+                  formControlName="workplaceType"
+                >
+                  <option value="" disabled selected>Select workplace type</option>
                   <option *ngFor="let type of workplaceTypes" [value]="type.value">{{ type.label }}</option>
                 </select>
+                <div
+                  *ngIf="jobForm.get('workplaceType')?.invalid && jobForm.get('workplaceType')?.touched"
+                  class="text-danger mt-1"
+                >
+                  <small><i class="bi bi-exclamation-circle"></i> Workplace type is required</small>
+                </div>
               </div>
               <div class="col-md-4">
                 <label for="expireDate" class="form-label">Application Deadline*</label>
-                <input type="date" class="form-control" id="expireDate" formControlName="expireDate" />
+                <input 
+                  type="date" 
+                  class="form-control" 
+                  [class.is-invalid]="jobForm.get('expireDate')?.invalid && jobForm.get('expireDate')?.touched"
+                  id="expireDate" 
+                  formControlName="expireDate" 
+                />
+                <div
+                  *ngIf="jobForm.get('expireDate')?.invalid && jobForm.get('expireDate')?.touched"
+                  class="text-danger mt-1"
+                >
+                  <small *ngIf="jobForm.get('expireDate')?.errors?.['required']">
+                    <i class="bi bi-exclamation-circle"></i> Application deadline is required
+                  </small>
+                  <small *ngIf="jobForm.get('expireDate')?.errors?.['pastDate']">
+                    <i class="bi bi-exclamation-circle"></i> Deadline must be a future date
+                  </small>
+                </div>
               </div>
             </div>
 
@@ -81,29 +140,113 @@
               <label for="description" class="form-label">Job Description*</label>
               <textarea
                 class="form-control"
+                [class.is-invalid]="jobForm.get('description')?.invalid && jobForm.get('description')?.touched"
                 id="description"
                 formControlName="description"
                 rows="5"
-                placeholder="Provide job description..."
+                placeholder="Provide a detailed job description..."
               ></textarea>
+              <div
+                *ngIf="jobForm.get('description')?.invalid && jobForm.get('description')?.touched"
+                class="text-danger mt-1"
+              >
+                <small *ngIf="jobForm.get('description')?.errors?.['required']">
+                  <i class="bi bi-exclamation-circle"></i> Job description is required
+                </small>
+                <small *ngIf="jobForm.get('description')?.errors?.['minlength']">
+                  <i class="bi bi-exclamation-circle"></i> Description must be at least 50 characters
+                </small>
+              </div>
             </div>
 
             <!-- Requirements -->
             <h4 class="mb-3 mt-4 fade-line">Requirements</h4>
             <div class="row mb-3 fade-line">
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="experienceLevel" class="form-label">Experience Level*</label>
-                <select class="form-select" id="experienceLevel" formControlName="experienceLevel">
-                  <option value="" disabled>Select experience</option>
+                <select 
+                  class="form-select" 
+                  [class.is-invalid]="jobForm.get('experienceLevel')?.invalid && jobForm.get('experienceLevel')?.touched"
+                  id="experienceLevel" 
+                  formControlName="experienceLevel"
+                >
+                  <option value="" disabled selected>Select experience</option>
                   <option *ngFor="let level of experienceLevels" [value]="level.value">{{ level.label }}</option>
                 </select>
+                <div
+                  *ngIf="jobForm.get('experienceLevel')?.invalid && jobForm.get('experienceLevel')?.touched"
+                  class="text-danger mt-1"
+                >
+                  <small><i class="bi bi-exclamation-circle"></i> Experience level is required</small>
+                </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="educationLevel" class="form-label">Education Level*</label>
-                <select class="form-select" id="educationLevel" formControlName="educationLevel">
-                  <option value="" disabled>Select education</option>
+                <select 
+                  class="form-select" 
+                  [class.is-invalid]="jobForm.get('educationLevel')?.invalid && jobForm.get('educationLevel')?.touched"
+                  id="educationLevel" 
+                  formControlName="educationLevel"
+                >
+                  <option value="" disabled selected>Select education</option>
                   <option *ngFor="let level of educationLevels" [value]="level.value">{{ level.label }}</option>
                 </select>
+                <div
+                  *ngIf="jobForm.get('educationLevel')?.invalid && jobForm.get('educationLevel')?.touched"
+                  class="text-danger mt-1"
+                >
+                  <small><i class="bi bi-exclamation-circle"></i> Education level is required</small>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label for="website" class="form-label">Company Website</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [class.is-invalid]="jobForm.get('website')?.invalid && jobForm.get('website')?.touched"
+                  id="website"
+                  formControlName="website"
+                  placeholder="https://example.com"
+                />
+                <div
+                  *ngIf="jobForm.get('website')?.invalid && jobForm.get('website')?.touched"
+                  class="text-danger mt-1"
+                >
+                  <small *ngIf="jobForm.get('website')?.errors?.['pattern']">
+                    <i class="bi bi-exclamation-circle"></i> Please enter a valid website URL
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Team Size with Validation -->
+            <div class="row mb-3 fade-line">
+              <div class="col-md-6">
+                <label for="minTeamSize" class="form-label">Minimum Team Size*</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  [class.is-invalid]="(jobForm.get('minTeamSize')?.invalid && jobForm.get('minTeamSize')?.touched) || jobForm.errors?.['teamSizeInvalid']"
+                  id="minTeamSize"
+                  formControlName="minTeamSize"
+                  placeholder="e.g. 1"
+                />
+              </div>
+              <div class="col-md-6">
+                <label for="maxTeamSize" class="form-label">Maximum Team Size*</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  [class.is-invalid]="(jobForm.get('maxTeamSize')?.invalid && jobForm.get('maxTeamSize')?.touched) || jobForm.errors?.['teamSizeInvalid']"
+                  id="maxTeamSize"
+                  formControlName="maxTeamSize"
+                  placeholder="e.g. 10"
+                />
+              </div>
+              <div class="col-12" *ngIf="jobForm.errors?.['teamSizeInvalid'] && (jobForm.get('minTeamSize')?.touched || jobForm.get('maxTeamSize')?.touched)">
+                <small class="text-danger mt-1">
+                  <i class="bi bi-exclamation-circle"></i> Maximum team size must be greater than or equal to minimum team size
+                </small>
               </div>
             </div>
 
@@ -114,7 +257,7 @@
                 id="requirements"
                 formControlName="requirements"
                 rows="4"
-                placeholder="List key requirements..."
+                placeholder="List key requirements for this position..."
               ></textarea>
             </div>
 
@@ -122,27 +265,63 @@
               <label for="responsabilities" class="form-label">Responsibilities</label>
               <textarea
                 class="form-control"
+                [class.is-invalid]="jobForm.get('responsabilities')?.invalid && jobForm.get('responsabilities')?.touched"
                 id="responsabilities"
                 formControlName="responsabilities"
                 rows="4"
-                placeholder="List responsibilities..."
+                placeholder="List main responsibilities..."
               ></textarea>
+              <div
+                *ngIf="jobForm.get('responsabilities')?.invalid && jobForm.get('responsabilities')?.touched"
+                class="text-danger mt-1"
+              >
+                <small *ngIf="jobForm.get('responsabilities')?.errors?.['minlength']">
+                  <i class="bi bi-exclamation-circle"></i> Responsibilities must be at least 50 characters
+                </small>
+              </div>
             </div>
 
             <div class="mb-3 fade-line">
               <label for="benefits" class="form-label">Benefits</label>
               <textarea
                 class="form-control"
+                [class.is-invalid]="jobForm.get('benefits')?.invalid && jobForm.get('benefits')?.touched"
                 id="benefits"
                 formControlName="benefits"
                 rows="4"
                 placeholder="List job benefits..."
               ></textarea>
+              <div
+                *ngIf="jobForm.get('benefits')?.invalid && jobForm.get('benefits')?.touched"
+                class="text-danger mt-1"
+              >
+                <small *ngIf="jobForm.get('benefits')?.errors?.['minlength']">
+                  <i class="bi bi-exclamation-circle"></i> Benefits must be at least 50 characters
+                </small>
+              </div>
             </div>
 
             <!-- Skills Section -->
             <div class="fade-line">
-              <h5 class="mb-3">Job Skills</h5>
+              <h5 class="mb-3">Job Skills* 
+                <span class="badge bg-primary ms-2">{{ selectedSkills().length }} Selected</span>
+              </h5>
+              
+              <!-- Selected Skills Display -->
+              <div *ngIf="selectedSkills().length > 0" class="selected-items mb-3">
+                <div *ngFor="let skill of selectedSkills()" class="selected-item">
+                  <span>{{ skill.skillName }}</span>
+                  <button 
+                    type="button"
+                    class="btn-remove-item" 
+                    (click)="removeSelectedSkill(skill.id)"
+                    title="Remove skill"
+                  >
+                    <i class="bi bi-x"></i>
+                  </button>
+                </div>
+              </div>
+
               <div class="search-container position-relative mb-3">
                 <input
                   type="text"
@@ -155,7 +334,7 @@
               </div>
 
               <div class="skill-tags">
-                @for (skill of filteredSkills(); track $index) {
+                @for (skill of filteredSkills(); track skill.id) {
                 <div
                   class="skill-tag"
                   [class.selected]="isSkillSelected(skill.id)"
@@ -165,12 +344,45 @@
                   <i *ngIf="isSkillSelected(skill.id)" class="bi bi-check-circle-fill ms-1"></i>
                 </div>
                 }
+                @if (filteredSkills().length === 0) {
+                <div class="no-results w-100">
+                  <i class="bi bi-search me-2"></i> No skills found
+                </div>
+                }
+              </div>
+
+              <!-- Skills Validation Message -->
+              <div
+                *ngIf="jobForm.get('skills')?.invalid && jobForm.get('skills')?.touched"
+                class="text-danger mt-2"
+              >
+                <small>
+                  <i class="bi bi-exclamation-circle"></i> Please select at least one skill
+                </small>
               </div>
             </div>
 
             <!-- Categories Section -->
-            <div class="fade-line">
-              <h5 class="mb-3">Job Categories</h5>
+            <div class="fade-line mt-4">
+              <h5 class="mb-3">Job Categories* 
+                <span class="badge bg-info ms-2">{{ selectedCategories().length }} Selected</span>
+              </h5>
+              
+              <!-- Selected Categories Display -->
+              <div *ngIf="selectedCategories().length > 0" class="selected-items mb-3">
+                <div *ngFor="let category of selectedCategories()" class="selected-item">
+                  <span>{{ category.categoryName }}</span>
+                  <button 
+                    type="button"
+                    class="btn-remove-item" 
+                    (click)="removeSelectedCategory(category.id)"
+                    title="Remove category"
+                  >
+                    <i class="bi bi-x"></i>
+                  </button>
+                </div>
+              </div>
+
               <div class="search-container position-relative mb-3">
                 <input
                   type="text"
@@ -183,7 +395,7 @@
               </div>
 
               <div class="category-tags">
-                @for (category of filteredCategories(); track $index) {
+                @for (category of filteredCategories(); track category.id) {
                 <div
                   class="category-tag"
                   [class.selected]="isCategorySelected(category.id)"
@@ -193,6 +405,21 @@
                   <i *ngIf="isCategorySelected(category.id)" class="bi bi-check-circle-fill ms-1"></i>
                 </div>
                 }
+                @if (filteredCategories().length === 0) {
+                <div class="no-results w-100">
+                  <i class="bi bi-search me-2"></i> No categories found
+                </div>
+                }
+              </div>
+
+              <!-- Categories Validation Message -->
+              <div
+                *ngIf="jobForm.get('categories')?.invalid && jobForm.get('categories')?.touched"
+                class="text-danger mt-2"
+              >
+                <small>
+                  <i class="bi bi-exclamation-circle"></i> Please select at least one category
+                </small>
               </div>
             </div>
 
@@ -206,7 +433,10 @@
                 [disabled]="isSubmitting || jobForm.invalid"
               >
                 <i class="bi bi-check-circle me-1"></i>
-                <span *ngIf="isSubmitting">Posting...</span>
+                <span *ngIf="isSubmitting">
+                  <span class="spinner-border spinner-border-sm me-1"></span>
+                  Posting...
+                </span>
                 <span *ngIf="!isSubmitting">Post Job</span>
               </button>
             </div>

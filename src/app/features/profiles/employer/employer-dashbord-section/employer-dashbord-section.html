@@ -45,11 +45,11 @@
                         <div *ngIf="recentActivity().length === 0" class="fade-line">
                             <p>No recent activity available.</p>
                         </div>
-                        <div class="fade-line">
+                        <div>
                             @for(activity of recentActivity(); track $index){
-                                <div class="activity-item fade-line" *ngIf="activity.link" (click)="viewNotification(activity.link)">
-                                    <p class="fs-5 fw-medium mb-0 fade-line">{{ activity.message }}</p>
-                                    <small class="mt-0 fade-line">{{ getTimeDifference(activity.createdAt) }}</small>
+                                <div class="activity-item " *ngIf="activity.link" (click)="viewNotification(activity.link)">
+                                    <p class="fs-5 fw-medium mb-0">{{ activity.message }}</p>
+                                    <small class="mt-0">{{ getTimeDifference(activity.createdAt) }}</small>
                                 </div>
                             }
                     </div>

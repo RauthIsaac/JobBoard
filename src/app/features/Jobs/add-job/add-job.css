@@ -1,98 +1,332 @@
+.nav{
+    background: var(--basic-color);
+    color: white;
+    padding: 25px 50px;
 
-/* ================== Navbar ================== */
-.nav {
-  background: var(--basic-color);
-  color: white;
-  padding: 20px 50px;
+    a{
+        color: white;
+    }
 }
 
-.nav a {
-  color: white;
+.card-header{
+    background: var(--basic-color);
+    color: white;
+    border-radius: 10px 10px 0 0;
+    padding: 15px 20px;
 }
 
-/* ================== Card Header ================== */
-.card-header {
-  background: var(--basic-color);
-  color: white;
-  border-radius: 10px 10px 0 0;
-  padding: 15px 20px;
+/* Section heading styles */
+h5.mb-3 {
+    font-weight: 600;
+    color: #333;
+    margin-top: 25px;
+    position: relative;
+    padding-bottom: 10px;
 }
 
-/* ================== Search Inputs ================== */
+h5.mb-3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background-color: var(--basic-color);
+    border-radius: 3px;
+}
+
+/* Search Container Styles */
+.search-container {
+    margin-bottom: 15px;
+}
+
 .search-input {
-  border-radius: 25px;
-  border: 2px solid #e8e8e8;
-  padding: 12px 20px 12px 45px;
-  background-color: #fafafa;
+    border-radius: 25px;
+    border: 2px solid #e8e8e8;
+    padding: 12px 20px 12px 45px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background-color: #fafafa;
 }
 
 .search-input:focus {
-  border-color: var(--basic-color);
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.1);
-  background-color: white;
+    border-color: var(--basic-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.1);
+    background-color: white;
+    outline: none;
 }
 
 .search-icon {
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #6c757d;
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    font-size: 16px;
+    pointer-events: none;
+    z-index: 2;
 }
 
-/* ================== Skills & Categories ================== */
-.skill-tags,
-.category-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  max-height: 280px;
-  overflow-y: auto;
-  padding: 5px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--basic-color) #f1f1f1;
+.btn-clear-search {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6c757d;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    z-index: 2;
 }
 
-.skill-tag,
+.btn-clear-search:hover {
+    background-color: #f8f9fa;
+    color: #dc3545;
+}
+
+/* No Results Message */
+.no-results {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #6c757d;
+    font-style: italic;
+    border: 2px dashed #e8e8e8;
+    border-radius: 10px;
+    background-color: #fafafa;
+    margin: 10px 0;
+}
+
+/* Selected Items Display */
+.selected-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    min-height: 50px;
+}
+
+.selected-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background-color: var(--basic-color);
+    color: rgb(16, 16, 160);
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    animation: slideIn 0.3s ease-out;
+}
+
+
+.btn-remove-item {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.2s ease;
+    margin-left: 4px;
+}
+
+.btn-remove-item:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.btn-remove-item:active {
+    transform: scale(0.9);
+}
+
+/* Selected items heading */
+h6.text-muted {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+h6.text-muted i.text-success {
+    color: #28a745 !important;
+}
+
+/* Showing Limited Message */
+.showing-limited {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 20px;
+    color: #0077cc;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid #b3d9ff;
+    border-radius: 10px;
+    background-color: #e6f7ff;
+    margin: 10px 0;
+    width: 100%;
+    text-align: center;
+}
+
+/* Styles for skill tags */
+.skill-tags, .category-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 5px;
+    min-height: 60px;
+    max-height: 300px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--basic-color) #f1f1f1;
+}
+
+.skill-tags::-webkit-scrollbar, .category-tags::-webkit-scrollbar {
+    width: 6px;
+}
+
+.skill-tags::-webkit-scrollbar-track, .category-tags::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.skill-tags::-webkit-scrollbar-thumb, .category-tags::-webkit-scrollbar-thumb {
+    background: var(--basic-color);
+    border-radius: 3px;
+}
+
+.skill-tag, .category-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 18px;
+    border-radius: 25px;
+    background-color: #f5f5f5;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    font-weight: 500;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+
+
+.skill-tag:hover, .category-tag:hover {
+    background-color: #e8e8e8;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.skill-tag.selected, .category-tag.selected {
+    background: var(--basic-color);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    animation: pulse 0.6s ease-in-out;
+}
+
+
+
+.skill-tag.selected i, .category-tag.selected i {
+    margin-left: 8px;
+    font-size: 16px;
+}
+
 .category-tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 10px 18px;
-  border-radius: 25px;
-  background-color: #f5f5f5;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 14px;
-  font-weight: 500;
+    background-color: #e6f7ff;
+    color: #0077cc;
 }
 
-.skill-tag:hover,
 .category-tag:hover {
-  background-color: #e8e8e8;
-  transform: translateY(-3px);
+    background-color: #d1efff;
 }
 
-.skill-tag.selected,
 .category-tag.selected {
-  background-color: var(--basic-color);
-  color: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background-color: #0077cc;
+    color: white;
 }
 
-/* ================== Buttons ================== */
+/* Styles for add new skill/category inputs */
+.mt-3.d-flex {
+    margin-top: 15px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    border-radius: 25px;
+    overflow: hidden;
+}
+
+.mt-3.d-flex .form-control {
+    border-radius: 25px 0 0 25px;
+    border: none;
+    padding: 12px 20px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: none;
+}
+
+.mt-3.d-flex .form-control:focus {
+    box-shadow: inset 0 0 0 2px var(--basic-color);
+}
+
+.mt-3.d-flex .btn {
+    border-radius: 0 25px 25px 0;
+    background-color: var(--basic-color);
+    border: none;
+    padding: 0 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.mt-3.d-flex .btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* Info icon styling */
+.bi-info-circle-fill {
+    font-size: 14px;
+    color: #6c757d;
+    cursor: help;
+    transition: color 0.3s ease;
+}
+
+.bi-info-circle-fill:hover {
+    color: var(--basic-color);
+}
+
+
+/* Post Button */
 .post-btn {
-  background: var(--basic-color);
-  color: white;
-  border-radius: 25px;
-  padding: 10px 25px;
-  font-size: 15px;
-  transition: all 0.3s ease;
+    background: var(--basic-color);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .post-btn:hover {
-  background: var(--basic-color-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: var(--basic-color-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 
