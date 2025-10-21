@@ -79,7 +79,6 @@ export const routes: Routes = [
             { path: 'editSeeker', component: EditSeekerProfile},
             { path: 'seekerProfile', component: SeekerProfile},
             { path: 'appViewSeeker', component: AppViewSeeker},
-            {path: 'jobDtl/:id', component: JobDetails},
         ]
     },
 
@@ -128,6 +127,7 @@ export const routes: Routes = [
         data: { allowedUserTypes: ['Employer'] as UserType[] }
     },
 
+
     /*---------------- Applications  ----------------*/
     {path: 'appView/:id', component: AppView},
     {path: 'appViewEmp', component: AppViewEmp},
@@ -136,6 +136,8 @@ export const routes: Routes = [
 
     /*---------------- Jobs ----------------*/
     {path: 'jobView', component: JobView},
+    {path: 'jobDtl/:id', component: JobDetails},
+
 
     {
         path: 'addJob', 
