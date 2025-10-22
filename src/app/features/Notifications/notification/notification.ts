@@ -118,12 +118,17 @@ export class NotificationComponent implements OnInit, OnDestroy {
   async clearNotifications() {
     try {
       const notifications = this.notifications();
+      
+      // Update local state immediately
+      this.notifications.set([]);
+      this.unreadCount.set(0);
+      
+      // Then sync with server
       for (const notification of notifications) {
         if (notification.id) {
           await this.notificationService.deleteNotification(notification.id);
         }
       }
-      // No reload; SignalR will handle updates
     } catch (error) {
       console.error('❌ Error clearing notifications:', error);
     }
@@ -132,21 +137,39 @@ export class NotificationComponent implements OnInit, OnDestroy {
   async markAsRead(index: number) {
     const notification = this.notifications()[index];
     if (notification?.id && !notification.isRead) {
+      // Update local state immediately
+      const updatedNotifications = [...this.notifications()];
+      updatedNotifications[index] = { ...notification, isRead: true };
+      this.notifications.set(updatedNotifications);
+      this.unreadCount.set(this.unreadCount() - 1);
+      
+      // Then sync with server
       await this.notificationService.markAsRead(notification.id);
-      // No local update; SignalR handles it
     }
   }
 
   async markAllAsRead() {
+    // Update local state immediately
+    const updatedNotifications = this.notifications().map(n => ({ ...n, isRead: true }));
+    this.notifications.set(updatedNotifications);
+    this.unreadCount.set(0);
+    
+    // Then sync with server
     await this.notificationService.markAllAsRead();
-    // No local update; SignalR handles it
   }
 
   async deleteNotification(index: number) {
     const notification = this.notifications()[index];
     if (notification?.id) {
+      // Update local state immediately
+      const updatedNotifications = this.notifications().filter((_, i) => i !== index);
+      this.notifications.set(updatedNotifications);
+      if (!notification.isRead) {
+        this.unreadCount.set(this.unreadCount() - 1);
+      }
+      
+      // Then sync with server
       await this.notificationService.deleteNotification(notification.id);
-      // No local update; SignalR handles it
     }
   }
 
@@ -160,39 +183,38 @@ export class NotificationComponent implements OnInit, OnDestroy {
     }
   }
 
-getTimeDifference(createdAt: Date | string | null | undefined): string {
-  if (!createdAt) {
-    console.warn('createdAt is undefined or null, using current date');
-    return 'now';
+  getTimeDifference(createdAt: Date | string | null | undefined): string {
+    if (!createdAt) {
+      console.warn('createdAt is undefined or null, using current date');
+      return 'now';
+    }
+
+    const notificationTime = createdAt instanceof Date ? createdAt : new Date(createdAt);
+    
+    if (isNaN(notificationTime.getTime())) {
+      console.warn('Invalid createdAt date:', createdAt, 'Type:', typeof createdAt);
+      return 'Unknown time';
+    }
+
+    const now = new Date();
+    const diffMs = now.getTime() - notificationTime.getTime();
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    
+    if (diffMinutes < 1) return 'now';
+    if (diffMinutes < 60) return `${diffMinutes} m`;
+    const diffHours = Math.floor(diffMinutes / 60);
+    if (diffHours < 24) return `${diffHours} h`;
+    const diffDays = Math.floor(diffHours / 24);
+    if (diffDays < 7) return `${diffDays} d`;
+    const diffWeeks = Math.floor(diffDays / 7);
+    if (diffWeeks < 4) return `${diffWeeks} w`;
+    const diffMonths = Math.floor(diffDays / 30);
+    return `${diffMonths} m`;
   }
 
-  const notificationTime = createdAt instanceof Date ? createdAt : new Date(createdAt);
-  
-  if (isNaN(notificationTime.getTime())) {
-    console.warn('Invalid createdAt date:', createdAt, 'Type:', typeof createdAt);
-    return 'Unknown time';
-  }
-
-  const now = new Date();
-  const diffMs = now.getTime() - notificationTime.getTime();
-  const diffMinutes = Math.floor(diffMs / (1000 * 60));
-  
-  if (diffMinutes < 1) return 'now';
-  if (diffMinutes < 60) return `${diffMinutes} m`;
-  const diffHours = Math.floor(diffMinutes / 60);
-  if (diffHours < 24) return `${diffHours} h`;
-  const diffDays = Math.floor(diffHours / 24);
-  if (diffDays < 7) return `${diffDays} d`;
-  const diffWeeks = Math.floor(diffDays / 7);
-  if (diffWeeks < 4) return `${diffWeeks} w`;
-  const diffMonths = Math.floor(diffDays / 30);
-  return `${diffMonths} m`;
-}
   async refreshNotifications() {
     await this.notificationService.loadUserNotifications();
   }
 
-  // async addTestNotification() {
-  //   await this.notificationService.createNotification('هذا إشعار تجريبي', 'https://example.com');
-  // }
+
 }

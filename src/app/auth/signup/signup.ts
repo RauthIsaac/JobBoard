@@ -534,7 +534,7 @@ export class Signup implements AfterViewInit, OnDestroy {
         this.errorMessage = null;
         this.signupForm.get('userName')?.setErrors(null);
         this.signupForm.get('email')?.setErrors(null);
-        this.showSuccess('Registration successful! Redirecting to login...');
+        this.showInfo('Verification link has been sent to your email. Please check your inbox.');
       },
       error: (err: HttpErrorResponse) => {
         console.log('Error response:', err);

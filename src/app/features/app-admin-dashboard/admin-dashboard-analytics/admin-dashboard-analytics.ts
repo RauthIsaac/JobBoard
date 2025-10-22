@@ -202,19 +202,33 @@ export class AdminDashboardAnalytics implements OnInit, AfterViewInit, OnDestroy
   }
 
   deleteUser(userId: string): void {
-    this.adminService.deleteUser(userId)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: () => {
-          this.showSuccess('User deleted successfully');
-          this.loadDashboardData();
-          if (this.selectedSeeker()?.userId === userId || this.selectedEmployer()?.userId === userId) {
-            this.closeDetails();
-          }
-        },
-        error: (error) => this.showError(`Delete Error: ${error.message}`)
-      });
-  }
+  this.adminService.deleteUser(userId)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: () => {
+        this.showSuccess('User deleted successfully');
+
+        this.seekers.update((list) => list.filter((s) => s.userId !== userId));
+        this.employers.update((list) => list.filter((e) => e.userId !== userId));
+
+        this.stats.update((s) => ({
+          ...s,
+          totalSeekers: this.seekers().length,
+          totalEmployers: this.employers().length,
+          totalJobs: s.totalJobs,
+          pendingJobs: s.pendingJobs
+        }));
+
+        if (this.selectedSeeker()?.userId === userId || this.selectedEmployer()?.userId === userId) {
+          this.closeDetails();
+        }
+
+        this.cdr.detectChanges();
+      },
+      error: (error) => this.showError(`Delete Error: ${error.message}`)
+    });
+}
+
 
   approveJob(jobId: number): void {
     this.adminService.approveJob(jobId)

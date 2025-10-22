@@ -91,7 +91,7 @@
             <!-- View/Download Button -->
             <button class="openCv">
               <div *ngIf="seekerData().cV_Url" >
-                <a [href]="seekerData().cV_Url" download="uploaded-file.pdf" style="text-decoration: none; color:#1564ca; font-weight: 600;">
+                <a [href]="seekerData().cV_Url" target="_blank" download="uploaded-file.pdf" style="text-decoration: none; color:#1564ca; font-weight: 600;">
                   <span><i class="bi bi-box-arrow-in-right me-3 fs-4 mt-2"></i>Open CV</span>
                 </a>
             </div>

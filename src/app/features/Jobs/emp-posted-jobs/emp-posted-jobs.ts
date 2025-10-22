@@ -30,6 +30,10 @@ export class EmpPostedJobs implements OnInit {
   selectedStatus = signal<string>('All Status');
   selectedSort = signal<string>('PostedDateDesc');
 
+  // ✅ Delete Modal State
+  showDeleteModal = signal<boolean>(false);
+  jobToDelete = signal<{ id: number; title: string } | null>(null);
+
   // ✅ Subject for debouncing search input
   private searchSubject = new Subject<string>();
 
@@ -136,24 +140,36 @@ export class EmpPostedJobs implements OnInit {
 
   /******************************************************************/
   /*----------------------------Delete Job--------------------------*/
-  deleteJob(jobId: number, jobTitle: string) {
-    if (confirm(`Are you sure you want to delete "${jobTitle}"?`)) {
-      this.isLoading.set(true);
+  openDeleteModal(jobId: number, jobTitle: string) {
+    this.jobToDelete.set({ id: jobId, title: jobTitle });
+    this.showDeleteModal.set(true);
+  }
 
-      this.jobService.deleteJob(jobId).subscribe({
-        next: () => {
-          const updatedJobs = this.postedJobs().filter(job => job.id !== jobId);
-          this.postedJobs.set(updatedJobs);
-          this.isLoading.set(false);
-          this.showSuccess(`Job "${jobTitle}" deleted successfully.`);
-        },
-        error: (err) => {
-          console.error(err);
-          this.isLoading.set(false);
-          this.showError('Failed to delete the job.');
-        }
-      });
-    }
+  closeDeleteModal() {
+    this.showDeleteModal.set(false);
+    this.jobToDelete.set(null);
+  }
+
+  confirmDelete() {
+    const job = this.jobToDelete();
+    if (!job) return;
+
+    this.isLoading.set(true);
+    this.closeDeleteModal();
+
+    this.jobService.deleteJob(job.id).subscribe({
+      next: () => {
+        const updatedJobs = this.postedJobs().filter(j => j.id !== job.id);
+        this.postedJobs.set(updatedJobs);
+        this.isLoading.set(false);
+        this.showSuccess(`Job "${job.title}" deleted successfully.`);
+      },
+      error: (err) => {
+        console.error(err);
+        this.isLoading.set(false);
+        this.showError('Failed to delete the job.');
+      }
+    });
   }
 
   //#region Snackbar

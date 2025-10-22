@@ -131,13 +131,12 @@ export class AppViewEmp implements OnInit {
   }
 
   getStatusClass(status: string): string {
-    // const statusLower = status.toLowerCase();
-    switch (status) {
+    const statusNormalized = status.toLowerCase().replace(/\s+/g, '');
+    switch (statusNormalized) {
       case 'pending':
       case 'new':
         return 'status-new';
       case 'underreview':
-      case 'under review':
         return 'status-under-review';
       case 'interviewed':
       case 'interview':
@@ -151,6 +150,7 @@ export class AppViewEmp implements OnInit {
         return 'status-new';
     }
   }
+
 
   getCardClass(status: ApplicationStatus): string {
     switch (status) {
