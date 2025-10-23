@@ -28,7 +28,7 @@
                 </div>
 
 
-                <div *ngIf="applicationsList().length > 0" class="application-list fade-line">
+                <div *ngIf="applicationsList().length > 0" class="application-list fade-line is-visible">
                     <div *ngFor="let app of applicationsList(); trackBy: trackByApplicationId" 
                         class="application-card fade-line" 
                         [ngClass]="getCardClass(app.status)">

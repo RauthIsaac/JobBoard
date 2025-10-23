@@ -17,7 +17,7 @@
         <div class="applications-section my-3">
             <div *ngIf="isLoading()" class="loading"><app-loading-page></app-loading-page></div>
 
-            <div *ngIf="!isLoading()" class="results-container fade-line">
+            <div *ngIf="!isLoading()" class="results-container fade-line is-visible">
                 <div class="results-info">
                     <h5>{{applicationsList().length}} Application{{applicationsList().length !== 1 ? 's' : ''}} found</h5>
                 </div>
